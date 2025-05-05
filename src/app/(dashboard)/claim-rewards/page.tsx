@@ -1,7 +1,7 @@
 import React from "react";
 
 const ClaimRewardsPage = () => {
-  return <div>ClaimRewardsPage</div>;
+  return <div className="text-bgtext-100">ClaimRewardsPage</div>;
 };
 
 export default ClaimRewardsPage;

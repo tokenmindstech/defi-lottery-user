@@ -1,7 +1,7 @@
 import React from "react";
 
 const PerksPage = () => {
-  return <div>PerksPage</div>;
+  return <div className="text-bgtext-100">PerksPage</div>;
 };
 
 export default PerksPage;

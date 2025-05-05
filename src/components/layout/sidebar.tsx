@@ -13,8 +13,8 @@ const SidebarLayout = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col space-y-5 w-[300px] h-screen bg-bgtext-950 p-5">
-      <div className="flex flex-row space-x-2 items-center justify-start">
+    <div className="flex flex-col space-y-5 w-[300px] h-screen bg-bgtext-950">
+      <div className="flex flex-row h-[10vh] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-700">
         <Image
           width={50}
           height={50}
@@ -24,9 +24,7 @@ const SidebarLayout = () => {
         <p className="text-bgtext-100 text-2xl font-bold">Lottery</p>
       </div>
 
-      <Separator className="bg-bgtext-700" />
-
-      <ul className="flex flex-col space-y-7">
+      <ul className="flex flex-col space-y-7 p-5 pt-0">
         {MENU_ITEMS.map((item, index) => (
           <Link href={item.href} key={index}>
             <li
@@ -58,16 +56,16 @@ const SidebarLayout = () => {
             </li>
           </Link>
         ))}
+
+        <Separator className="bg-bgtext-700" />
+
+        <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
+          <SignOut className="text-bgtext-600 size-6 group-hover:text-bgtext-100 ease-out duration-300 transition-all" />
+          <p className="text-bgtext-600 font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all">
+            Logout
+          </p>
+        </li>
       </ul>
-
-      <Separator className="bg-bgtext-700" />
-
-      <div className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
-        <SignOut className="text-bgtext-600 size-6 group-hover:text-bgtext-100 ease-out duration-300 transition-all" />
-        <p className="text-bgtext-600 font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all">
-          Logout
-        </p>
-      </div>
     </div>
   );
 };

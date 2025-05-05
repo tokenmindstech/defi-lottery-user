@@ -1,7 +1,7 @@
 import React from "react";
 
 const LuckyDrawPage = () => {
-  return <div>LuckyDrawPage</div>;
+  return <div className="text-bgtext-100">LuckyDrawPage</div>;
 };
 
 export default LuckyDrawPage;
