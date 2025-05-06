@@ -1,47 +1,37 @@
-import {
-  Layout,
-  Gift,
-  PiggyBank,
-  DiceFive,
-  User,
-  Headset,
-} from "@phosphor-icons/react/dist/ssr";
-import { Icon } from "@phosphor-icons/react";
-
 interface MenuItems {
-  icon: Icon;
+  icon: string;
   title: string;
   href: string;
 }
 
 export const MENU_ITEMS: MenuItems[] = [
   {
-    icon: Layout,
+    icon: "dashboard",
     title: "Dashboard",
     href: "/",
   },
   {
-    icon: DiceFive,
+    icon: "lucky-draw",
     title: "Lucky Draw",
     href: "/lucky-draw",
   },
   {
-    icon: Gift,
+    icon: "perks",
     title: "Perks",
     href: "/perks",
   },
   {
-    icon: PiggyBank,
+    icon: "claim-rewards",
     title: "Claim Rewards",
     href: "/claim-rewards",
   },
   {
-    icon: User,
+    icon: "my-profile",
     title: "My Profile",
     href: "/profile",
   },
   {
-    icon: Headset,
+    icon: "support",
     title: "Support",
     href: "/support",
   },
