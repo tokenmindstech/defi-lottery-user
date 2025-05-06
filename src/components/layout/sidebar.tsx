@@ -36,14 +36,14 @@ const SidebarLayout = () => {
               className={cn(
                 "flex flex-row space-x-2 items-center justify-start group cursor-pointer",
                 pathname === item.href || pathname.startsWith(`${item.href}/`)
-                  ? "bg-gradient-to-r from-bgtext-800 to-bgtext-900 p-2 rounded-lg border border-bgtext-900"
+                  ? "bg-gradient-to-l from-bgtext-800 to-bgtext-900 rounded-2xl border border-bgtext-800"
                   : ""
               )}
             >
               <RenderIcon
                 icon={item.icon}
                 className={cn(
-                  "size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all fill-bgtext-100",
+                  "size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all fill-bgtext-100 ml-3",
                   pathname === item.href || pathname.startsWith(`${item.href}/`)
                     ? "fill-bgtext-100"
                     : "fill-bgtext-600"
@@ -51,7 +51,7 @@ const SidebarLayout = () => {
               />
               <p
                 className={cn(
-                  " font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all",
+                  " font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all py-3",
                   pathname === item.href || pathname.startsWith(`${item.href}/`)
                     ? "text-bgtext-100"
                     : "text-bgtext-600"
@@ -63,12 +63,12 @@ const SidebarLayout = () => {
           </Link>
         ))}
 
-        <Separator className="bg-bgtext-700" />
+        <Separator className="bg-bgtext-700 mask-l-from-80% mask-r-from-80%" />
 
         <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
           <RenderIcon
             icon="log-out"
-            className="fill-bgtext-600 size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all"
+            className="ml-3 fill-bgtext-600 size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all"
           />
 
           <p className="text-bgtext-600 font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all">

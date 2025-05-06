@@ -17,7 +17,7 @@ const LuckyDrawIcon = ({ className }: CustomIconProps) => {
         height="15"
         rx="3"
         fill="white"
-        fill-opacity="0.12"
+        fillOpacity="0.12"
       />
       <rect x="2" y="6" width="9.5" height="11" rx="2" />
       <path
