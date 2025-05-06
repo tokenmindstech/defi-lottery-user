@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  CreditCard,
-  Link,
-  Medal,
-  Ticket,
-} from "@phosphor-icons/react/dist/ssr";
+import { CreditCard, Medal, Ticket } from "@phosphor-icons/react/dist/ssr";
 import LotteryStats from "@/components/shared/lottery-stats";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,11 +9,12 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import Link from "next/link";
 
 const DashboardLottery = () => {
   return (
-    <Card className="bg-bgtext-950 border-0">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="bg-bgtext-950 border border-bgtext-800">
+      <CardHeader className="flex flex-row items-center justify-between w-full">
         <div className="flex flex-col">
           <CardTitle className="text-bgtext-100 font-inter text-xl font-semibold">
             Lottery Stats
@@ -27,9 +23,8 @@ const DashboardLottery = () => {
             View you lottery ticket statistics
           </CardDescription>
         </div>
-
         <Link href={"/dashboard/stats"}>
-          <Button className="bg-gradient-to-l from-linprimary-start to-linprimary-end/40 text-bgtext-100 hover:bg-gradient-to-r hover:from-linprimary-start/40 hover:to-linprimary-end border-0 rounded-lg cursor-pointer ease-out transition-all duration-300">
+          <Button className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300">
             View Details
           </Button>
         </Link>

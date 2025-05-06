@@ -5,12 +5,12 @@ import DashboardStatistic from "@/components/specifics/dashboard/statistic";
 export default function Home() {
   return (
     <section className="flex flex-col w-full h-full space-y-10">
-      <div className="flex flex-col md:flex-row items-start justify-between space-y-5 md:space-y-0 md:space-x-5 w-full h-full md:justify-between">
+      <div className="flex flex-row items-start justify-between space-x-5 w-full h-full md:justify-between">
         <p className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
           Welcome John!
         </p>
 
-        <div className="flex flex-row space-x-10 justify-between lg:justify-start">
+        <div className="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-10 justify-between lg:justify-start">
           <div className="flex flex-col space-y-2">
             <p className="text-sm text-bgtext-600 font-inter">
               Tickets Remaining
