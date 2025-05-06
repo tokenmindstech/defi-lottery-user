@@ -6,8 +6,8 @@ import MobileSidebarLayout from "./mobile-sidebar";
 
 const HeaderLayout = () => {
   return (
-    <div className="flex flex-row h-[10vh] items-center justify-between p-5 bg-black">
-      <div className="flex flex-row items-center space-x-3 w-full">
+    <div className="flex relative flex-row h-[10vh] w-full items-center justify-between p-5">
+      <div className="flex z-20 flex-row items-center space-x-3 w-full">
         <MobileSidebarLayout />
         <Input
           type="text"
@@ -17,7 +17,7 @@ const HeaderLayout = () => {
         />
       </div>
 
-      <div className="flex flex-row items-center space-x-3">
+      <div className="flex z-20 flex-row items-center space-x-3">
         <div className="w-10 h-10 bg-transparent border-2 border-bgtext-700 rounded-full items-center justify-center flex cursor-pointer">
           <Bell weight="regular" className="text-bgtext-100 size-7" />
         </div>

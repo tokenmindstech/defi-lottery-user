@@ -13,8 +13,8 @@ const DesktopSidebarLayout = () => {
   const pathname = usePathname();
 
   return (
-    <div className="hidden lg:flex flex-col space-y-5 min-w-[290px] max-w-[290px] h-screen bg-bgtext-950">
-      <div className="hidden lg:absolute min-w-[290px] max-w-[290px] h-[10vh] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-700 mask-l-from-35% mask-r-from-35%"></div>
+    <div className="hidden lg:flex flex-col space-y-5 min-w-[290px] max-w-[290px] h-screen bg-black border-r border-bgtext-700">
+      <div className="absolute min-w-[290px] max-w-[290px] h-[10vh] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-700 mask-l-from-80% mask-r-from-80%" />
       <Link
         href={"/"}
         className="flex z-20 flex-row items-center justify-start p-5 space-x-2"
