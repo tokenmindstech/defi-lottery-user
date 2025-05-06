@@ -110,7 +110,7 @@ const DashboardStatistic = () => {
                   <th className="p-4 w-5/12 text-left border-l border-r border-bgtext-800 bg-bgtext-900">
                     <span className="text-bgtext-100">Name</span>
                   </th>
-                  <th className="p-4 w-5/12 text-center bg-bgtext-900">
+                  <th className="p-4 w-5/12 text-left bg-bgtext-900">
                     <span className="text-bgtext-100">Action</span>
                   </th>
                 </tr>
