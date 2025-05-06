@@ -29,14 +29,14 @@ const HeaderLayout = () => {
             }).format(1200)}
           </p>
 
-          <div className="flex items-center justify-center size-7 bg-gradient-to-l from-linprimary-start to-linprimary-end rounded-full border-2 border-bgtext-700 cursor-pointer">
+          <div className="flex items-center justify-center size-7 bg-gradient-to-l from-linprimary-start to-linprimary-end rounded-full border-2 border-bgtext-800 cursor-pointer">
             <Plus className="text-bgtext-100 size-5 cursor-pointer" />
           </div>
         </div>
-        <div className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-700 rounded-full items-center justify-center flex cursor-pointer">
+        <div className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-800 rounded-full items-center justify-center flex cursor-pointer">
           <Bell weight="regular" className="text-bgtext-100 size-5" />
         </div>
-        <Avatar className="w-10 h-10 bg-bgtext-700 rounded-full cursor-pointer">
+        <Avatar className="w-10 h-10 bg-bgtext-800 rounded-full cursor-pointer">
           <AvatarImage
             src="/assets/images/user.jpeg"
             alt="User Avatar"

@@ -114,7 +114,13 @@
   --color-linprimary-start: #5623ff;
   --color-linprimary-end: #a23cff;
   --color-linsea-start: #2EB8F6;
-  --color-linsea-end: #2EB8F6;
+  --color-linsea-end: #6CEBFF;
+  --color-linblue-start: #4A19C0;
+  --color-linblue-end: #4C99FF;
+  --color-lindeepgreen-start: #33BBF6;
+  --color-linblack-start: #1E1E1E;
+  --color-linblack-via: #292929;
+  --color-linblack-end: #161616;
 }
 
 :root {

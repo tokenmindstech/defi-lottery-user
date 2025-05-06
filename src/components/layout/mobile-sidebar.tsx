@@ -92,7 +92,7 @@ const MobileSidebarLayout = () => {
               </Link>
             ))}
 
-            <Separator className="bg-bgtext-700 mask-l-from-80% mask-r-from-80%" />
+            <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
             <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
               <RenderIcon
