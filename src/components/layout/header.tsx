@@ -1,6 +1,6 @@
 import React from "react";
 import { Input } from "../ui/input";
-import { MagnifyingGlass, Bell } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass, Bell, Plus } from "@phosphor-icons/react/dist/ssr";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import MobileSidebarLayout from "./mobile-sidebar";
 
@@ -18,14 +18,29 @@ const HeaderLayout = () => {
       </div>
 
       <div className="flex z-20 flex-row items-center space-x-3">
-        <div className="w-10 h-10 bg-transparent border-2 border-bgtext-700 rounded-full items-center justify-center flex cursor-pointer">
-          <Bell weight="regular" className="text-bgtext-100 size-7" />
+        <div className="flex flex-row items-center justify-start space-x-2 px-4 p-2 bg-bgtext-900 rounded-full">
+          <p className="text-bgtext-600 text-sm hidden md:block">Balance:</p>
+          <p className="pl-1 text-bgtext-100 font-bold">
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+              maximumFractionDigits: 0,
+              minimumFractionDigits: 0,
+            }).format(1200)}
+          </p>
+
+          <div className="flex items-center justify-center size-7 bg-gradient-to-l from-linprimary-start to-linprimary-end rounded-full border-2 border-bgtext-700 cursor-pointer">
+            <Plus className="text-bgtext-100 size-5 cursor-pointer" />
+          </div>
+        </div>
+        <div className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-700 rounded-full items-center justify-center flex cursor-pointer">
+          <Bell weight="regular" className="text-bgtext-100 size-5" />
         </div>
         <Avatar className="w-10 h-10 bg-bgtext-700 rounded-full cursor-pointer">
           <AvatarImage
-            src="/assets/images/536.png"
-            alt="@shadcn"
-            className="object-cover p-0.5"
+            src="/assets/images/user.jpeg"
+            alt="User Avatar"
+            className="object-cover"
           />
           <AvatarFallback>DF</AvatarFallback>
         </Avatar>
