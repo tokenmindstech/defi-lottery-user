@@ -1,11 +1,11 @@
 import React, { PropsWithChildren } from "react";
-import SidebarLayout from "./sidebar";
 import ContentLayout from "./content";
+import DesktopSidebarLayout from "./desktop-sidebar";
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (
     <div className="flex flex-row w-full h-full">
-      <SidebarLayout />
+      <DesktopSidebarLayout />
       <ContentLayout>{children}</ContentLayout>
     </div>
   );
