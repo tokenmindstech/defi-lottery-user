@@ -46,8 +46,8 @@ const chartConfig = {
 
 const DashboardStatistic = () => {
   return (
-    <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <Card className="bg-bgtext-950 lg:col-span-2 border border-bgtext-800">
+    <div className="w-full h-full grid grid-cols-1 xl:grid-cols-3 gap-5">
+      <Card className="bg-bgtext-950 md:col-span-3 xl:col-span-2 border border-bgtext-800">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex flex-col">
             <CardTitle className="text-bgtext-100 font-inter text-xl font-semibold">
@@ -90,7 +90,7 @@ const DashboardStatistic = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-bgtext-950 border border-bgtext-800">
+      <Card className="bg-bgtext-950 md:col-span-3 xl:col-span-1 border border-bgtext-800">
         <CardHeader className="flex flex-row items-center justify-between">
           <div className="flex flex-col">
             <CardTitle className="text-bgtext-100 font-inter text-xl font-semibold">
