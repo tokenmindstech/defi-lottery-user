@@ -147,12 +147,12 @@ const RenderCountDown = ({
   return (
     <div className="flex flex-col items-center">
       <div className="flex gap-1">
-        <div className="w-14 h-16 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
+        <div className="p-2 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
           <span className="text-bgtext-100 text-3xl font-bold">
             {firstDigit}
           </span>
         </div>
-        <div className="w-14 h-16 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
+        <div className="p-2 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
           <span className="text-bgtext-100 text-3xl font-bold">
             {secondDigit}
           </span>
