@@ -1,16 +1,15 @@
 import CircleShadowIcon from "@/components/icons/circle-shadow";
 import CountDownDraw from "@/components/specifics/lucky-draw/count-down";
+import HistoryDraw from "@/components/specifics/lucky-draw/history-draw";
 import Image from "next/image";
 import React from "react";
 
 const LuckyDrawPage = () => {
   return (
     <section className="flex flex-col w-full h-full space-y-10">
-      <div className="flex flex-row items-start justify-between space-x-5 w-full h-full md:justify-between">
-        <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
-          Lucky Draw
-        </h2>
-      </div>
+      <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
+        Lucky Draw
+      </h2>
 
       <div className="w-full h-full grid grid-cols-1 xl:grid-cols-3 gap-5">
         <div className="flex w-full relative h-40 xl:col-span-2 bg-bgtext-900 border border-bgtext-800 rounded-xl">
@@ -71,6 +70,8 @@ const LuckyDrawPage = () => {
           </div>
         </div>
       </div>
+
+      <HistoryDraw />
     </section>
   );
 };
