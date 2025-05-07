@@ -5,6 +5,9 @@ import Image from "next/image";
 import React from "react";
 
 const LuckyDrawPage = () => {
+  const now = new Date();
+  const nextDrawDate = new Date(now.getTime() + 23 * 60 * 60 * 1000); // Next draw in 24 hours
+
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -44,7 +47,7 @@ const LuckyDrawPage = () => {
 
         <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
           <p className="text-base text-bgtext-100 font-inter">Next Draw In</p>
-          <CountDownDraw />
+          <CountDownDraw targetDate={nextDrawDate.toString()} />
         </div>
       </div>
 

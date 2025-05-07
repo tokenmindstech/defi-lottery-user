@@ -11,7 +11,7 @@ const HistoryDraw = () => {
         <h2 className="text-xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
           History Draws
         </h2>
-        <div className="w-full h-full rounded-xl border border-bgtext-800 overflow-x-auto">
+        <div className="w-full h-full rounded-xl border border-bgtext-800 overflow-x-auto no-scrollbar">
           <table className="w-full border-collapse">
             <thead>
               <tr className="bg-bgtext-900">
