@@ -1,6 +1,6 @@
 import CircleShadowIcon from "@/components/icons/circle-shadow";
 import CountDownDraw from "@/components/specifics/lucky-draw/count-down";
-import HistoryDraw from "@/components/specifics/lucky-draw/history-draw";
+import HistoryDraw from "@/components/specifics/lucky-draw/history";
 import Image from "next/image";
 import React from "react";
 

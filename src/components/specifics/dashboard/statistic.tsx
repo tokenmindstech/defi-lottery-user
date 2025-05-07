@@ -134,7 +134,7 @@ const DashboardStatistic = () => {
                     </p>
                   </td>
                   <td className="p-4 text-center">
-                    <Button className="bg-gradient-to-b px-8 py-5 from-linprimary-start to-linprimary-end text-bgtext-100 border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
+                    <Button className="px-8 py-5 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
                       Claim
                     </Button>
                   </td>
