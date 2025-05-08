@@ -1,6 +1,6 @@
-import DashboardLottery from "@/components/specifics/dashboard/lottery";
-import DashboardOngoingUpcoming from "@/components/specifics/dashboard/ongoing-upcoming";
-import DashboardStatistic from "@/components/specifics/dashboard/statistic";
+import DashboardLottery from "./_components/lottery";
+import DashboardOngoingUpcoming from "./_components/ongoing-upcoming";
+import DashboardStatistic from "./_components/statistic";
 
 export default function Home() {
   return (

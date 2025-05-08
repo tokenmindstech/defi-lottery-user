@@ -1,8 +1,8 @@
-import HistoryClaimReward from "@/components/specifics/claim-rewards/history";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Clock, Gift, Trophy } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
+import HistoryClaimReward from "./_components/history";
 
 const ClaimRewardsPage = () => {
   return (

@@ -1,5 +1,5 @@
-import ItemPerks from "@/components/specifics/perks/item";
 import React from "react";
+import ItemPerks from "./_components/item";
 
 const PerksPage = () => {
   return (
