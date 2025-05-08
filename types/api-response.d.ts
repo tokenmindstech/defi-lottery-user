@@ -24,4 +24,17 @@ declare global {
     message: string[];
     statusCode: number;
   }
+
+  interface APILoginResponseDTO extends APIBaseResponse {
+    data: {
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        roles: RoleType[];
+        provider: ProviderType;
+      };
+      access_token: string;
+    };
+  }
 }

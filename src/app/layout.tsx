@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { getServerSession, Session } from "next-auth";
 import { authConfig } from "@/config/auth";
 import AuthProvider from "@/provider/auth";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +42,15 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased font-inter bg-bgtext-950`}
       >
-        <AuthProvider session={session}>{children}</AuthProvider>
+        <AuthProvider session={session}>
+          {children}
+          <Toaster
+            toastOptions={{
+              duration: 5000,
+              position: "top-center",
+            }}
+          />
+        </AuthProvider>
       </body>
     </html>
   );

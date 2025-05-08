@@ -17,6 +17,8 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import RenderIcon from "../icons/render-icon";
 import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
+import { signOut } from "next-auth/react";
 
 const MobileSidebarLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,16 +96,23 @@ const MobileSidebarLayout = () => {
 
             <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
-            <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
-              <RenderIcon
-                icon="log-out"
-                className="ml-3 fill-bgtext-600 size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all"
-              />
+            <Button
+              onClick={() =>
+                signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
+              }
+              className="w-full flex flex-row items-start justify-start bg-transparent hover:bg-transparent cursor-pointer group"
+            >
+              <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">
+                <RenderIcon
+                  icon="log-out"
+                  className="fill-bgtext-600 size-6 group-hover:fill-bgtext-100 ease-out duration-300 transition-all"
+                />
 
-              <p className="text-bgtext-600 font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all">
-                Logout
-              </p>
-            </li>
+                <p className="text-bgtext-600 font-medium text-base group-hover:text-bgtext-100 ease-out duration-300 transition-all">
+                  Logout
+                </p>
+              </li>
+            </Button>
           </ul>
         </SheetContent>
       </Sheet>

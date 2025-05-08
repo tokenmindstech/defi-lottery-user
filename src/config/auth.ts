@@ -11,7 +11,6 @@ export const authConfig: NextAuthOptions = {
       },
       authorize: async (credentials): Promise<User | null> => {
         try {
-          console.log("Credentials", credentials);
           const request = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/auth`,
             {
@@ -25,16 +24,15 @@ export const authConfig: NextAuthOptions = {
               }),
             }
           );
-          const response = await request.json();
-          console.log("Response", response);
+          const response = (await request.json()) as APILoginResponseDTO;
 
           const user: User = {
-            accessToken: "xxx",
-            email: "aa@mail.com",
-            id: "zxx",
-            name: "John Doe",
-            roles: ["USER"],
-            provider: "GOOGLE",
+            accessToken: response.data.access_token,
+            email: response.data.user.email,
+            id: response.data.user.id,
+            name: response.data.user.name,
+            roles: response.data.user.roles,
+            provider: response.data.user.provider,
             image: "https://example.com/image.jpg",
           };
 
