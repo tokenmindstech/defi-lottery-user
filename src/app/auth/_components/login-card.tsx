@@ -23,6 +23,7 @@ import { AuthAdapter } from "@web3auth/auth-adapter";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
@@ -103,6 +104,14 @@ export function LoginCardForm() {
     }
     const user = await web3Auth.getUserInfo();
     console.log("User info", user);
+
+    const result = await signIn("credentials", {
+      jwt: user.idToken,
+      role: "USER",
+      redirect: false,
+    });
+
+    console.log("Sign in result", result);
   };
 
   useEffect(() => {

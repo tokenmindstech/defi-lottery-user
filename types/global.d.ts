@@ -6,6 +6,8 @@
 export {};
 
 declare global {
+  type RoleType = "USER" | "ADMIN" | "AGENT";
+
   interface CustomIconProps {
     className?: string;
   }

@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import dayjs from "dayjs";
+import { getServerSession, Session } from "next-auth";
+import { authConfig } from "@/config/auth";
+import AuthProvider from "@/provider/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,17 +29,19 @@ export const metadata: Metadata = {
 
 dayjs.locale("en");
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = (await getServerSession(authConfig)) as Session;
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} antialiased font-inter bg-bgtext-950`}
       >
-        {children}
+        <AuthProvider session={session}>{children}</AuthProvider>
       </body>
     </html>
   );
