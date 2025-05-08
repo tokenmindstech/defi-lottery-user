@@ -20,7 +20,7 @@ const DesktopSidebarLayout = () => {
         className="flex z-20 flex-row items-center justify-start p-5 space-x-2"
       >
         <Image
-          src="/assets/images/536.png"
+          src="/assets/icons/536.svg"
           alt="logo"
           width={50}
           height={50}
