@@ -18,13 +18,12 @@ import { Web3AuthNoModal } from "@web3auth/no-modal";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import {
   WALLET_ADAPTERS,
-  IProvider,
   UX_MODE,
   WEB3AUTH_NETWORK,
   getEvmChainConfig,
 } from "@web3auth/base";
 import { AuthAdapter } from "@web3auth/auth-adapter";
-import { useEffect, useState, useCallback, Fragment } from "react";
+import { useEffect, useState, useCallback, Fragment, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
@@ -71,10 +70,9 @@ web3Auth.configureAdapter(authAdapter);
 const LoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [provider, setProvider] = useState<IProvider | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const jwtRequestedRef = useRef(false);
 
   const initializeWeb3Auth = useCallback(async () => {
     if (isInitialized) {
@@ -95,12 +93,22 @@ const LoginForm = () => {
   }, [isInitialized]);
 
   const requestJwt = useCallback(async () => {
+    // Skip if JWT was already requested during this session
+    if (jwtRequestedRef.current) {
+      return;
+    }
+
     try {
+      setIsLoading(true);
       if (!web3Auth || !web3Auth.connected) {
         return;
       }
 
+      // Mark that we've started the JWT request process
+      jwtRequestedRef.current = true;
+
       const user = await web3Auth.getUserInfo();
+      console.log("User info:", user);
       const result = await signIn("credentials", {
         jwt: user.idToken,
         role: "USER",
@@ -113,12 +121,16 @@ const LoginForm = () => {
 
       if (result?.ok) {
         toast.success("Login successful!", { id: "login" });
+        setIsLoading(false);
         delay(2000).then(() => {
           router.refresh();
         });
       }
     } catch (error) {
       console.error("JWT request failed:", error);
+      // Reset the flag in case of error to allow retry
+      jwtRequestedRef.current = false;
+      setIsLoading(false);
     }
   }, [router]);
 
@@ -127,9 +139,9 @@ const LoginForm = () => {
       try {
         setIsLoading(true);
 
+        console.log("Login with Web3Auth:", type, token);
         const initialized = await initializeWeb3Auth();
         if (!initialized) return;
-
         let web3AuthProvider;
 
         if (type === "google") {
@@ -147,7 +159,6 @@ const LoginForm = () => {
         }
 
         if (web3AuthProvider) {
-          setProvider(web3AuthProvider);
           await requestJwt();
         }
       } catch (error) {
@@ -164,21 +175,25 @@ const LoginForm = () => {
 
   // Handle initialization and check connection status
   useEffect(() => {
+    let isMounted = true;
+
     const checkAuthStatus = async () => {
+      if (!isMounted) return;
+
       try {
         const action = searchParams.get("action");
         const jwtToken = searchParams.get("token");
 
         // Initialize web3Auth
         const initialized = await initializeWeb3Auth();
-        if (!initialized) return;
+        if (!initialized || !isMounted) return;
 
-        // Handle logout action
+        // Reset JWT requested flag on logout
         if (action === "logout") {
+          jwtRequestedRef.current = false;
           if (web3Auth.connected) {
             await web3Auth.logout();
           }
-          setProvider(null);
           window.history.replaceState(
             {},
             document.title,
@@ -199,8 +214,7 @@ const LoginForm = () => {
         }
 
         // Check if already logged in
-        if (web3Auth.connected) {
-          setProvider(web3Auth.provider);
+        if (web3Auth.connected && isMounted && !jwtRequestedRef.current) {
           await requestJwt();
         }
       } catch (error) {
@@ -209,6 +223,11 @@ const LoginForm = () => {
     };
 
     checkAuthStatus();
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+    };
   }, [initializeWeb3Auth, loginWithWeb3Auth, requestJwt, searchParams]);
 
   return (
