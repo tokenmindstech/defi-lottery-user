@@ -68,7 +68,7 @@ const authAdapter = new AuthAdapter({
 });
 web3Auth.configureAdapter(authAdapter);
 
-export function LoginCardForm() {
+const LoginForm = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -160,9 +160,7 @@ export function LoginCardForm() {
   );
 
   const loginWithTelegram = useCallback(() => {
-    router.push(
-      `${BACKEND_URL}/auth/telegram-login?redirect_uri=${window.location.origin}/auth`
-    );
+    router.push(`${BACKEND_URL}/auth/telegram-login`);
   }, [router]);
 
   // Handle initialization and check connection status
@@ -269,4 +267,6 @@ export function LoginCardForm() {
       </CardContent>
     </Card>
   );
-}
+};
+
+export default LoginForm;
