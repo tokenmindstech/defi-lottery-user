@@ -37,6 +37,21 @@ export const MENU_ITEMS: MenuItems[] = [
   },
 ];
 
+export const NOTIFICATION_MENU_ITEMS = [
+  {
+    value: "all",
+    label: "All",
+  },
+  {
+    value: "unread",
+    label: "Unread",
+  },
+  {
+    value: "read",
+    label: "Read",
+  },
+];
+
 export const REQUIRED_2FA_SETUP = "required_2fa_setup";
 export const REQUIRED_AUTHENTICATION = "required_authentication";
 export const AUTH_ERROR = "auth_error";
