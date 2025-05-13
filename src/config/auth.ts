@@ -1,5 +1,6 @@
 import {
   AUTH_ERROR,
+  AUTH_LOGIN_2FA,
   REQUIRED_2FA_SETUP,
   REQUIRED_AUTHENTICATION,
 } from "@/constant/common";
@@ -131,7 +132,7 @@ export const authConfig: NextAuthOptions = {
       authorize: async (credentials): Promise<User | null> => {
         try {
           console.log("Credentials:", credentials);
-          if (credentials?.type === "update") {
+          if (credentials?.type === AUTH_LOGIN_2FA) {
             const userData =
               typeof credentials.user === "string"
                 ? JSON.parse(credentials.user)

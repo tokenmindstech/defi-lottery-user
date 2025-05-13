@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import { redirect, useSearchParams } from "next/navigation";
 
-const Setup2FAPage = () => {
+const TwoFASetupPage = () => {
   const searchParams = useSearchParams();
   const { data: twoFA, isLoading } = useQuery<APIGenerate2FAResponseDTO>({
     queryKey: ["generate-2fa"],
@@ -36,7 +36,6 @@ const Setup2FAPage = () => {
     redirect("/auth");
   }
 
-  console.log(twoFA);
   return (
     <section
       className={
@@ -92,7 +91,7 @@ const Setup2FAPage = () => {
                     </div>
                     <div className="flex flex-col space-y-2 col-span-5 h-full">
                       <p className="text-bgtext-100 text-sm font-inter font-normal text-left">
-                        Enter the 6 confirmation code shown on the app:
+                        Enter the code shown on the app:
                       </p>
                       <Setup2FAForm
                         qrCode={twoFA.data.qrCode}
@@ -112,4 +111,4 @@ const Setup2FAPage = () => {
   );
 };
 
-export default Setup2FAPage;
+export default TwoFASetupPage;

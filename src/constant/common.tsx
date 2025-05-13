@@ -40,3 +40,4 @@ export const MENU_ITEMS: MenuItems[] = [
 export const REQUIRED_2FA_SETUP = "required_2fa_setup";
 export const REQUIRED_AUTHENTICATION = "required_authentication";
 export const AUTH_ERROR = "auth_error";
+export const AUTH_LOGIN_2FA = "2fa";

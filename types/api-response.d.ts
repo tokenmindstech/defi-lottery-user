@@ -71,4 +71,20 @@ declare global {
       access_token: string;
     };
   }
+
+  interface API2FAVerifyResponseDTO extends APIBaseResponse {
+    data: {
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        roles: RoleType[];
+        verifiers: Verifier[];
+        isTwoFactorSetup: boolean;
+        subscription: unknown | null;
+        authenticated: boolean;
+      };
+      access_token: string;
+    };
+  }
 }

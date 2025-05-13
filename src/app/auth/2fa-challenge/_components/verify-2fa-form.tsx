@@ -18,17 +18,15 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMutation } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import { Spinner } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
+import { AUTH_LOGIN_2FA } from "@/constant/common";
 
-interface Setup2FAFormProps {
-  secret: string;
-  qrCode: string;
+interface Verify2FAFormProps {
   token: string;
 }
 
@@ -41,42 +39,35 @@ const formSchema = z.object({
     .max(6, {
       message: "OTP must be at most 6 characters long",
     }),
-  secret: z.string().length(16, {
-    message: "Secret must be exactly 16 characters long",
-  }),
   qrCode: z.string(),
 });
 
-const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
+const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       otp: "",
-      secret,
-      qrCode,
     },
   });
 
   const isErrorResponse = (
-    response: APIBind2FAResponseDTO | APIBaseErrorResponse
+    response: API2FAVerifyResponseDTO | APIBaseErrorResponse
   ): response is APIBaseErrorResponse => {
     return "statusCode" in response && response.statusCode >= 400;
   };
 
   const mutation = useMutation<
-    APIBind2FAResponseDTO | APIBaseErrorResponse,
+    API2FAVerifyResponseDTO | APIBaseErrorResponse,
     Error,
     z.infer<typeof formSchema>
   >({
-    mutationKey: ["bind-2fa"],
+    mutationKey: ["verify-2fa"],
     mutationFn: async (data) => {
       const response = await fetchProxy({
         method: "POST",
-        url: "two-factor/bind",
+        url: "two-factor/verify",
         body: {
           otp: data.otp,
-          secret: data.secret,
-          qrCode: data.qrCode,
         },
         customHeaders: {
           Authorization: `Bearer ${token}`,
@@ -97,16 +88,13 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
         return;
       }
 
-      // Now TypeScript knows this is APIBind2FAResponseDTO
-      toast.success("2FA activated successfully");
-      const ress = await signIn("credentials", {
-        type: "update",
+      toast.success("2FA verified successfully!");
+      await signIn("credentials", {
+        type: AUTH_LOGIN_2FA,
         accessToken: result.data.access_token,
         user: JSON.stringify(result.data.user),
         redirect: false,
       });
-
-      console.log("SignIn Result:", ress);
 
       setTimeout(() => {
         window.location.href = "/";
@@ -147,15 +135,16 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
         <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
         <div className="w-full flex flex-row space-x-5 items-center justify-end">
-          <Link href={"/auth"} passHref>
-            <Button
-              type="button"
-              disabled={form.formState.isSubmitting}
-              className="bggradient-to-b from-linblack-start to-linblack-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linblack-start hover:to-linblack-end rounded-lg cursor-pointer ease-out transition-all duration-300"
-            >
-              Cancel
-            </Button>
-          </Link>
+          <Button
+            type="button"
+            disabled={form.formState.isSubmitting}
+            onClick={() =>
+              signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
+            }
+            className="bggradient-to-b from-linblack-start to-linblack-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linblack-start hover:to-linblack-end rounded-lg cursor-pointer ease-out transition-all duration-300"
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
@@ -165,11 +154,11 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
               <div className="flex flex-row items-center justify-center space-x-2">
                 <Spinner className="size-5 fill-bgtext-100 animate-spin" />
                 <p className="text-bgtext-100 font-inter font-medium text-base">
-                  Activating...
+                  Logging in...
                 </p>
               </div>
             ) : (
-              "Activate"
+              "Login"
             )}
           </Button>
         </div>
@@ -178,4 +167,4 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
   );
 };
 
-export default Setup2FAForm;
+export default Verify2FAForm;

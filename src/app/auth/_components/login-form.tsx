@@ -28,7 +28,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { delay } from "@/lib/utils";
-import { REQUIRED_2FA_SETUP } from "@/constant/common";
+import { REQUIRED_2FA_SETUP, REQUIRED_AUTHENTICATION } from "@/constant/common";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
@@ -120,9 +120,17 @@ const LoginForm = () => {
       if (result?.error) {
         if (result.error.startsWith(REQUIRED_2FA_SETUP)) {
           toast.success("2FA setup required. Redirecting...");
+          await delay(2000);
           router.push(
-            `/auth/setup-2fa?token=${result.error.replace(
+            `/auth/2fa-setup?token=${result.error.replace(
               REQUIRED_2FA_SETUP,
+              ""
+            )}`
+          );
+        } else if (result.error.startsWith(REQUIRED_AUTHENTICATION)) {
+          router.push(
+            `/auth/2fa-challenge?token=${result.error.replace(
+              REQUIRED_AUTHENTICATION,
               ""
             )}`
           );
