@@ -63,25 +63,6 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
   const firstInputRef = useRef<HTMLInputElement>(null);
   const formContainerRef = useRef<HTMLDivElement>(null);
 
-  // Focus the first OTP input when component mounts with a slight delay
-  useEffect(() => {
-    // Using a short timeout to ensure the component is fully rendered
-    const timer = setTimeout(() => {
-      if (firstInputRef.current) {
-        firstInputRef.current.focus();
-      } else if (formContainerRef.current) {
-        // Try to find the input directly if the ref doesn't work
-        const input =
-          formContainerRef.current.querySelector('input[type="text"]');
-        if (input) {
-          (input as HTMLInputElement).focus();
-        }
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   const isErrorResponse = (
     response: APIBind2FAResponseDTO | APIBaseErrorResponse
   ): response is APIBaseErrorResponse => {
@@ -121,7 +102,6 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
         return;
       }
 
-      // Now TypeScript knows this is APIBind2FAResponseDTO
       toast.success("2FA activated successfully");
       await signIn("credentials", {
         type: AUTH_LOGIN_2FA,
@@ -141,6 +121,25 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
       toast.error("Error submitting form");
     }
   };
+
+  // Focus the first OTP input when component mounts with a slight delay
+  useEffect(() => {
+    // Using a short timeout to ensure the component is fully rendered
+    const timer = setTimeout(() => {
+      if (firstInputRef.current) {
+        firstInputRef.current.focus();
+      } else if (formContainerRef.current) {
+        // Try to find the input directly if the ref doesn't work
+        const input =
+          formContainerRef.current.querySelector('input[type="text"]');
+        if (input) {
+          (input as HTMLInputElement).focus();
+        }
+      }
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div ref={formContainerRef}>
