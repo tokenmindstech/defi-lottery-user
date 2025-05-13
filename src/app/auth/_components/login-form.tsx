@@ -216,6 +216,11 @@ const LoginForm = () => {
           if (web3Auth.connected) {
             await web3Auth.logout();
           }
+          window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+          );
           return;
         }
 
