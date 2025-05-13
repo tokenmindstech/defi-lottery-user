@@ -24,7 +24,7 @@ const TwoFAChallengePage = () => {
         <Card className="w-full z-20 max-w-md md:max-w-md lg:max-w-xl bg-bgtext-950 border border-bgtext-800">
           <CardHeader className="flex flex-col items-center justify-center space-y-2">
             <CardTitle className="text-3xl lg:text-4xl font-inter font-medium text-bgtext-100 text-center">
-              Two-factor Authentication
+              Two-Factor Authentication
             </CardTitle>
             <CardDescription className="hidden">
               Deploy your new project in one-click.

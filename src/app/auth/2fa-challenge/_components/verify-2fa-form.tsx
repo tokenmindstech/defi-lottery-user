@@ -39,7 +39,6 @@ const formSchema = z.object({
     .max(6, {
       message: "OTP must be at most 6 characters long",
     }),
-  qrCode: z.string(),
 });
 
 const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
@@ -80,7 +79,6 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const result = await mutation.mutateAsync(data);
-      console.log("Result:", result);
       if (isErrorResponse(result)) {
         toast.error(
           Array.isArray(result.message) ? result.message[0] : result.message

@@ -115,8 +115,6 @@ const LoginForm = () => {
         redirect: false,
       });
 
-      console.log("Result from signIn:", result);
-
       if (result?.error) {
         if (result.error.startsWith(REQUIRED_2FA_SETUP)) {
           toast.success("2FA setup required. Redirecting...");
@@ -164,7 +162,6 @@ const LoginForm = () => {
       try {
         setIsLoading(true);
 
-        console.log("Login with Web3Auth:", type, token);
         const initialized = await initializeWeb3Auth();
         if (!initialized) return;
         let web3AuthProvider;

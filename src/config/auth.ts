@@ -131,13 +131,11 @@ export const authConfig: NextAuthOptions = {
       },
       authorize: async (credentials): Promise<User | null> => {
         try {
-          console.log("Credentials:", credentials);
           if (credentials?.type === AUTH_LOGIN_2FA) {
             const userData =
               typeof credentials.user === "string"
                 ? JSON.parse(credentials.user)
                 : credentials.user;
-            console.log("Parsed user data:", userData);
             const user: User = {
               accessToken: credentials?.accessToken,
               email: userData.email,
@@ -147,7 +145,6 @@ export const authConfig: NextAuthOptions = {
               verifiers: userData.verifiers,
               image: "https://example.com/image.jpg",
             };
-            console.log("User data:", user);
 
             return user;
           }
@@ -166,7 +163,6 @@ export const authConfig: NextAuthOptions = {
             }
           );
           const response = (await request.json()) as APILoginResponseDTO;
-          console.log("Response from server:", response);
 
           if (!request.ok) {
             throw new CustomError(`${AUTH_ERROR}${response.message}`);
@@ -222,7 +218,6 @@ export const authConfig: NextAuthOptions = {
         token.verifiers = user.verifiers;
       }
       if (trigger === "update" && session) {
-        console.log("Session in update:", session);
         token.accessToken = session.accessToken;
         token.email = session.user?.email;
         token.name = session.user?.name;

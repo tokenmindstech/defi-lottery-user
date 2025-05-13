@@ -89,7 +89,6 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       const result = await mutation.mutateAsync(data);
-      console.log("Result:", result);
       if (isErrorResponse(result)) {
         toast.error(
           Array.isArray(result.message) ? result.message[0] : result.message
@@ -99,14 +98,12 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
 
       // Now TypeScript knows this is APIBind2FAResponseDTO
       toast.success("2FA activated successfully");
-      const ress = await signIn("credentials", {
+      await signIn("credentials", {
         type: AUTH_LOGIN_2FA,
         accessToken: result.data.access_token,
         user: JSON.stringify(result.data.user),
         redirect: false,
       });
-
-      console.log("SignIn Result:", ress);
 
       setTimeout(() => {
         window.location.href = "/";
