@@ -122,11 +122,35 @@ export const authConfig: NextAuthOptions = {
     Credentials({
       name: "Credentials",
       credentials: {
+        type: { label: "Type", type: "text" },
+        user: { label: "User", type: "text" },
+        accessToken: { label: "Access Token", type: "text" },
         role: { label: "Role", type: "text" },
         jwt: { label: "JWT", type: "text" },
       },
       authorize: async (credentials): Promise<User | null> => {
         try {
+          console.log("Credentials:", credentials);
+          if (credentials?.type === "update") {
+            const userData =
+              typeof credentials.user === "string"
+                ? JSON.parse(credentials.user)
+                : credentials.user;
+            console.log("Parsed user data:", userData);
+            const user: User = {
+              accessToken: credentials?.accessToken,
+              email: userData.email,
+              id: userData.id,
+              name: userData.name,
+              roles: userData.roles,
+              verifiers: userData.verifiers,
+              image: "https://example.com/image.jpg",
+            };
+            console.log("User data:", user);
+
+            return user;
+          }
+
           const request = await fetch(
             `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/auth`,
             {
@@ -165,7 +189,7 @@ export const authConfig: NextAuthOptions = {
             id: response.data.user.id,
             name: response.data.user.name,
             roles: response.data.user.roles,
-            provider: response.data.user.provider,
+            verifiers: response.data.user.verifiers,
             image: "https://example.com/image.jpg",
           };
 
@@ -194,10 +218,15 @@ export const authConfig: NextAuthOptions = {
         token.roles = user.roles;
         token.picture = user.image;
         token.name = user.name;
-        token.provider = user.provider;
+        token.verifiers = user.verifiers;
       }
       if (trigger === "update" && session) {
-        token.picture = session.imageUrl;
+        console.log("Session in update:", session);
+        token.accessToken = session.accessToken;
+        token.email = session.user?.email;
+        token.name = session.user?.name;
+        token.roles = session.user?.roles;
+        token.provider = session.user?.provider;
       }
       return token;
     },
@@ -210,7 +239,7 @@ export const authConfig: NextAuthOptions = {
           name: token.name || "",
           image: token.picture || "",
           roles: token.roles,
-          provider: token.provider,
+          verifiers: token.verifiers,
         };
       }
       return session;

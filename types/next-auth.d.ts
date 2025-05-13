@@ -8,7 +8,7 @@ declare module "next-auth" {
     email: string | null;
     roles: RoleType[];
     accessToken: string;
-    provider: ProviderType;
+    verifiers: Verifier[];
   }
 
   interface Session {
@@ -24,6 +24,6 @@ declare module "next-auth/jwt" {
     accessToken: string;
     roles: RoleType[];
     isVerified: boolean;
-    provider: ProviderType;
+    verifiers: Verifier[];
   }
 }

@@ -16,7 +16,7 @@ const CopySecret = ({ secret }: CopySecretProps) => {
   };
   return (
     <div className="flex flex-row items-center justify-between w-full bg-bgtext-900 rounded-lg p-4">
-      <p className="text-bgtext-100 text-base font-inter font-medium">
+      <p className="text-bgtext-100 text-base font-inter tracking-wider font-medium">
         {secret}
       </p>
       <Button

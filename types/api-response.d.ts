@@ -8,6 +8,14 @@ export {};
 declare global {
   type RoleType = "USER" | "ADMIN";
   type ProviderType = "GOOGLE" | "TELEGRAM";
+
+  interface Verifier {
+    id: string;
+    type: ProviderType;
+    preferNotification: boolean;
+    createdAt: string;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -32,8 +40,32 @@ declare global {
         name: string;
         email: string | null;
         roles: RoleType[];
-        provider: ProviderType;
+        verifiers: Verifier[];
         isTwoFactorSetup: boolean;
+        authenticated: boolean;
+      };
+      access_token: string;
+    };
+  }
+
+  interface APIGenerate2FAResponseDTO extends APIBaseResponse {
+    data: {
+      userId: string;
+      secret: string;
+      qrCode: string;
+    };
+  }
+
+  interface APIBind2FAResponseDTO extends APIBaseResponse {
+    data: {
+      user: {
+        id: string;
+        name: string;
+        email: string;
+        roles: RoleType[];
+        verifiers: Verifier[];
+        isTwoFactorSetup: boolean;
+        subscription: unknown | null;
         authenticated: boolean;
       };
       access_token: string;
