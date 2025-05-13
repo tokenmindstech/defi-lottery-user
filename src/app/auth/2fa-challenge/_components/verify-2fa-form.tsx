@@ -20,11 +20,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMutation } from "@tanstack/react-query";
-import { fetchProxy } from "@/lib/utils";
+import { delay, fetchProxy } from "@/lib/utils";
 import { Spinner } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
 import { signIn, signOut } from "next-auth/react";
 import { AUTH_LOGIN_2FA } from "@/constant/common";
+import { useRouter } from "next/navigation";
 
 interface Verify2FAFormProps {
   token: string;
@@ -42,6 +43,7 @@ const formSchema = z.object({
 });
 
 const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -94,9 +96,12 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
         redirect: false,
       });
 
-      setTimeout(() => {
-        window.location.href = "/";
-      }, 2000);
+      await delay(2000);
+      if (!result.data.user.subscription) {
+        router.push("/auth/subscription-offers");
+      } else {
+        router.push("/");
+      }
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
