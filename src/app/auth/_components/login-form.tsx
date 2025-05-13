@@ -28,6 +28,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { delay } from "@/lib/utils";
+import { REQUIRED_2FA_SETUP } from "@/constant/common";
 
 const CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
@@ -108,18 +109,34 @@ const LoginForm = () => {
       jwtRequestedRef.current = true;
 
       const user = await web3Auth.getUserInfo();
-      console.log("User info:", user);
       const result = await signIn("credentials", {
         jwt: user.idToken,
         role: "USER",
         redirect: false,
       });
 
+      console.log("Result from signIn:", result);
+
       if (result?.error) {
-        toast.error(result.error || "Invalid credentials. Please try again.");
+        if (result.error.startsWith(REQUIRED_2FA_SETUP)) {
+          toast.success("2FA setup required. Redirecting...");
+          router.push(
+            `/auth/setup-2fa?token=${result.error.replace(
+              REQUIRED_2FA_SETUP,
+              ""
+            )}`
+          );
+        } else {
+          toast.error(result.error || "Invalid credentials. Please try again.");
+        }
       }
 
       if (result?.ok) {
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
         toast.success("Login successful!", { id: "login" });
         setIsLoading(false);
         delay(2000).then(() => {
@@ -194,22 +211,12 @@ const LoginForm = () => {
           if (web3Auth.connected) {
             await web3Auth.logout();
           }
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
           return;
         }
 
         // Handle JWT token from URL
         if (jwtToken) {
           await loginWithWeb3Auth(jwtToken, "jwt");
-          window.history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-          );
           return;
         }
 

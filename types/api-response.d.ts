@@ -30,9 +30,11 @@ declare global {
       user: {
         id: string;
         name: string;
-        email: string;
+        email: string | null;
         roles: RoleType[];
         provider: ProviderType;
+        isTwoFactorSetup: boolean;
+        authenticated: boolean;
       };
       access_token: string;
     };

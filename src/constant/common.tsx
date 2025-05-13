@@ -36,3 +36,7 @@ export const MENU_ITEMS: MenuItems[] = [
     href: "/support",
   },
 ];
+
+export const REQUIRED_2FA_SETUP = "required_2fa_setup";
+export const REQUIRED_AUTHENTICATION = "required_authentication";
+export const AUTH_ERROR = "auth_error";
