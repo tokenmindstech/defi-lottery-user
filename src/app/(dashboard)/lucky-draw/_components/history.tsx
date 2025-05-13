@@ -87,7 +87,7 @@ const HistoryDraw = () => {
                       {Array.from({ length: 5 }, (_, index) => (
                         <div
                           key={index}
-                          className="flex items-center justify-center w-8 h-8 bg-gradient-to-b from-linblue-start to-transparent rounded-full border border-bgtext-800"
+                          className="flex items-center justify-center w-8 h-8 bg-gradient-to-b from-linprimary-start to-transparent rounded-full border border-bgtext-800"
                         >
                           <span className="text-bgtext-100 text-lg font-bold">
                             {index + 1}
