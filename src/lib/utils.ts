@@ -52,12 +52,6 @@ export const fetchProxy = async ({
   }
 };
 
-/**
- * Parse custom headers from string format supporting multiple formats:
- * - "key1=value1,key2=value2" (comma-separated)
- * - "key1=value1&key2=value2" (ampersand-separated)
- * Handles URL-encoded values with + signs and special characters
- */
 export const parseCustomHeaders = (
   headersStr: string | null
 ): Record<string, string> => {
@@ -87,5 +81,41 @@ export const parseCustomHeaders = (
   } catch (error) {
     console.error("Error parsing custom headers:", error);
     return {};
+  }
+};
+
+export const getTimestamp = (date: Date): string => {
+  const now = new Date();
+  const timeDifference = now.getTime() - date.getTime();
+
+  // Define time intervals in milliseconds
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+  const week = 7 * day;
+  const month = 30 * day;
+  const year = 365 * day;
+
+  if (timeDifference < minute) {
+    const seconds = Math.floor(timeDifference / 1000);
+    return `${seconds} ${seconds === 1 ? "second" : "seconds"} ago`;
+  } else if (timeDifference < hour) {
+    const minutes = Math.floor(timeDifference / minute);
+    return `${minutes} ${minutes === 1 ? "minute" : "minutes"} ago`;
+  } else if (timeDifference < day) {
+    const hours = Math.floor(timeDifference / hour);
+    return `${hours} ${hours === 1 ? "hour" : "hours"} ago`;
+  } else if (timeDifference < week) {
+    const days = Math.floor(timeDifference / day);
+    return `${days} ${days === 1 ? "day" : "days"} ago`;
+  } else if (timeDifference < month) {
+    const weeks = Math.floor(timeDifference / week);
+    return `${weeks} ${weeks === 1 ? "week" : "weeks"} ago`;
+  } else if (timeDifference < year) {
+    const months = Math.floor(timeDifference / month);
+    return `${months} ${months === 1 ? "month" : "months"} ago`;
+  } else {
+    const years = Math.floor(timeDifference / year);
+    return `${years} ${years === 1 ? "year" : "years"} ago`;
   }
 };

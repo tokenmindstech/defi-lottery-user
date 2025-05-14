@@ -6,9 +6,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Bell } from "@phosphor-icons/react/dist/ssr";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import NotificationAllTab from "../notification/tabs/all";
+import NotificationUnreadTab from "../notification/tabs/unread";
+import NotificationReadTab from "../notification/tabs/read";
 
 const NotificationDropdown = () => {
   return (
@@ -18,7 +22,7 @@ const NotificationDropdown = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         sideOffset={20}
-        className="w-full min-w-xs max-w-sm bg-bgtext-900 border-1 border-bgtext-800 rounded-xl p-0"
+        className="w-full min-w-sm max-w-sm md:min-w-md md:max-w-md bg-bgtext-900 border-1 border-bgtext-800 rounded-xl p-0"
       >
         <DropdownMenuLabel className="text-bgtext-100 font-medium text-base mb-3 p-3 pb-0">
           Notification
@@ -32,20 +36,27 @@ const NotificationDropdown = () => {
               <TabsTrigger
                 key={idx}
                 value={item.value}
-                className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none text-bgtext-600 data-[state=active]:text-bgtext-100 border-0 data-[state=active]:border-b-2 border-linprimary-start rounded-none px-2"
+                className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none text-bgtext-600 data-[state=active]:text-bgtext-100 border-0 data-[state=active]:border-b-2 border-linprimary-start rounded-none px-2 cursor-pointer"
               >
                 {item.label}
+                {item.count !== "" && (
+                  <Badge
+                    variant="destructive"
+                    className="rounded-full text-xs border-0"
+                  >
+                    {item.count}
+                  </Badge>
+                )}
               </TabsTrigger>
             ))}
           </TabsList>
-          <TabsContent value="account">
-            Make changes to your account here.
-          </TabsContent>
-          <TabsContent value="password">Change your password here.</TabsContent>
+          <NotificationAllTab />
+          <NotificationUnreadTab />
+          <NotificationReadTab />
         </Tabs>
 
         <Link href="/notifications">
-          <p className="text-bgtext-100 text-sm text-center border-0 border-t-1 p-2 border-bgtext-800 hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer">
+          <p className="text-bgtext-100 text-sm text-center border-0 border-t-1 py-2 border-bgtext-800 hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer">
             View all
           </p>
         </Link>
