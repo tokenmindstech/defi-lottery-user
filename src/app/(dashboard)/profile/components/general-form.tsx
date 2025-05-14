@@ -89,7 +89,7 @@ const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
     setIsEditing(false);
   };
   return (
-    <div className="flex flex-col space-y-5">
+    <div className="flex flex-col space-y-5 p-2">
       <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
         Profile
       </h2>
