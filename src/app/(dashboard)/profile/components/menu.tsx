@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import GeneralForm from "./general-form";
 import MembershipForm from "./membership-form";
 import PaymentDetailsForm from "./payment-details";
+import AccountSetting from "./account-setting";
 
 interface ProfileMenuProps {
   isEditing: boolean;
@@ -46,16 +47,7 @@ const ProfileMenu = ({ isEditing, setIsEditing }: ProfileMenuProps) => {
         )}
         {activeTab === "membership" && <MembershipForm />}
         {activeTab === "payment" && <PaymentDetailsForm />}
-        {activeTab === "account" && (
-          <div className="flex flex-col space-y-5">
-            <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
-              Account
-            </h2>
-            <p className="text-base text-bgtext-600 font-inter">
-              This is the account tab content.
-            </p>
-          </div>
-        )}
+        {activeTab === "account" && <AccountSetting />}
       </div>
     </div>
   );
