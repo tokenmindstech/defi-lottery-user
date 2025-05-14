@@ -4,10 +4,14 @@ import React from "react";
 import NotificationItem from "../item";
 import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
-const NotificationAllTab = () => {
+interface NotificationUnreadTabProps {
+  handleOpen?: () => void;
+}
+
+const NotificationUnreadTab = ({ handleOpen }: NotificationUnreadTabProps) => {
   return (
     <TabsContent
-      value={NOTIFICATION_MENU_ITEMS[0].value}
+      value={NOTIFICATION_MENU_ITEMS[1].value}
       className="bg-transparent text-bgtext-100 font-inter"
     >
       <NotificationItem
@@ -16,6 +20,7 @@ const NotificationAllTab = () => {
         description="Secure your integration with the new token management system to safeguard your API keys."
         isRead={false}
         time={new Date(Date.now() - 0.55 * 60 * 1000)}
+        handleOpen={handleOpen}
         href="/notifications/id"
       />
       <NotificationItem
@@ -24,15 +29,7 @@ const NotificationAllTab = () => {
         description="Secure your integration with the new token management system to safeguard your API keys."
         isRead={false}
         time={new Date(Date.now() - 25 * 60 * 60 * 1000)}
-        isLastItem={false}
-        href="/notifications/id"
-      />
-      <NotificationItem
-        Icon={Info}
-        title="Your account is pending verification."
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={true}
-        time={new Date(Date.now() - 25 * 60 * 60 * 1000)}
+        handleOpen={handleOpen}
         isLastItem={true}
         href="/notifications/id"
       />
@@ -40,4 +37,4 @@ const NotificationAllTab = () => {
   );
 };
 
-export default NotificationAllTab;
+export default NotificationUnreadTab;

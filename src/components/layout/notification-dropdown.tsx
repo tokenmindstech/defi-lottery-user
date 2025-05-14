@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +12,18 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import NotificationAllTab from "../notification/tabs/all";
-import NotificationUnreadTab from "../notification/tabs/unread";
-import NotificationReadTab from "../notification/tabs/read";
+import NotificationAllTab from "@/app/(dashboard)/notifications/components/tabs/all";
+import NotificationReadTab from "@/app/(dashboard)/notifications/components/tabs/read";
+import NotificationUnreadTab from "@/app/(dashboard)/notifications/components/tabs/unread";
 
 const NotificationDropdown = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-800 rounded-full items-center justify-center flex cursor-pointer">
         <Bell weight="regular" className="text-bgtext-100 size-5" />
       </DropdownMenuTrigger>
@@ -50,12 +57,12 @@ const NotificationDropdown = () => {
               </TabsTrigger>
             ))}
           </TabsList>
-          <NotificationAllTab />
-          <NotificationUnreadTab />
-          <NotificationReadTab />
+          <NotificationAllTab handleOpen={handleOpen} />
+          <NotificationUnreadTab handleOpen={handleOpen} />
+          <NotificationReadTab handleOpen={handleOpen} />
         </Tabs>
 
-        <Link href="/notifications">
+        <Link href="/notifications" onClick={() => setOpen(false)}>
           <p className="text-bgtext-100 text-sm text-center border-0 border-t-1 py-2 border-bgtext-800 hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer">
             View all
           </p>

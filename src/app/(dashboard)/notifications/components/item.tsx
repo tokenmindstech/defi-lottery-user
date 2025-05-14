@@ -9,6 +9,7 @@ interface NotificationItemProps {
   time: Date;
   isRead: boolean;
   href: string;
+  handleOpen?: () => void;
   isLastItem?: boolean; // New prop to determine if this is the last item
 }
 
@@ -19,12 +20,14 @@ const NotificationItem = ({
   href,
   time,
   title,
+  handleOpen,
   isLastItem = false, // Default to false
 }: NotificationItemProps) => {
   return (
     <Link
       href={href}
-      className={`w-full grid grid-cols-6 py-2 ${
+      onClick={handleOpen}
+      className={`w-full grid grid-cols-6 md:grid-cols-8 lg:grid-cols-12 py-2 ${
         !isLastItem ? "border-b-1 border-bgtext-800" : ""
       } hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer`}
     >
@@ -34,7 +37,7 @@ const NotificationItem = ({
         </div>
       </div>
 
-      <div className="col-span-5 flex flex-col space-y-2">
+      <div className="col-span-5 md:col-span-7 lg:col-span-11 flex flex-col space-y-2">
         <div className="flex flex-row items-center justify-between pr-5">
           <h5 className="text-bgtext-100 font-inter font-medium text-sm">
             {title}

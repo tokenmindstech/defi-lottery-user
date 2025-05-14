@@ -4,7 +4,11 @@ import React from "react";
 import NotificationItem from "../item";
 import { Ticket } from "@phosphor-icons/react/dist/ssr";
 
-const NotificationReadTab = () => {
+interface NotificationReadTabProps {
+  handleOpen?: () => void;
+}
+
+const NotificationReadTab = ({ handleOpen }: NotificationReadTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[2].value}
@@ -16,7 +20,8 @@ const NotificationReadTab = () => {
         description="Secure your integration with the new token management system to safeguard your API keys."
         isRead={true}
         time={new Date(Date.now() - 30 * 60 * 1000)}
-        href="/notifications/id"
+        href="/notifications"
+        handleOpen={handleOpen}
       />
       <NotificationItem
         Icon={Ticket}
@@ -24,7 +29,8 @@ const NotificationReadTab = () => {
         description="Secure your integration with the new token management system to safeguard your API keys."
         isRead={true}
         time={new Date(Date.now() - 2 * 60 * 60 * 1000)}
-        href="/notifications/id"
+        href="/notifications"
+        handleOpen={handleOpen}
       />
       <NotificationItem
         Icon={Ticket}
@@ -32,7 +38,8 @@ const NotificationReadTab = () => {
         description="Secure your integration with the new token management system to safeguard your API keys."
         isRead={true}
         time={new Date(Date.now() - 79 * 60 * 60 * 1000)}
-        href="/notifications/id"
+        href="/notifications"
+        handleOpen={handleOpen}
         isLastItem={true}
       />
     </TabsContent>
