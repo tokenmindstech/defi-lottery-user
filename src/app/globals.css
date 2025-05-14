@@ -123,6 +123,8 @@
   --color-linblack-end: #161616;
   --color-lincyan-start: #7fe5ff;
   --color-lincyan-end: #0fa7eb;
+  --color-linviolet-start: #4a19c0;
+  --color-linviolet-end: #a45cff;
 }
 
 :root {
