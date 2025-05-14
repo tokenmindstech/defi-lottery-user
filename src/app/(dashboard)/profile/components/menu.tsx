@@ -6,7 +6,12 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import GeneralForm from "./general-form";
 
-const ProfileMenu = () => {
+interface ProfileMenuProps {
+  isEditing: boolean;
+  setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const ProfileMenu = ({ isEditing, setIsEditing }: ProfileMenuProps) => {
   const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
 
   return (
@@ -31,7 +36,9 @@ const ProfileMenu = () => {
       </div>
 
       <div className="flex flex-col col-span-3 lg:col-span-2 space-y-5 bg-bgtext-900 rounded-xl px-4 py-4">
-        {activeTab === "general" && <GeneralForm />}
+        {activeTab === "general" && (
+          <GeneralForm isEditing={isEditing} setIsEditing={setIsEditing} />
+        )}
         {activeTab === "membership" && (
           <div className="flex flex-col space-y-5">
             <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">

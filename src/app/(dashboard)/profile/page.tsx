@@ -1,8 +1,12 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import ProfileMenu from "./components/menu";
+import { useState } from "react";
 
 const ProfilePage = () => {
+  const [isEditing, setIsEditing] = useState(false);
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -31,14 +35,17 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <Button className="w-fit bg-bgtext-800 border border-bgtext-700 hover:bg-bgtext-700 rounded-lg cursor-pointer">
+        <Button
+          onClick={() => setIsEditing(!isEditing)}
+          className="w-fit bg-bgtext-800 border border-bgtext-700 hover:bg-bgtext-700 rounded-lg cursor-pointer"
+        >
           <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
             Edit Profile
           </p>
         </Button>
       </div>
 
-      <ProfileMenu />
+      <ProfileMenu isEditing={isEditing} setIsEditing={setIsEditing} />
     </section>
   );
 };
