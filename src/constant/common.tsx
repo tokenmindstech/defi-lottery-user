@@ -1,7 +1,14 @@
+export type ProfileMenuType = "general" | "membership" | "payment" | "account";
+
 interface MenuItems {
   icon: string;
   title: string;
   href: string;
+}
+
+interface ProfileMenuItems {
+  value: ProfileMenuType;
+  label: string;
 }
 
 export const MENU_ITEMS: MenuItems[] = [
@@ -59,3 +66,22 @@ export const REQUIRED_2FA_SETUP = "required_2fa_setup";
 export const REQUIRED_AUTHENTICATION = "required_authentication";
 export const AUTH_ERROR = "auth_error";
 export const AUTH_LOGIN_2FA = "2fa";
+
+export const PROFILE_MENU_ITEMS: ProfileMenuItems[] = [
+  {
+    value: "general",
+    label: "General Settings",
+  },
+  {
+    value: "membership",
+    label: "Membership",
+  },
+  {
+    value: "payment",
+    label: "Payment Details",
+  },
+  {
+    value: "account",
+    label: "Account Settings",
+  },
+];

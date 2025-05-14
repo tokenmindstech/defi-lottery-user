@@ -1,7 +1,13 @@
 import React from "react";
 
 const SupportPage = () => {
-  return <div className="text-bgtext-100">SupportPage</div>;
+  return (
+    <section className="flex flex-col w-full h-full space-y-10">
+      <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
+        Support
+      </h2>
+    </section>
+  );
 };
 
 export default SupportPage;
