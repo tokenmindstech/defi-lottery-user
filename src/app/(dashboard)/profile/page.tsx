@@ -4,9 +4,29 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import ProfileMenu from "./components/menu";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProxy } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
+
+  const { data: userSession } = useSession();
+
+  const { data } = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () =>
+      fetchProxy({
+        url: "user/profile",
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!userSession,
+  });
+
+  console.log("userSession", userSession);
+  console.log("data", data);
+
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">

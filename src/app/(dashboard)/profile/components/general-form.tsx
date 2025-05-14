@@ -13,7 +13,6 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { PasswordInput } from "@/components/ui/password-input";
 import { Separator } from "@/components/ui/separator";
 import { EnvelopeSimple, TelegramLogo } from "@phosphor-icons/react/dist/ssr";
 import { Switch } from "@/components/ui/switch";
@@ -29,33 +28,7 @@ const formSchema = z.object({
     .refine((val) => !val || z.string().email().safeParse(val).success, {
       message: "Invalid email address",
     }),
-  phone: z
-    .string()
-    .optional()
-    .refine(
-      (val) =>
-        !val ||
-        /^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/.test(val),
-      { message: "Invalid phone number format" }
-    ),
-  password: z
-    .string()
-    .optional()
-    .refine((val) => !val || val.length >= 8, {
-      message: "Password must be at least 8 characters",
-    })
-    .refine((val) => !val || /[A-Z]/.test(val), {
-      message: "Password must contain at least one uppercase letter",
-    })
-    .refine((val) => !val || /[a-z]/.test(val), {
-      message: "Password must contain at least one lowercase letter",
-    })
-    .refine((val) => !val || /[0-9]/.test(val), {
-      message: "Password must contain at least one number",
-    })
-    .refine((val) => !val || /[^A-Za-z0-9]/.test(val), {
-      message: "Password must contain at least one special character",
-    }),
+
   notificationPreferences: z.enum(["TELEGRAM", "EMAIL"]),
   twoFactorAuth: z.boolean(),
 });
@@ -71,8 +44,6 @@ const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
     defaultValues: {
       telegramId: "",
       email: "",
-      phone: "",
-      password: "",
       notificationPreferences: "TELEGRAM",
       twoFactorAuth: true,
     },
@@ -122,28 +93,6 @@ const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
             />
 
             <FormField
-              name="phone"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="col-span-2 md:col-span-1">
-                  <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                    Phone Number
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Phone Number"
-                      disabled={!isEditing}
-                      className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
               name="email"
               control={form.control}
               render={({ field }) => (
@@ -155,27 +104,6 @@ const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
                     <Input
                       type="email"
                       placeholder="Email"
-                      disabled={!isEditing}
-                      className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="col-span-2 md:col-span-1">
-                  <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                    Password
-                  </FormLabel>
-                  <FormControl>
-                    <PasswordInput
-                      placeholder="Password"
                       disabled={!isEditing}
                       className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
                       {...field}
