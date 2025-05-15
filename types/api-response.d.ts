@@ -86,4 +86,19 @@ declare global {
       access_token: string;
     };
   }
+
+  interface APIGetUserProfileResponseDTO extends APIBaseResponse {
+    data: {
+      id: string;
+      email: string;
+      name: string;
+      roles: RoleType[];
+      createdAt: string;
+      updatedAt: string;
+      twoFactorAuthId: string | null;
+      subscriptionId: string | null;
+      verifiers: Verifier[];
+      subscription: unknown | null;
+    };
+  }
 }
