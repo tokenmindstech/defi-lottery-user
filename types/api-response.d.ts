@@ -6,7 +6,6 @@
 export {};
 
 declare global {
-  type RoleType = "USER" | "ADMIN";
   type ProviderType = "GOOGLE" | "TELEGRAM";
 
   interface Verifier {
