@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Trash } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
+import AccountDeletionForm from "./account-deletion-form";
 
 const AccountSetting = () => {
   return (
@@ -21,10 +20,7 @@ const AccountSetting = () => {
           </p>
         </div>
 
-        <Button variant="destructive" className="cursor-pointer">
-          Delete My Account
-          <Trash className="size-5 text-bgtext-100" />
-        </Button>
+        <AccountDeletionForm />
       </div>
     </div>
   );
