@@ -1,4 +1,7 @@
+import { authConfig } from "@/config/auth";
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import { Fragment } from "react";
 
 export const metadata: Metadata = {
@@ -59,10 +62,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authConfig);
+  const isAgent = session?.user?.roles?.includes("AGENT");
+
+  if (!isAgent) {
+    redirect("/no-access");
+  }
   return <Fragment>{children}</Fragment>;
 }
