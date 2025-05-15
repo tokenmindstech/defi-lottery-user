@@ -1,97 +1,105 @@
 "use client";
 
+import CircleShadowIcon from "@/components/icons/circle-shadow";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Copy,
   DollarSign,
+  Link,
   TextIcon as Telegram,
+  TrendingDown,
   TrendingUp,
+  User,
   Users,
+  Wallet,
 } from "lucide-react";
+import PerformanceCard from "./performance";
 
 const AgentDashboard = () => {
   return (
     <section className="flex flex-col w-full h-full space-y-6">
-      <div className="flex flex-col space-y-2">
-        <h2 className="text-3xl font-medium text-bgtext-100 font-inter">
+      <div className="flex flex-row  justify-between items-center">
+        <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
           Welcome Alex!
         </h2>
-        <div className="flex justify-between">
-          <div className="flex items-center space-x-2">
-            <p className="text-sm text-bgtext-400">Agent ID</p>
-            <p className="text-sm text-bgtext-100">ID : 123123</p>
+
+        <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-8 md:gap-16">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm text-bgtext-600 font-inter">Agent ID</p>
+            <p className="text-sm text-bgtext-100 font-inter">ID : 123123</p>
           </div>
-          <div className="flex items-center space-x-2">
-            <p className="text-sm text-bgtext-400">Joined Date</p>
-            <p className="text-sm text-bgtext-100">August 2025</p>
+          <div className="flex  flex-col space-y-1">
+            <p className="text-sm text-bgtext-600 font-inter">Joined Date</p>
+            <p className="text-sm text-bgtext-100 font-inter">August 2025</p>
           </div>
         </div>
       </div>
 
       {/* Copy, Share, and Earn Section */}
-      <div className="bg-bgtext-900 rounded-xl p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-medium text-bgtext-100">
-            Copy, Share, and Earn
-          </h3>
-          <Button className="bg-linprimary-start hover:bg-linprimary-end text-white flex items-center gap-2 rounded-lg">
+      <Card className="bg-bgtext-950 border border-bgtext-800">
+        <CardHeader className="flex flex-row items-center justify-between w-full">
+          <div className="flex flex-col">
+            <CardTitle className="text-bgtext-100 font-inter text-xl">
+              Copy, Share, and Earn
+            </CardTitle>
+          </div>
+          {/* <Button className="bg-linprimary-start hover:bg-linprimary-end text-white flex items-center gap-2 rounded-lg">
             <Telegram className="h-4 w-4" />
             <span>Share on Telegram</span>
-          </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col space-y-2">
-            <p className="text-sm text-bgtext-400">Referral Link</p>
-            <div className="flex items-center bg-bgtext-800 rounded-lg p-3">
-              <Input
-                value="https://example.com/ref123"
-                readOnly
-                className="border-none bg-transparent text-bgtext-100"
-              />
-              <Button variant="ghost" className="p-1">
-                <Copy className="h-5 w-5 text-bgtext-100" />
+          </Button> */}
+        </CardHeader>
+
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2 bg-bgtext-900 border border-bgtext-800 rounded-lg p-5">
+            <p className="text-sm text-bgtext-500">Referral Link</p>
+            <div className="flex items-center justify-between">
+              <div className="text-bgtext-100 font-inter">
+                https://example.com/ref123
+              </div>
+              <Button className="flex p-1.5 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end cursor-pointer hover:bg-gradient-to-t">
+                <Link className="rotate-45 text-bgtext-100" />
               </Button>
             </div>
           </div>
-          <div className="flex flex-col space-y-2">
-            <p className="text-sm text-bgtext-400">Referral Code</p>
-            <div className="flex items-center bg-bgtext-800 rounded-lg p-3">
-              <Input
-                value="DKHIKX123"
-                readOnly
-                className="border-none bg-transparent text-bgtext-100"
-              />
-              <Button variant="ghost" className="p-1">
-                <Copy className="h-5 w-5 text-bgtext-100" />
+
+          <div className="flex flex-col gap-2 bg-bgtext-900 border border-bgtext-800 rounded-lg p-5">
+            <p className="text-sm text-bgtext-500">Referral Code</p>
+            <div className="flex items-center justify-between">
+              <div className="text-bgtext-100 font-inter">DKHIKX123</div>
+              <Button className="flex p-1.5 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end cursor-pointer hover:bg-gradient-to-t">
+                <Link className="rotate-45 text-bgtext-100" />
               </Button>
             </div>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Performance Overview */}
-      <div className="bg-bgtext-900 rounded-xl p-4">
-        <h3 className="text-xl font-medium text-bgtext-100 mb-4">
-          Performance Overview
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Card className="bg-bgtext-950 border border-bgtext-800">
+        <CardHeader className="flex flex-row items-center justify-between w-full">
+          <CardTitle className="text-bgtext-100 font-inter text-xl font-semibold">
+            Performance Overview
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <PerformanceCard
-            icon={<DollarSign className="h-5 w-5" />}
+            icon={<Wallet className="h-5 w-5" />}
             title="Total Earning"
             value="$4,589"
             trend="+7.25%"
             trendUp={true}
-            bgGradient="from-linprimary-start to-linprimary-end"
+            variant="checkerboard"
           />
           <PerformanceCard
-            icon={<Users className="h-5 w-5" />}
+            icon={<User className="h-5 w-5" />}
             title="Total Sign Up"
             value="245"
             trend="+1.25%"
             trendUp={false}
-            bgGradient="from-bgtext-800 to-bgtext-900"
           />
           <PerformanceCard
             icon={<TrendingUp className="h-5 w-5" />}
@@ -99,10 +107,9 @@ const AgentDashboard = () => {
             value="$310"
             trend="+7.25%"
             trendUp={true}
-            bgGradient="from-bgtext-800 to-bgtext-900"
           />
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -303,46 +310,6 @@ const AgentDashboard = () => {
         </div>
       </div>
     </section>
-  );
-};
-
-// ...existing code...
-
-interface PerformanceCardProps {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  trend: string;
-  trendUp: boolean;
-  bgGradient: string;
-}
-
-const PerformanceCard = ({
-  icon,
-  title,
-  value,
-  trend,
-  trendUp,
-  bgGradient,
-}: PerformanceCardProps) => {
-  return (
-    <div className={`bg-gradient-to-br ${bgGradient} p-4 rounded-xl`}>
-      <div className="flex items-center justify-between mb-4">
-        <div className="bg-bgtext-800/30 p-2 rounded-md">{icon}</div>
-        <div
-          className={`flex items-center space-x-1 text-xs ${
-            trendUp ? "text-success-500" : "text-error-500"
-          }`}
-        >
-          <span>{trendUp ? "↑" : "↓"}</span>
-          <span>{trend}</span>
-        </div>
-      </div>
-      <div className="space-y-1">
-        <p className="text-sm text-bgtext-400">{title}</p>
-        <p className="text-2xl font-bold text-bgtext-100">{value}</p>
-      </div>
-    </div>
   );
 };
 
