@@ -29,22 +29,34 @@ const formSchema = z.object({
       message: "Invalid email address",
     }),
 
-  notificationPreferences: z.enum(["TELEGRAM", "EMAIL"]),
+  notificationPreferences: z.enum(["TELEGRAM", "GOOGLE"]),
   twoFactorAuth: z.boolean(),
 });
 
 interface GeneralFormProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  verifiers: Verifier[];
 }
 
-const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
+const GeneralForm = ({
+  isEditing,
+  setIsEditing,
+  verifiers,
+}: GeneralFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      telegramId: "",
-      email: "",
-      notificationPreferences: "TELEGRAM",
+      telegramId: verifiers.find((verifier) => verifier.type === "TELEGRAM")
+        ?.id,
+      email: verifiers.find((verifier) => verifier.type === "GOOGLE")?.id,
+      notificationPreferences: (() => {
+        const preferredVerifier = verifiers.find(
+          (verifier) => verifier.preferNotification
+        );
+        if (preferredVerifier?.type === "GOOGLE") return "GOOGLE";
+        return "TELEGRAM";
+      })(),
       twoFactorAuth: true,
     },
   });
@@ -123,66 +135,70 @@ const GeneralForm = ({ isEditing, setIsEditing }: GeneralFormProps) => {
             </h2>
 
             <div className="flex flex-row items-center justify-start space-x-10">
-              <FormField
-                name="notificationPreferences"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-2">
-                    <div className="flex flex-row items-center space-x-2">
-                      <div className="bg-bgtext-100 rounded-full p-1">
-                        <TelegramLogo className="text-bgtext-900 size-4" />
+              {verifiers.some((verifier) => verifier.type === "TELEGRAM") && (
+                <FormField
+                  name="notificationPreferences"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <div className="flex flex-row items-center space-x-2">
+                        <div className="bg-bgtext-100 rounded-full p-1">
+                          <TelegramLogo className="text-bgtext-900 size-4" />
+                        </div>
+                        <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
+                          Telegram
+                        </FormLabel>
                       </div>
-                      <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                        Telegram
-                      </FormLabel>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        id="telegram"
-                        checked={field.value === "TELEGRAM"}
-                        disabled={!isEditing}
-                        className={cn(
-                          "w-8 h-5 cursor-pointer data-[state=checked]:bg-linprimary-start data-[state=unchecked]:bg-linblack-start",
-                          !isEditing && "cursor-not-allowed opacity-70"
-                        )}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "TELEGRAM" : "EMAIL")
-                        }
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                name="notificationPreferences"
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-2">
-                    <div className="flex flex-row items-center space-x-2">
-                      <div className="bg-bgtext-100 rounded-full p-1">
-                        <EnvelopeSimple className="text-bgtext-900 size-4" />
+                      <FormControl>
+                        <Switch
+                          id="telegram"
+                          checked={field.value === "TELEGRAM"}
+                          disabled={!isEditing}
+                          className={cn(
+                            "w-8 h-5 cursor-pointer data-[state=checked]:bg-linprimary-start data-[state=unchecked]:bg-linblack-start",
+                            !isEditing && "cursor-not-allowed opacity-70"
+                          )}
+                          onCheckedChange={(checked) =>
+                            field.onChange(checked ? "TELEGRAM" : "GOOGLE")
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
+              {verifiers.some((verifier) => verifier.type === "GOOGLE") && (
+                <FormField
+                  name="notificationPreferences"
+                  control={form.control}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-2">
+                      <div className="flex flex-row items-center space-x-2">
+                        <div className="bg-bgtext-100 rounded-full p-1">
+                          <EnvelopeSimple className="text-bgtext-900 size-4" />
+                        </div>
+                        <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
+                          Email
+                        </FormLabel>
                       </div>
-                      <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                        Email
-                      </FormLabel>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        id="email"
-                        checked={field.value === "EMAIL"}
-                        disabled={!isEditing}
-                        className={cn(
-                          "w-8 h-5 cursor-pointer data-[state=checked]:bg-linprimary-start data-[state=unchecked]:bg-linblack-start",
-                          !isEditing && "cursor-not-allowed opacity-70"
-                        )}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "EMAIL" : "TELEGRAM")
-                        }
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                      <FormControl>
+                        <Switch
+                          id="email"
+                          checked={field.value === "GOOGLE"}
+                          disabled={!isEditing}
+                          className={cn(
+                            "w-8 h-5 cursor-pointer data-[state=checked]:bg-linprimary-start data-[state=unchecked]:bg-linblack-start",
+                            !isEditing && "cursor-not-allowed opacity-70"
+                          )}
+                          onCheckedChange={(checked) =>
+                            field.onChange(checked ? "GOOGLE" : "TELEGRAM")
+                          }
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
           </div>
 

@@ -12,9 +12,14 @@ import AccountSetting from "./account-setting";
 interface ProfileMenuProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  verifiers: Verifier[];
 }
 
-const ProfileMenu = ({ isEditing, setIsEditing }: ProfileMenuProps) => {
+const ProfileMenu = ({
+  isEditing,
+  setIsEditing,
+  verifiers,
+}: ProfileMenuProps) => {
   const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
 
   return (
@@ -43,7 +48,11 @@ const ProfileMenu = ({ isEditing, setIsEditing }: ProfileMenuProps) => {
 
       <div className="flex flex-col col-span-3 lg:col-span-2 space-y-5 bg-bgtext-950 rounded-xl px-4 py-4">
         {activeTab === "general" && (
-          <GeneralForm isEditing={isEditing} setIsEditing={setIsEditing} />
+          <GeneralForm
+            verifiers={verifiers}
+            isEditing={isEditing}
+            setIsEditing={setIsEditing}
+          />
         )}
         {activeTab === "membership" && <MembershipForm />}
         {activeTab === "payment" && <PaymentDetailsForm />}

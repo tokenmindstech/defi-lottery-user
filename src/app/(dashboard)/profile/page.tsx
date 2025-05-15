@@ -71,7 +71,11 @@ const ProfilePage = () => {
               </Button>
             </div>
 
-            <ProfileMenu isEditing={isEditing} setIsEditing={setIsEditing} />
+            <ProfileMenu
+              verifiers={userData.data.verifiers}
+              isEditing={isEditing}
+              setIsEditing={setIsEditing}
+            />
           </Fragment>
         )
       )}
