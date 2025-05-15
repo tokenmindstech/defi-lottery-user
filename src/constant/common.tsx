@@ -61,14 +61,24 @@ export const AGENT_MENU_ITEMS: MenuItems[] = [
     href: "/",
   },
   {
-    icon: "lucky-draw",
+    icon: "referral",
     title: "My Referrals",
     href: "/referrals",
   },
   {
-    icon: "lucky-draw",
+    icon: "commission",
     title: "Commissions",
     href: "/commissions",
+  },
+  {
+    icon: "lucky-draw",
+    title: "Lucky Draw",
+    href: "/lucky-draw",
+  },
+  {
+    icon: "perks",
+    title: "Perks",
+    href: "/perks",
   },
   {
     icon: "my-profile",
@@ -81,6 +91,7 @@ export const AGENT_MENU_ITEMS: MenuItems[] = [
     href: "/support",
   },
 ];
+
 export const USER_MENU_ITEMS: MenuItems[] = [
   {
     icon: "dashboard",
@@ -136,7 +147,6 @@ export const REQUIRED_2FA_SETUP = "required_2fa_setup";
 export const REQUIRED_AUTHENTICATION = "required_authentication";
 export const AUTH_ERROR = "auth_error";
 export const AUTH_LOGIN_2FA = "2fa";
-
 export const PROFILE_MENU_ITEMS: ProfileMenuItems[] = [
   {
     value: "general",

@@ -7,6 +7,8 @@ import LuckyDrawIcon from "./lucky-draw";
 import MyProfileIcon from "./my-profile";
 import PerksIcon from "./perks";
 import SupportIcon from "./support";
+import ReferralIcon from "./referral";
+import ComissionIcon from "./commission";
 
 interface RenderIconProps {
   icon: string;
@@ -22,6 +24,8 @@ const RenderIcon = ({ icon, className }: RenderIconProps) => {
     "my-profile": MyProfileIcon,
     perks: PerksIcon,
     support: SupportIcon,
+    referral: ReferralIcon,
+    commission: ComissionIcon,
   };
 
   const IconComponent = icons[icon];

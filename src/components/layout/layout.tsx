@@ -8,7 +8,6 @@ const Layout = async ({ children }: PropsWithChildren) => {
   const session = await getServerSession(authConfig);
   const isAgent = session?.user?.roles?.includes("AGENT");
 
-  console.log("session", session);
   return (
     <div className="flex flex-row w-full h-full">
       <DesktopSidebarLayout isAgent={isAgent} />

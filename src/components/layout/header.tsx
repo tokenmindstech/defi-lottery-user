@@ -6,13 +6,17 @@ import MobileSidebarLayout from "./mobile-sidebar";
 import NotificationDropdown from "./notification-dropdown";
 import { Button } from "../ui/button";
 
-const HeaderLayout = () => {
+interface HeaderLayoutProps {
+  isAgent?: boolean;
+}
+
+const HeaderLayout = ({ isAgent }: HeaderLayoutProps) => {
   return (
     <div className="flex sticky flex-row h-[10vh] w-full items-center justify-between">
       <div className="absolute h-[10vh] w-full border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
       <div className="flex w-full h-full p-5">
         <div className="flex z-20 flex-row items-center space-x-3 w-full">
-          <MobileSidebarLayout />
+          <MobileSidebarLayout isAgent={isAgent} />
           <Input
             type="text"
             placeholder="Search..."
