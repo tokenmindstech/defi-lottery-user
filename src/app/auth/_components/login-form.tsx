@@ -70,7 +70,6 @@ const LoginForm = () => {
           toast.success("Telegram binding required. Redirecting...");
           web3Auth.clearCache();
           await web3Auth.logout();
-          console.log("Logout successful");
           await delay(2000);
           router.push(
             `/auth/telegram-bind?jwt=${result.error.replace(

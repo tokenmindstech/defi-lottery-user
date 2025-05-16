@@ -101,10 +101,6 @@ const GeneralForm = ({
   >({
     mutationKey: ["update-account"],
     mutationFn: async ({ name, verifiers }) => {
-      console.log("Updating account with:", {
-        name,
-        verifiers,
-      });
       return await fetchProxy({
         method: "PATCH",
         url: "user/profile",

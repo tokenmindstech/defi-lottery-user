@@ -145,7 +145,6 @@ const BindTelegramForm = () => {
 
       try {
         const jwtToken = searchParams.get("token");
-        console.log("JWT Token:", jwtToken);
 
         // Handle JWT token from URL
         if (jwtToken) {
