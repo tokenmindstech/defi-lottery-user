@@ -16,7 +16,7 @@ const AgentDashboard = () => {
       .then(() => {
         toast.success("Copied to clipboard!");
       })
-      .catch((err) => {
+      .catch(() => {
         toast.success("Failed to copy!");
       });
   };
