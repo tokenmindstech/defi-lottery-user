@@ -1,6 +1,6 @@
 import DashboardLottery from "./lottery";
 import DashboardOngoingUpcoming from "./ongoing-upcoming";
-import DashboardStatistic from "./statistic";
+import DashboardStatistic from "./user-statistic";
 
 const UserDashboard = () => {
   return (
