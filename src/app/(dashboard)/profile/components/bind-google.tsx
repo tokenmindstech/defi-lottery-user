@@ -18,19 +18,12 @@ const BindGoogle = () => {
       }
 
       web3Auth.clearCache();
-      console.log("D");
       await web3Auth.logout();
-      console.log("E");
 
-      const web3AuthProvider = await web3Auth.connectTo(WALLET_ADAPTERS.AUTH, {
+      await web3Auth.connectTo(WALLET_ADAPTERS.AUTH, {
         loginProvider: "google",
         redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/profile?binding=true&provider=google`,
       });
-      console.log("F");
-      if (web3AuthProvider) {
-        console.log("Connected to Web3Auth provider:", web3AuthProvider);
-      }
-      console.log("G");
     } catch (error) {
       console.error("Login failed:", error);
       setIsLoading(false);

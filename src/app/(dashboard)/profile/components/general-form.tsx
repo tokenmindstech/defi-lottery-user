@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -20,7 +20,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import BindGoogle from "./bind-google";
-import { AuthUserInfo } from "@web3auth/auth-adapter";
 
 const formSchema = z.object({
   telegramId: z.string().optional(),
@@ -38,45 +37,82 @@ const formSchema = z.object({
 interface GeneralFormProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  verifiers: Verifier[];
-  userInfo?: Partial<AuthUserInfo>;
+  userInfoResponse: UserInfoResponse;
 }
 
 const GeneralForm = ({
   isEditing,
   setIsEditing,
-  verifiers,
-  userInfo,
+  userInfoResponse,
 }: GeneralFormProps) => {
+  // Track the user info as state to force re-renders
+  const [userInfo, setUserInfo] = useState(userInfoResponse);
+
+  // Update local state when props change
+  useEffect(() => {
+    setUserInfo(userInfoResponse);
+  }, [userInfoResponse]);
+
+  // Initialize default notification preference
+  const getDefaultNotificationPreference = useCallback(() => {
+    const preferredVerifier = userInfo.verifiers.find(
+      (verifier) => verifier.preferNotification
+    );
+    return preferredVerifier?.type === "GOOGLE" ? "GOOGLE" : "TELEGRAM";
+  }, [userInfo.verifiers]);
+
+  // Get verifier IDs with defaults to prevent undefined values
+  const getTelegramId = useCallback(() => {
+    return (
+      userInfo.verifiers.find((verifier) => verifier.type === "TELEGRAM")?.id ||
+      ""
+    );
+  }, [userInfo.verifiers]);
+
+  const getEmailId = useCallback(() => {
+    return (
+      userInfo.verifiers.find((verifier) => verifier.type === "GOOGLE")?.id ||
+      ""
+    );
+  }, [userInfo.verifiers]);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      telegramId: verifiers.find((verifier) => verifier.type === "TELEGRAM")
-        ?.id,
-      email:
-        userInfo?.email ||
-        verifiers.find((verifier) => verifier.type === "GOOGLE")?.id,
-      notificationPreferences: (() => {
-        const preferredVerifier = verifiers.find(
-          (verifier) => verifier.preferNotification
-        );
-        if (preferredVerifier?.type === "GOOGLE") return "GOOGLE";
-        return "TELEGRAM";
-      })(),
+      telegramId: getTelegramId(),
+      email: getEmailId(),
+      notificationPreferences: getDefaultNotificationPreference(),
       twoFactorAuth: true,
     },
   });
 
+  // Add effect to update form when userInfoResponse changes
+  useEffect(() => {
+    const notificationPreference = getDefaultNotificationPreference();
+
+    form.reset({
+      telegramId: getTelegramId(),
+      email: getEmailId(),
+      notificationPreferences: notificationPreference,
+      twoFactorAuth: true,
+    });
+  }, [form, getDefaultNotificationPreference, getTelegramId, getEmailId]);
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     toast.success("Profile updated successfully");
     console.log("Form submitted:", data);
-    // setIsEditing(false);
   };
 
   const handleResetForm = () => {
-    form.reset();
+    form.reset({
+      telegramId: getTelegramId(),
+      email: getEmailId(),
+      notificationPreferences: getDefaultNotificationPreference(),
+      twoFactorAuth: true,
+    });
     setIsEditing(false);
   };
+
   return (
     <div className="flex flex-col space-y-5 p-2">
       <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
@@ -100,9 +136,10 @@ const GeneralForm = ({
                     <Input
                       type="text"
                       placeholder="Telegram ID"
-                      disabled={!isEditing}
+                      disabled
                       className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                      {...field}
+                      value={field.value || ""}
+                      onChange={field.onChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -123,16 +160,19 @@ const GeneralForm = ({
                       <Input
                         type="email"
                         placeholder="Email"
-                        disabled={!isEditing}
+                        disabled
                         className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                        {...field}
+                        value={field.value || ""}
+                        onChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              {verifiers.some((verifier) => verifier.type !== "GOOGLE") &&
+              {userInfo.verifiers.some(
+                (verifier) => verifier.type !== "GOOGLE"
+              ) &&
                 isEditing && <BindGoogle />}
             </div>
           </div>
@@ -145,7 +185,9 @@ const GeneralForm = ({
             </h2>
 
             <div className="flex flex-row items-center justify-start space-x-10">
-              {verifiers.some((verifier) => verifier.type === "TELEGRAM") && (
+              {userInfo.verifiers.some(
+                (verifier) => verifier.type === "TELEGRAM"
+              ) && (
                 <FormField
                   name="notificationPreferences"
                   control={form.control}
@@ -177,7 +219,9 @@ const GeneralForm = ({
                   )}
                 />
               )}
-              {verifiers.some((verifier) => verifier.type === "GOOGLE") && (
+              {userInfo.verifiers.some(
+                (verifier) => verifier.type === "GOOGLE"
+              ) && (
                 <FormField
                   name="notificationPreferences"
                   control={form.control}
@@ -223,12 +267,12 @@ const GeneralForm = ({
               <FormField
                 name="twoFactorAuth"
                 control={form.control}
-                render={() => (
+                render={({ field }) => (
                   <FormItem className="flex flex-row items-center space-x-2">
                     <FormControl>
                       <Switch
                         disabled
-                        checked={true}
+                        checked={field.value}
                         className={cn(
                           "w-8 h-5 cursor-not-allowed data-[state=checked]:bg-linprimary-start opacity-70"
                         )}

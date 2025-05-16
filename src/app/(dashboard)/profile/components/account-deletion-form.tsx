@@ -55,13 +55,12 @@ const AccountDeletionForm = () => {
   >({
     mutationKey: ["delete-account"],
     mutationFn: async () => {
-      const response = await fetchProxy({
+      return await fetchProxy({
         method: "DELETE",
         url: "user/account",
         auth: true,
         body: {},
       });
-      return response;
     },
   });
 
@@ -83,7 +82,6 @@ const AccountDeletionForm = () => {
       }
 
       const result = await mutation.mutateAsync(data);
-      console.log("result", result);
       if (isErrorResponse(result)) {
         toast.error(
           Array.isArray(result.message) ? result.message[0] : result.message

@@ -14,7 +14,7 @@ const ProfilePage = () => {
 
   const { data: userSession } = useSession();
   const { data: userData, isLoading } = useQuery<APIGetUserProfileResponseDTO>({
-    queryKey: ["profile"],
+    queryKey: ["profile", userSession?.user.id],
     queryFn: async () =>
       fetchProxy({
         url: "user/profile",
@@ -22,9 +22,8 @@ const ProfilePage = () => {
         auth: true,
       }),
     enabled: !!userSession,
+    staleTime: 0,
   });
-
-  console.log("User Data:", userData);
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
@@ -71,7 +70,7 @@ const ProfilePage = () => {
             </div>
 
             <ProfileMenu
-              verifiers={userData.data.verifiers}
+              userInfoResponse={userData.data}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
             />

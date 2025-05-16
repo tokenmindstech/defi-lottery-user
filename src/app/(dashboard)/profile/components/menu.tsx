@@ -3,33 +3,69 @@
 import { Button } from "@/components/ui/button";
 import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
 import React, { useCallback, useContext, useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, fetchProxy } from "@/lib/utils";
 import GeneralForm from "./general-form";
 import MembershipForm from "./membership-form";
 import PaymentDetailsForm from "./payment-details";
 import AccountSetting from "./account-setting";
 import { useSearchParams } from "next/navigation";
 import { Web3AuthContext } from "@/provider/web3-auth";
-import { AuthUserInfo } from "@web3auth/auth-adapter";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 interface ProfileMenuProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
-  verifiers: Verifier[];
+  userInfoResponse: UserInfoResponse;
 }
 
 const ProfileMenu = ({
   isEditing,
   setIsEditing,
-  verifiers,
+  userInfoResponse,
 }: ProfileMenuProps) => {
   const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
-  const [userInfo, setUserInfo] = useState<Partial<AuthUserInfo>>();
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0); // Add a key to force rerender
 
   const { isInitialized, web3Auth } = useContext(Web3AuthContext);
   const searchParams = useSearchParams();
+  const queryClient = useQueryClient();
+  const { data: userSession } = useSession();
+
+  const mutation = useMutation<
+    APIBaseResponse | APIBaseErrorResponse,
+    Error,
+    Verifier[]
+  >({
+    mutationKey: ["update-account"],
+    mutationFn: async (data: Verifier[]) => {
+      return await fetchProxy({
+        method: "PATCH",
+        url: "user/profile",
+        body: {
+          name: userInfoResponse.name,
+          verifiers: data,
+        },
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+      });
+      // Force a rerender of the form after successful mutation
+      setRefreshKey((prevKey) => prevKey + 1);
+    },
+  });
+
+  const isErrorResponse = (
+    response: APIBaseResponse | APIBaseErrorResponse
+  ): response is APIBaseErrorResponse => {
+    return "statusCode" in response && response.statusCode >= 400;
+  };
 
   const checkBinding = useCallback(async () => {
     if (!isInitialized) {
@@ -42,30 +78,85 @@ const ProfileMenu = ({
 
     if (binding && provider) {
       try {
+        setIsLoading(true);
+
         const userInfoData = await web3Auth.getUserInfo();
-        console.log("User Info:", userInfoData);
-        return userInfoData;
+        const toBeNewVerifiers = userInfoResponse.verifiers.map((verifier) => {
+          if (verifier.type === "GOOGLE") {
+            return {
+              ...verifier,
+              preferNotification:
+                userInfoResponse.verifiers.find((v) => v.type === "GOOGLE")
+                  ?.preferNotification || false,
+            };
+          }
+          if (verifier.type === "TELEGRAM") {
+            return {
+              ...verifier,
+              preferNotification:
+                userInfoResponse.verifiers.find((v) => v.type === "TELEGRAM")
+                  ?.preferNotification || false,
+            };
+          }
+          return verifier;
+        });
+
+        if (userInfoData) {
+          toBeNewVerifiers.push({
+            id: userInfoData.verifierId!,
+            type:
+              userInfoData.verifier ===
+              process.env.NEXT_PUBLIC_SUB_VERIFIER_TELEGRAM
+                ? "TELEGRAM"
+                : "GOOGLE",
+            preferNotification: false,
+            userId: userInfoResponse.id,
+          });
+        }
+
+        toast.success("Binding account successful!", {
+          id: `binding-${userInfoResponse.id}`,
+        });
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+
+        const result = await mutation.mutateAsync(toBeNewVerifiers);
+        if (isErrorResponse(result)) {
+          toast.error(
+            Array.isArray(result.message) ? result.message[0] : result.message,
+            {
+              id: `binding-error-${userInfoResponse.id}`,
+            }
+          );
+          return;
+        }
       } catch (error) {
         console.error("Error fetching user info:", error);
         return null;
+      } finally {
+        setIsLoading(false);
       }
     }
 
     return null;
-  }, [isInitialized, searchParams, web3Auth]);
+  }, [
+    isInitialized,
+    mutation,
+    searchParams,
+    userInfoResponse.id,
+    userInfoResponse.verifiers,
+    web3Auth,
+  ]);
 
   useEffect(() => {
     const loadUserInfo = async () => {
-      setIsLoading(true);
-
       try {
-        const userInfoData = await checkBinding();
-        setUserInfo(userInfoData || undefined);
-        setIsEditing(userInfoData ? true : false);
+        await checkBinding();
       } catch (error) {
         console.error("Error in loadUserInfo:", error);
-      } finally {
-        setIsLoading(false);
       }
     };
 
@@ -118,10 +209,10 @@ const ProfileMenu = ({
       <div className="flex flex-col col-span-3 lg:col-span-2 space-y-5 bg-bgtext-950 rounded-xl px-4 py-4">
         {activeTab === "general" && (
           <GeneralForm
-            verifiers={verifiers}
+            key={refreshKey} // Add a key to force rerender when data is updated
             isEditing={isEditing}
             setIsEditing={setIsEditing}
-            userInfo={userInfo}
+            userInfoResponse={userInfoResponse}
           />
         )}
         {activeTab === "membership" && <MembershipForm />}

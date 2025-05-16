@@ -76,13 +76,13 @@ const Web3AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      console.log("Initializing Web3Auth...");
+      console.info("Initializing Web3Auth...");
       try {
         setIsLoadingInitialization(true);
         await web3Auth.init();
         isGloballyInitialized = true; // Set global flag
         setIsInitialized(true);
-        console.log("Web3Auth initialized");
+        console.info("Web3Auth initialized");
       } catch (error) {
         console.error("Failed to initialize web3Auth:", error);
       } finally {

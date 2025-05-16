@@ -12,7 +12,20 @@ declare global {
     id: string;
     type: ProviderType;
     preferNotification: boolean;
+    userId: string;
+  }
+
+  interface UserInfoResponse {
+    id: string;
+    email: string;
+    name: string;
+    roles: RoleType[];
     createdAt: string;
+    updatedAt: string;
+    twoFactorAuthId: string | null;
+    subscriptionId: string | null;
+    verifiers: Verifier[];
+    subscription: unknown | null;
   }
 
   interface APIBaseResponse {
@@ -88,17 +101,6 @@ declare global {
   }
 
   interface APIGetUserProfileResponseDTO extends APIBaseResponse {
-    data: {
-      id: string;
-      email: string;
-      name: string;
-      roles: RoleType[];
-      createdAt: string;
-      updatedAt: string;
-      twoFactorAuthId: string | null;
-      subscriptionId: string | null;
-      verifiers: Verifier[];
-      subscription: unknown | null;
-    };
+    data: UserInfoResponse;
   }
 }
