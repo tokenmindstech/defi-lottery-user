@@ -12,7 +12,7 @@ const NotificationAllTab = ({ handleOpen }: NotificationAllTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[0].value}
-      className="bg-transparent text-bgtext-100 font-inter"
+      className="bg-transparent w-full text-bgtext-100 font-inter"
     >
       <NotificationItem
         Icon={Ticket}

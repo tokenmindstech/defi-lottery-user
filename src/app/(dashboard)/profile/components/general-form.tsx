@@ -19,6 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import BindGoogle from "./bind-google";
 
 const formSchema = z.object({
   telegramId: z.string().optional(),
@@ -86,7 +87,7 @@ const GeneralForm = ({
               name="telegramId"
               control={form.control}
               render={({ field }) => (
-                <FormItem className="col-span-2 md:col-span-1">
+                <FormItem className="col-span-2 md:col-span-1 h-fit">
                   <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
                     Telegram ID
                   </FormLabel>
@@ -104,27 +105,31 @@ const GeneralForm = ({
               )}
             />
 
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="col-span-2 md:col-span-1">
-                  <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                    Email
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Email"
-                      disabled={!isEditing}
-                      className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-col space-y-2 col-span-2 md:col-span-1">
+              <FormField
+                name="email"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
+                      Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Email"
+                        disabled={!isEditing}
+                        className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {verifiers.some((verifier) => verifier.type !== "GOOGLE") &&
+                isEditing && <BindGoogle />}
+            </div>
           </div>
 
           <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
