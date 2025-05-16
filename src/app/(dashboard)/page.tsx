@@ -7,7 +7,7 @@ const DashboardPage = async () => {
   const session = await getServerSession(authConfig);
   const isAgent = session?.user?.roles?.includes("AGENT");
 
-  if (isAgent) {
+  if (!isAgent) {
     return <AgentDashboard />;
   }
 
