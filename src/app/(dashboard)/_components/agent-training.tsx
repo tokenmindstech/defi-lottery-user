@@ -30,7 +30,7 @@ const TrainingCard = ({ title, price, tag }: TrainingCardProps) => {
     <div
       className={`bg-gradient-to-br from-bgtext-900 to-bgtext-800 p-4 rounded-xl relative overflow-hidden`}
     >
-      <div className="bg-bgtext-700 rounded-lg w-full h-[300px] relative overflow-hidden">
+      <div className="bg-bgtext-800 rounded-lg w-full h-[300px] relative overflow-hidden">
         {tag && (
           <div className="absolute top-0 left-0 bg-violet-600 text-xs text-bgtext-100 px-5 py-1 rounded-br-full   ">
             {tag}
