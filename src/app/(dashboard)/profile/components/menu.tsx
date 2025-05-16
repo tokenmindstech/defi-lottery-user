@@ -2,23 +2,16 @@
 
 import { Button } from "@/components/ui/button";
 import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import GeneralForm from "./general-form";
 import MembershipForm from "./membership-form";
 import PaymentDetailsForm from "./payment-details";
 import AccountSetting from "./account-setting";
 import { useSearchParams } from "next/navigation";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
-import {
-  WALLET_ADAPTERS,
-  UX_MODE,
-  WEB3AUTH_NETWORK,
-  getEvmChainConfig,
-  ADAPTER_STATUS,
-} from "@web3auth/base";
-import { AuthAdapter } from "@web3auth/auth-adapter";
+import { Web3AuthContext } from "@/provider/web3-auth";
+import { AuthUserInfo } from "@web3auth/auth-adapter";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProfileMenuProps {
   isEditing: boolean;
@@ -26,160 +19,74 @@ interface ProfileMenuProps {
   verifiers: Verifier[];
 }
 
-const CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-const VERIFIER_NAME = process.env.NEXT_PUBLIC_VERIFIER_NAME!;
-const SUB_VERIFIER_GOOGLE = process.env.NEXT_PUBLIC_SUB_VERIFIER_GOOGLE!;
-
-// Initialize the Web3Auth configuration outside the component
-const chainConfig = getEvmChainConfig(0x13882, CLIENT_ID)!;
-const privateKeyProvider = new EthereumPrivateKeyProvider({
-  config: { chainConfig },
-});
-const web3Auth = new Web3AuthNoModal({
-  clientId: CLIENT_ID!,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-  privateKeyProvider,
-  chainConfig,
-});
-const authAdapter = new AuthAdapter({
-  adapterSettings: {
-    uxMode: UX_MODE.REDIRECT,
-    loginConfig: {
-      google: {
-        verifier: VERIFIER_NAME,
-        typeOfLogin: "google",
-        clientId: GOOGLE_CLIENT_ID,
-        verifierSubIdentifier: SUB_VERIFIER_GOOGLE,
-      },
-    },
-  },
-});
-web3Auth.configureAdapter(authAdapter);
-
 const ProfileMenu = ({
   isEditing,
   setIsEditing,
   verifiers,
 }: ProfileMenuProps) => {
   const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
+  const [userInfo, setUserInfo] = useState<Partial<AuthUserInfo>>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { isInitialized, web3Auth } = useContext(Web3AuthContext);
   const searchParams = useSearchParams();
 
-  // Check initial connection status
-  useEffect(() => {
-    const checkConnectionStatus = async () => {
+  const checkBinding = useCallback(async () => {
+    if (!isInitialized) {
+      console.info("Web3Auth not initialized");
+      return null;
+    }
+
+    const binding = searchParams.get("binding");
+    const provider = searchParams.get("provider");
+
+    if (binding && provider) {
       try {
-        if (web3Auth.status !== ADAPTER_STATUS.READY) {
-          await web3Auth.init();
-        }
-
-        // Check if user is already connected
-        const isUserConnected = web3Auth.connected;
-        setIsConnected(isUserConnected);
-
-        if (isUserConnected) {
-          console.log("User is already connected");
-        }
+        const userInfoData = await web3Auth.getUserInfo();
+        console.log("User Info:", userInfoData);
+        return userInfoData;
       } catch (error) {
-        console.error("Error checking connection status:", error);
+        console.error("Error fetching user info:", error);
+        return null;
+      }
+    }
+
+    return null;
+  }, [isInitialized, searchParams, web3Auth]);
+
+  useEffect(() => {
+    const loadUserInfo = async () => {
+      setIsLoading(true);
+
+      try {
+        const userInfoData = await checkBinding();
+        setUserInfo(userInfoData || undefined);
+        setIsEditing(userInfoData ? true : false);
+      } catch (error) {
+        console.error("Error in loadUserInfo:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    checkConnectionStatus();
-  }, []);
+    loadUserInfo();
+  }, [checkBinding, isInitialized, searchParams, setIsEditing]);
 
-  const initAndBindGoogle = useCallback(async () => {
-    if (isConnected) {
-      console.log("Already connected to Web3Auth");
-      return await web3Auth.getUserInfo();
-    }
-
-    try {
-      setIsAuthenticating(true);
-      setAuthError(null);
-
-      // Initialize Web3Auth
-      if (web3Auth.status !== ADAPTER_STATUS.READY) {
-        console.log("Initializing Web3Auth...");
-        await web3Auth.init();
-      }
-
-      // Connect using Google provider
-      console.log("Connecting to Web3Auth with Google...");
-      await web3Auth.connectTo(WALLET_ADAPTERS.AUTH, {
-        loginProvider: "google",
-      });
-
-      // Get user info after successful connection
-      const user = await web3Auth.getUserInfo();
-      console.log("User authenticated:", user);
-      setIsConnected(true);
-
-      // Add additional handling here if needed
-      // For example, you might want to call your backend API to save the binding
-
-      return user;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.error("Failed to initialize and bind Google:", error);
-      setAuthError(error.message || "Failed to connect with Google");
-      throw error;
-    } finally {
-      setIsAuthenticating(false);
-    }
-  }, [isConnected]);
-
-  useEffect(() => {
-    const binding = searchParams.get("binding");
-
-    // Only attempt Google binding if specifically requested and not already connected
-    if (binding === "google" && !isConnected) {
-      console.log("Starting Google binding process");
-
-      // Add a small delay to ensure proper initialization
-      const timer = setTimeout(() => {
-        initAndBindGoogle()
-          .then((user) => {
-            console.log("Google binding successful", user);
-            // Additional success handling if needed
-          })
-          .catch((error) => {
-            console.error("Error during Google binding:", error);
-            // Error is already set in the initAndBindGoogle function
-          });
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [initAndBindGoogle, searchParams, isConnected]);
-
-  // Return loading state if authentication is in progress
-  if (isAuthenticating) {
+  if (isLoading || !isInitialized) {
     return (
-      <div className="w-full text-center py-8">
-        <p>Authenticating with Google...</p>
-        <p className="text-sm text-bgtext-600 mt-2">
-          Please wait while we connect your account
-        </p>
-      </div>
-    );
-  }
-
-  // Show error message if authentication failed
-  if (authError) {
-    return (
-      <div className="w-full text-center py-8">
-        <p className="text-red-500">Authentication failed</p>
-        <p className="text-sm text-bgtext-600 mt-2">{authError}</p>
-        <Button
-          onClick={() => setAuthError(null)}
-          className="mt-4 bg-bgtext-800 hover:bg-bgtext-700"
-        >
-          Return to Profile
-        </Button>
+      <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <div className="col-span-3 lg:col-span-1 flex flex-col space-y-5 rounded-xl px-4 py-4">
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+        </div>
+        <div className="col-span-3 lg:col-span-2 flex flex-col space-y-5 rounded-xl px-4 py-4">
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+        </div>
       </div>
     );
   }
@@ -214,6 +121,7 @@ const ProfileMenu = ({
             verifiers={verifiers}
             isEditing={isEditing}
             setIsEditing={setIsEditing}
+            userInfo={userInfo}
           />
         )}
         {activeTab === "membership" && <MembershipForm />}

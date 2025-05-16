@@ -14,84 +14,30 @@ import {
   Spinner,
   TelegramLogo,
 } from "@phosphor-icons/react/dist/ssr";
-import { Web3AuthNoModal } from "@web3auth/no-modal";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { WALLET_ADAPTERS } from "@web3auth/base";
 import {
-  WALLET_ADAPTERS,
-  UX_MODE,
-  WEB3AUTH_NETWORK,
-  getEvmChainConfig,
-} from "@web3auth/base";
-import { AuthAdapter } from "@web3auth/auth-adapter";
-import { useEffect, useState, useCallback, Fragment, useRef } from "react";
+  useEffect,
+  useState,
+  useCallback,
+  Fragment,
+  useRef,
+  useContext,
+} from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { delay } from "@/lib/utils";
 import { REQUIRED_2FA_SETUP, REQUIRED_AUTHENTICATION } from "@/constant/common";
-
-const CLIENT_ID = process.env.NEXT_PUBLIC_WEB3AUTH_CLIENT_ID!;
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!;
-const VERIFIER_NAME = process.env.NEXT_PUBLIC_VERIFIER_NAME!;
-const SUB_VERIFIER_TELEGRAM = process.env.NEXT_PUBLIC_SUB_VERIFIER_TELEGRAM!;
-const SUB_VERIFIER_GOOGLE = process.env.NEXT_PUBLIC_SUB_VERIFIER_GOOGLE!;
+import { Web3AuthContext } from "@/provider/web3-auth";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASEURL!;
-
-const chainConfig = getEvmChainConfig(0x13882, CLIENT_ID)!;
-const privateKeyProvider = new EthereumPrivateKeyProvider({
-  config: { chainConfig },
-});
-const web3Auth = new Web3AuthNoModal({
-  clientId: CLIENT_ID!,
-  web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_DEVNET,
-  privateKeyProvider,
-  chainConfig,
-});
-const authAdapter = new AuthAdapter({
-  adapterSettings: {
-    uxMode: UX_MODE.REDIRECT,
-    loginConfig: {
-      google: {
-        verifier: VERIFIER_NAME,
-        typeOfLogin: "google",
-        clientId: GOOGLE_CLIENT_ID,
-        verifierSubIdentifier: SUB_VERIFIER_GOOGLE,
-      },
-      jwt: {
-        verifier: VERIFIER_NAME,
-        verifierSubIdentifier: SUB_VERIFIER_TELEGRAM,
-        typeOfLogin: "jwt",
-        clientId: CLIENT_ID,
-      },
-    },
-  },
-});
-web3Auth.configureAdapter(authAdapter);
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const [isInitialized, setIsInitialized] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const jwtRequestedRef = useRef(false);
 
-  const initializeWeb3Auth = useCallback(async () => {
-    if (isInitialized) {
-      return true;
-    }
-
-    try {
-      setIsLoading(true);
-      await web3Auth.init();
-      setIsInitialized(true);
-      return true;
-    } catch (error) {
-      console.error("Failed to initialize web3Auth:", error);
-      return false;
-    } finally {
-      setIsLoading(false);
-    }
-  }, [isInitialized]);
+  const router = useRouter();
+  const { web3Auth, isInitialized } = useContext(Web3AuthContext);
 
   const requestJwt = useCallback(async () => {
     // Skip if JWT was already requested during this session
@@ -155,15 +101,17 @@ const LoginForm = () => {
       jwtRequestedRef.current = false;
       setIsLoading(false);
     }
-  }, [router]);
+  }, [router, web3Auth]);
 
   const loginWithWeb3Auth = useCallback(
     async (token: string, type: "google" | "jwt") => {
       try {
-        setIsLoading(true);
+        if (!isInitialized) {
+          console.error("Web3Auth is not initialized");
+          return;
+        }
 
-        const initialized = await initializeWeb3Auth();
-        if (!initialized) return;
+        setIsLoading(true);
         let web3AuthProvider;
 
         if (type === "google") {
@@ -188,7 +136,7 @@ const LoginForm = () => {
         setIsLoading(false);
       }
     },
-    [initializeWeb3Auth, requestJwt]
+    [isInitialized, requestJwt, web3Auth]
   );
 
   const loginWithTelegram = useCallback(() => {
@@ -197,18 +145,14 @@ const LoginForm = () => {
 
   // Handle initialization and check connection status
   useEffect(() => {
-    let isMounted = true;
-
     const checkAuthStatus = async () => {
-      if (!isMounted) return;
+      if (!isInitialized) {
+        return;
+      }
 
       try {
         const action = searchParams.get("action");
         const jwtToken = searchParams.get("token");
-
-        // Initialize web3Auth
-        const initialized = await initializeWeb3Auth();
-        if (!initialized || !isMounted) return;
 
         // Reset JWT requested flag on logout
         if (action === "logout") {
@@ -231,7 +175,7 @@ const LoginForm = () => {
         }
 
         // Check if already logged in
-        if (web3Auth.connected && isMounted && !jwtRequestedRef.current) {
+        if (web3Auth.connected && !jwtRequestedRef.current) {
           await requestJwt();
         }
       } catch (error) {
@@ -240,12 +184,7 @@ const LoginForm = () => {
     };
 
     checkAuthStatus();
-
-    // Cleanup function to prevent state updates after unmount
-    return () => {
-      isMounted = false;
-    };
-  }, [initializeWeb3Auth, loginWithWeb3Auth, requestJwt, searchParams]);
+  }, [isInitialized, loginWithWeb3Auth, requestJwt, searchParams, web3Auth]);
 
   return (
     <Card className="w-full z-20 max-w-sm md:max-w-md lg:max-w-lg bg-bgtext-950 border border-bgtext-800">

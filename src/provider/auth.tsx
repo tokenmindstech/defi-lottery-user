@@ -11,15 +11,6 @@ interface AuthProviderProps {
 }
 
 const AuthProvider = ({ children, session }: AuthProviderProps) => {
-  // const pathName = usePathname();
-  // let redirect = true;
-  // if (!session && typeof window !== "undefined") {
-  //   if (pathName.startsWith("/auth")) {
-  //     redirect = false;
-  //   }
-  //   signOut({ redirect, callbackUrl: "/auth" });
-  // }
-
   return (
     <SessionProvider baseUrl={process.env.NEXTAUTH_URL} session={session}>
       <QueryProvider>{children}</QueryProvider>

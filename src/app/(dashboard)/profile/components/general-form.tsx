@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import BindGoogle from "./bind-google";
+import { AuthUserInfo } from "@web3auth/auth-adapter";
 
 const formSchema = z.object({
   telegramId: z.string().optional(),
@@ -38,19 +39,23 @@ interface GeneralFormProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   verifiers: Verifier[];
+  userInfo?: Partial<AuthUserInfo>;
 }
 
 const GeneralForm = ({
   isEditing,
   setIsEditing,
   verifiers,
+  userInfo,
 }: GeneralFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       telegramId: verifiers.find((verifier) => verifier.type === "TELEGRAM")
         ?.id,
-      email: verifiers.find((verifier) => verifier.type === "GOOGLE")?.id,
+      email:
+        userInfo?.email ||
+        verifiers.find((verifier) => verifier.type === "GOOGLE")?.id,
       notificationPreferences: (() => {
         const preferredVerifier = verifiers.find(
           (verifier) => verifier.preferNotification
@@ -65,7 +70,7 @@ const GeneralForm = ({
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     toast.success("Profile updated successfully");
     console.log("Form submitted:", data);
-    setIsEditing(false);
+    // setIsEditing(false);
   };
 
   const handleResetForm = () => {
