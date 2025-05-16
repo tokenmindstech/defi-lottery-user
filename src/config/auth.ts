@@ -3,6 +3,7 @@ import {
   AUTH_LOGIN_2FA,
   REQUIRED_2FA_SETUP,
   REQUIRED_AUTHENTICATION,
+  REQUIRED_BIND_TELEGRAM,
 } from "@/constant/common";
 import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -166,6 +167,16 @@ export const authConfig: NextAuthOptions = {
 
           if (!request.ok) {
             throw new CustomError(`${AUTH_ERROR}${response.message}`);
+          }
+
+          // Check if TELEGRAM is exist in verifiers
+          const telegramVerifier = response.data.user.verifiers.find(
+            (verifier) => verifier.type === "TELEGRAM"
+          );
+          if (!telegramVerifier) {
+            throw new CustomError(
+              `${REQUIRED_BIND_TELEGRAM}${response.data.access_token}`
+            );
           }
 
           if (response.data.user.isTwoFactorSetup === false) {
