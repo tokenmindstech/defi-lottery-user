@@ -28,7 +28,6 @@ const ProfileMenu = ({
 }: ProfileMenuProps) => {
   const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
   const [isLoading, setIsLoading] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0); // Add a key to force rerender
 
   const { isInitialized, web3Auth } = useContext(Web3AuthContext);
   const searchParams = useSearchParams();
@@ -56,8 +55,6 @@ const ProfileMenu = ({
       queryClient.invalidateQueries({
         queryKey: ["profile", userSession?.user.id],
       });
-      // Force a rerender of the form after successful mutation
-      setRefreshKey((prevKey) => prevKey + 1);
     },
   });
 
@@ -209,7 +206,6 @@ const ProfileMenu = ({
       <div className="flex flex-col col-span-3 lg:col-span-2 space-y-5 bg-bgtext-950 rounded-xl px-4 py-4">
         {activeTab === "general" && (
           <GeneralForm
-            key={refreshKey} // Add a key to force rerender when data is updated
             isEditing={isEditing}
             setIsEditing={setIsEditing}
             userInfoResponse={userInfoResponse}

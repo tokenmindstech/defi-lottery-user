@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import BindGoogle from "./bind-google";
+import BindUnbindGoogle from "./bind-unbind-google";
 
 const formSchema = z.object({
   telegramId: z.string().optional(),
@@ -123,7 +123,12 @@ const GeneralForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex flex-col space-y-5"
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div
+            className={cn(
+              "grid grid-cols-1 md:grid-cols-2 gap-5",
+              isEditing && "mb-0"
+            )}
+          >
             <FormField
               name="telegramId"
               control={form.control}
@@ -147,7 +152,7 @@ const GeneralForm = ({
               )}
             />
 
-            <div className="flex flex-col space-y-2 col-span-2 md:col-span-1">
+            <div className="flex flex-col space-y-2 mb-0 col-span-2 md:col-span-1">
               <FormField
                 name="email"
                 control={form.control}
@@ -170,14 +175,16 @@ const GeneralForm = ({
                   </FormItem>
                 )}
               />
-              {userInfo.verifiers.some(
-                (verifier) => verifier.type !== "GOOGLE"
-              ) &&
-                isEditing && <BindGoogle />}
+              {isEditing && (
+                <BindUnbindGoogle
+                  setIsEditing={setIsEditing}
+                  userInfoResponse={userInfoResponse}
+                />
+              )}
             </div>
           </div>
 
-          <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
+          <Separator className="bg-bgtext-800  mask-l-from-80% mask-r-from-80%" />
 
           <div className="flex flex-col space-y-5">
             <h2 className="text-sm font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -205,7 +212,9 @@ const GeneralForm = ({
                         <Switch
                           id="telegram"
                           checked={field.value === "TELEGRAM"}
-                          disabled={!isEditing}
+                          disabled={
+                            !isEditing || userInfo.verifiers.length === 1
+                          }
                           className={cn(
                             "w-8 h-5 cursor-pointer data-[state=checked]:bg-linprimary-start data-[state=unchecked]:bg-linblack-start",
                             !isEditing && "cursor-not-allowed opacity-70"
