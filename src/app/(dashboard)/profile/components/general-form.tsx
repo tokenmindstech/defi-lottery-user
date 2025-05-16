@@ -14,14 +14,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { EnvelopeSimple, TelegramLogo } from "@phosphor-icons/react/dist/ssr";
+import {
+  EnvelopeSimple,
+  Spinner,
+  TelegramLogo,
+} from "@phosphor-icons/react/dist/ssr";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
+import { cn, fetchProxy } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import BindUnbindGoogle from "./bind-unbind-google";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
+  }),
   telegramId: z.string().optional(),
   email: z
     .string()
@@ -48,10 +57,8 @@ const GeneralForm = ({
   // Track the user info as state to force re-renders
   const [userInfo, setUserInfo] = useState(userInfoResponse);
 
-  // Update local state when props change
-  useEffect(() => {
-    setUserInfo(userInfoResponse);
-  }, [userInfoResponse]);
+  const queryClient = useQueryClient();
+  const { data: userSession } = useSession();
 
   // Initialize default notification preference
   const getDefaultNotificationPreference = useCallback(() => {
@@ -79,6 +86,7 @@ const GeneralForm = ({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: userInfo.name,
       telegramId: getTelegramId(),
       email: getEmailId(),
       notificationPreferences: getDefaultNotificationPreference(),
@@ -86,25 +94,83 @@ const GeneralForm = ({
     },
   });
 
-  // Add effect to update form when userInfoResponse changes
-  useEffect(() => {
-    const notificationPreference = getDefaultNotificationPreference();
+  const mutation = useMutation<
+    APIBaseResponse | APIBaseErrorResponse,
+    Error,
+    { name: string; verifiers: Verifier[] }
+  >({
+    mutationKey: ["update-account"],
+    mutationFn: async ({ name, verifiers }) => {
+      console.log("Updating account with:", {
+        name,
+        verifiers,
+      });
+      return await fetchProxy({
+        method: "PATCH",
+        url: "user/profile",
+        body: {
+          name,
+          verifiers,
+        },
+        auth: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+      });
+    },
+  });
 
-    form.reset({
-      telegramId: getTelegramId(),
-      email: getEmailId(),
-      notificationPreferences: notificationPreference,
-      twoFactorAuth: true,
-    });
-  }, [form, getDefaultNotificationPreference, getTelegramId, getEmailId]);
+  const isErrorResponse = (
+    response: APIBaseResponse | APIBaseErrorResponse
+  ): response is APIBaseErrorResponse => {
+    return "statusCode" in response && response.statusCode >= 400;
+  };
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    toast.success("Profile updated successfully");
-    console.log("Form submitted:", data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    try {
+      const newVerifiers = userInfoResponse.verifiers.map((verifier) => {
+        if (verifier.type === "TELEGRAM") {
+          return {
+            ...verifier,
+            preferNotification: data.notificationPreferences === "TELEGRAM",
+          };
+        }
+        if (verifier.type === "GOOGLE") {
+          return {
+            ...verifier,
+            preferNotification: data.notificationPreferences === "GOOGLE",
+          };
+        }
+        return verifier;
+      });
+      const result = await mutation.mutateAsync({
+        name: data.name,
+        verifiers: newVerifiers,
+      });
+
+      if (isErrorResponse(result)) {
+        toast.error(
+          Array.isArray(result.message) ? result.message[0] : result.message,
+          {
+            id: `update-profile-error-${userSession?.user.id}`,
+          }
+        );
+        return;
+      }
+      toast.success("Profile updated successfully", {
+        id: `update-profile-success-${userSession?.user.id}`,
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   const handleResetForm = () => {
     form.reset({
+      name: userInfo.name,
       telegramId: getTelegramId(),
       email: getEmailId(),
       notificationPreferences: getDefaultNotificationPreference(),
@@ -112,6 +178,30 @@ const GeneralForm = ({
     });
     setIsEditing(false);
   };
+
+  // Update local state when props change
+  useEffect(() => {
+    setUserInfo(userInfoResponse);
+  }, [userInfoResponse]);
+
+  // Add effect to update form when userInfoResponse changes
+  useEffect(() => {
+    const notificationPreference = getDefaultNotificationPreference();
+
+    form.reset({
+      name: userInfo.name,
+      telegramId: getTelegramId(),
+      email: getEmailId(),
+      notificationPreferences: notificationPreference,
+      twoFactorAuth: true,
+    });
+  }, [
+    form,
+    getDefaultNotificationPreference,
+    getTelegramId,
+    getEmailId,
+    userInfo.name,
+  ]);
 
   return (
     <div className="flex flex-col space-y-5 p-2">
@@ -129,6 +219,29 @@ const GeneralForm = ({
               isEditing && "mb-0"
             )}
           >
+            <FormField
+              name="name"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem className="col-span-2 h-fit">
+                  <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
+                    Name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Name"
+                      disabled={!isEditing}
+                      className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               name="telegramId"
               control={form.control}
@@ -298,15 +411,28 @@ const GeneralForm = ({
               <Button
                 type="button"
                 onClick={handleResetForm}
+                disabled={form.formState.isSubmitting}
                 className="bg-bgtext-800 border-2 border-bgtext-700 hover:bg-bgtext-700 rounded-lg cursor-pointer"
               >
                 Reset to Default
               </Button>
               <Button
                 type="submit"
+                disabled={form.formState.isSubmitting}
                 className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300"
               >
-                Save Changes
+                {form.formState.isSubmitting ? (
+                  <div className="flex flex-row items-center justify-center space-x-2">
+                    <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                    <p className="text-bgtext-100 font-inter font-medium text-sm">
+                      Saving...
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-bgtext-100 font-inter font-medium text-sm">
+                    Save Changes
+                  </p>
+                )}
               </Button>
             </div>
           )}

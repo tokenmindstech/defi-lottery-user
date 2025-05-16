@@ -48,7 +48,7 @@ const ProfilePage = () => {
                   <AvatarFallback>DF</AvatarFallback>
                 </Avatar>
 
-                <div className="flex flex-col space-y-2 items-center justify-center">
+                <div className="flex flex-col space-y-2">
                   <h2 className="text-2xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
                     {userData.data.name}
                   </h2>
