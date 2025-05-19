@@ -15,9 +15,15 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@phosphor-icons/react/dist/ssr";
+import { Spinner, Question } from "@phosphor-icons/react/dist/ssr";
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const formSchema = z.object({
   subscription: z.enum(["basic", "premium", "explore"], {
@@ -26,9 +32,23 @@ const formSchema = z.object({
 });
 
 const subscriptionOptions = [
-  { value: "basic", label: "Basic ($30/month)" },
-  { value: "premium", label: "Premium ($300/month)" },
-  { value: "explore", label: "I'm only exploring" },
+  {
+    value: "basic",
+    label: "Basic ($30/month)",
+    information:
+      "Access to essential features with limited benefits (1 tickets/day).",
+  },
+  {
+    value: "premium",
+    label: "Premium ($300/month)",
+    information:
+      "Full access to all features and premium support (10 tickets/day).",
+  },
+  {
+    value: "explore",
+    label: "I'm only exploring",
+    information: "Browse our platform with limited functionality.",
+  },
 ];
 
 const SubscriptionForm = () => {
@@ -91,8 +111,22 @@ const SubscriptionForm = () => {
                           )}
                         />
                       </FormControl>
-                      <FormLabel className="font-normal text-bgtext-100 font-inter text-base w-full cursor-pointer">
-                        {option.label}
+                      <FormLabel className="flex flex-row items-center justify-between w-full space-x-2">
+                        <p className="font-normal text-bgtext-100 font-inter text-base w-full cursor-pointer">
+                          {option.label}
+                        </p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger>
+                              <Question className="size-5 text-bgtext-100" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="text-bgtext-100 font-inter text-sm">
+                                {option.information}
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </FormLabel>
                     </FormItem>
                   ))}
