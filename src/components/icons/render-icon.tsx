@@ -5,10 +5,10 @@ import DashboardIcon from "./dashboard";
 import LogOutIcon from "./log-out";
 import LuckyDrawIcon from "./lucky-draw";
 import MyProfileIcon from "./my-profile";
-import PerksIcon from "./perks";
 import SupportIcon from "./support";
 import ReferralIcon from "./referral";
 import ComissionIcon from "./commission";
+import RewardsIcon from "./rewards";
 
 interface RenderIconProps {
   icon: string;
@@ -22,7 +22,7 @@ const RenderIcon = ({ icon, className }: RenderIconProps) => {
     "log-out": LogOutIcon,
     "lucky-draw": LuckyDrawIcon,
     "my-profile": MyProfileIcon,
-    perks: PerksIcon,
+    rewards: RewardsIcon,
     support: SupportIcon,
     referral: ReferralIcon,
     commission: ComissionIcon,

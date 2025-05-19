@@ -76,9 +76,9 @@ export const AGENT_MENU_ITEMS: MenuItems[] = [
     href: "/lucky-draw",
   },
   {
-    icon: "perks",
-    title: "Perks",
-    href: "/perks",
+    icon: "rewards",
+    title: "Rewards",
+    href: "/rewards",
   },
   {
     icon: "my-profile",
@@ -104,9 +104,9 @@ export const USER_MENU_ITEMS: MenuItems[] = [
     href: "/lucky-draw",
   },
   {
-    icon: "perks",
-    title: "Perks",
-    href: "/perks",
+    icon: "rewards",
+    title: "Rewards",
+    href: "/rewards",
   },
   {
     icon: "claim-rewards",

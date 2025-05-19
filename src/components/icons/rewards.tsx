@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const PerksIcon = ({ className }: CustomIconProps) => {
+const RewardsIcon = ({ className }: CustomIconProps) => {
   return (
     <svg
       width="24"
@@ -20,4 +20,4 @@ const PerksIcon = ({ className }: CustomIconProps) => {
   );
 };
 
-export default PerksIcon;
+export default RewardsIcon;

@@ -118,7 +118,7 @@ const SubscriptionForm = () => {
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
-                              <Question className="size-5 text-bgtext-100" />
+                              <Question className="size-5 text-bgtext-100 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="text-bgtext-100 font-inter text-sm">
