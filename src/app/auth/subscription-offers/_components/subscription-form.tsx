@@ -96,18 +96,16 @@ const SubscriptionForm = () => {
                     <FormItem
                       key={idx}
                       className={cn(
-                        "flex items-center space-x-3 space-y-0 bg-bgtext-900 p-5 rounded-xl cursor-pointer",
-                        field.value === option.value &&
-                          "bg-gradient-to-b from-linprimary-start to-linprimary-end"
+                        "flex items-center space-x-3 space-y-0 bg-bgtext-900 p-5 rounded-xl cursor-pointer"
                       )}
                     >
                       <FormControl className="">
                         <RadioGroupItem
                           value={option.value}
                           className={cn(
-                            "border-bgtext-500 focus:ring-linprimary-start",
+                            "border-bgtext-800",
                             field.value === option.value &&
-                              "bg-gradient-to-b from-bgtext-100 to-bgtext-100"
+                              "bg-linprimary-start"
                           )}
                         />
                       </FormControl>
@@ -141,7 +139,7 @@ const SubscriptionForm = () => {
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300"
+            className="cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg ease-out transition-all duration-300"
           >
             {form.formState.isSubmitting ? (
               <div className="flex flex-row items-center justify-center space-x-2">

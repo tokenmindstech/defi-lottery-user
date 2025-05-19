@@ -7,6 +7,8 @@ export {};
 
 declare global {
   type ProviderType = "GOOGLE" | "TELEGRAM";
+  type RoleType = "USER" | "ADMIN" | "AGENT";
+  type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
 
   interface Verifier {
     id: string;

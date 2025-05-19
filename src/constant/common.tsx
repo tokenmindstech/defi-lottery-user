@@ -11,6 +11,17 @@ interface ProfileMenuItems {
   label: string;
 }
 
+interface TicketIssue {
+  value: TicketIssueType;
+  label: string;
+}
+
+export const REQUIRED_2FA_SETUP = "required_2fa_setup";
+export const REQUIRED_AUTHENTICATION = "required_authentication";
+export const REQUIRED_BIND_TELEGRAM = "required_bind_telegram";
+export const AUTH_ERROR = "auth_error";
+export const AUTH_LOGIN_2FA = "2fa";
+
 export const MENU_ITEMS: MenuItems[] = [
   {
     icon: "dashboard",
@@ -143,11 +154,6 @@ export const NOTIFICATION_MENU_ITEMS = [
   },
 ];
 
-export const REQUIRED_2FA_SETUP = "required_2fa_setup";
-export const REQUIRED_AUTHENTICATION = "required_authentication";
-export const REQUIRED_BIND_TELEGRAM = "required_bind_telegram";
-export const AUTH_ERROR = "auth_error";
-export const AUTH_LOGIN_2FA = "2fa";
 export const PROFILE_MENU_ITEMS: ProfileMenuItems[] = [
   {
     value: "general",
@@ -164,5 +170,24 @@ export const PROFILE_MENU_ITEMS: ProfileMenuItems[] = [
   {
     value: "account",
     label: "Account Settings",
+  },
+];
+
+export const TICKET_ISSUE_ITEMS: TicketIssue[] = [
+  {
+    value: "ACCOUNT",
+    label: "Account",
+  },
+  {
+    value: "BILLING",
+    label: "Billing",
+  },
+  {
+    value: "TECHNICAL",
+    label: "Technical Support",
+  },
+  {
+    value: "OTHER",
+    label: "General Inquiry",
   },
 ];
