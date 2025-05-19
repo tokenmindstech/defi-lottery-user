@@ -88,6 +88,12 @@ const OpenTicketForm = () => {
       ...prev,
       ...processedFiles.map((item) => item.base64),
     ]);
+
+    form.setValue(
+      "files",
+      [...temporaryFiles, ...processedFiles.map((item) => item.file)],
+      { shouldValidate: true }
+    );
   };
 
   const handleRemoveImage = (index: number) => {
@@ -108,20 +114,23 @@ const OpenTicketForm = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <DialogTrigger asChild>
-            <Button className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
-              <div className="flex flex-row space-x-3 items-center justify-start">
-                <Plus className="size-5 text-bgtext-100" />
-                <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">
-                  Open a Ticket
-                </p>
-              </div>
-            </Button>
-          </DialogTrigger>
+      <DialogTrigger asChild>
+        <Button className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
+          <div className="flex flex-row space-x-3 items-center justify-start">
+            <Plus className="size-5 text-bgtext-100" />
+            <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">
+              Open a Ticket
+            </p>
+          </div>
+        </Button>
+      </DialogTrigger>
 
-          <DialogContent className="max-w-sm md:max-w-md h-full max-h-[80vh] overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg">
+      <DialogContent className="max-w-sm md:max-w-md h-full max-h-[80vh] overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col space-y-5"
+          >
             <DialogHeader>
               <DialogTitle className="text-bgtext-100 font-inter font-semibold text-lg text-left">
                 Open a Ticket
@@ -356,9 +365,9 @@ const OpenTicketForm = () => {
                 )}
               </Button>
             </div>
-          </DialogContent>
-        </form>
-      </Form>
+          </form>
+        </Form>
+      </DialogContent>
     </Dialog>
   );
 };
