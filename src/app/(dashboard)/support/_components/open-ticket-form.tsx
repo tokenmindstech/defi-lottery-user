@@ -42,6 +42,8 @@ const formSchema = z.object({
   files: z.array(z.instanceof(File)).optional(),
 });
 
+const MAX_FILES = 4;
+
 const OpenTicketForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [temporaryImages, setTemporaryImages] = useState<string[]>([]);
@@ -59,12 +61,38 @@ const OpenTicketForm = () => {
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      const base64 = await toBase64(file as File);
-      setTemporaryFiles((prev) => [...prev, file]);
-      setTemporaryImages((prev) => [...prev, base64 as string]);
-    }
+    if (!event.target.files || event.target.files.length === 0) return;
+
+    // Convert FileList to Array for easier processing
+    const newFiles = Array.from(event.target.files);
+
+    // Limit number of files to be added
+    const filesToAdd = newFiles.slice(0, MAX_FILES - temporaryImages.length);
+
+    if (filesToAdd.length === 0) return;
+
+    // Process all files and get their base64 representations
+    const processedFiles = await Promise.all(
+      filesToAdd.map(async (file) => {
+        const base64 = await toBase64(file);
+        return { file, base64: base64 as string };
+      })
+    );
+
+    // Update the state with all new files
+    setTemporaryFiles((prev) => [
+      ...prev,
+      ...processedFiles.map((item) => item.file),
+    ]);
+    setTemporaryImages((prev) => [
+      ...prev,
+      ...processedFiles.map((item) => item.base64),
+    ]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setTemporaryImages((prev) => prev.filter((_, i) => i !== index));
+    setTemporaryFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleResetForm = () => {
@@ -92,6 +120,7 @@ const OpenTicketForm = () => {
               </div>
             </Button>
           </DialogTrigger>
+
           <DialogContent className="max-w-sm md:max-w-md h-full max-h-[80vh] overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg">
             <DialogHeader>
               <DialogTitle className="text-bgtext-100 font-inter font-semibold text-lg text-left">
@@ -195,27 +224,68 @@ const OpenTicketForm = () => {
               name="files"
               render={() => (
                 <FormItem className="space-y-0.5 w-full px-1">
-                  <FormLabel className="text-sm font-montserrat text-neutral-300 font-medium">
-                    Upload Your Team Logo
+                  <FormLabel className="text-bgtext-100 font-inter font-semibold text-sm gap-1">
+                    Attachments
                   </FormLabel>
                   <FormControl>
                     <div className="relative">
                       <div
-                        className={`border border-dashed border-soft-border rounded-md p-5 text-center cursor-pointer hover:border-soft-border transition-colors`}
-                        onClick={() =>
-                          document.getElementById("files-input")?.click()
-                        }
+                        className={`border border-dashed border-soft-border rounded-md p-5 text-center ${
+                          temporaryImages.length < MAX_FILES
+                            ? "cursor-pointer hover:border-soft-border"
+                            : ""
+                        } transition-colors`}
+                        onClick={() => {
+                          if (temporaryImages.length < MAX_FILES) {
+                            document.getElementById("files-input")?.click();
+                          }
+                        }}
                       >
                         {temporaryImages.length > 0 ? (
                           <div className="flex flex-col w-full h-full items-center justify-center">
-                            <div className="flex relative w-40 h-40">
-                              <Image
-                                src={temporaryImages[0]}
-                                alt="Team logo preview"
-                                fill
-                                sizes="100%"
-                                className="object-cover"
-                              />
+                            <div
+                              className={`grid ${
+                                temporaryImages.length === 1
+                                  ? "grid-cols-1"
+                                  : "grid-cols-2"
+                              } gap-2 w-full`}
+                            >
+                              {temporaryImages.map((img, index) => (
+                                <div key={index} className="relative group">
+                                  <div className="w-full aspect-square relative">
+                                    <Image
+                                      src={img}
+                                      alt={`Image preview ${index + 1}`}
+                                      fill
+                                      sizes="100%"
+                                      className="object-cover rounded-md"
+                                    />
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleRemoveImage(index);
+                                    }}
+                                    className="absolute top-1 right-1 bg-black/70 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="16"
+                                      height="16"
+                                      viewBox="0 0 24 24"
+                                      fill="none"
+                                      stroke="currentColor"
+                                      strokeWidth="2"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      className="text-white"
+                                    >
+                                      <path d="M18 6L6 18M6 6l12 12"></path>
+                                    </svg>
+                                  </button>
+                                </div>
+                              ))}
                             </div>
                           </div>
                         ) : (
@@ -228,15 +298,27 @@ const OpenTicketForm = () => {
                             </p>
                           </div>
                         )}
+                        {temporaryImages.length > 0 &&
+                          temporaryImages.length < MAX_FILES && (
+                            <div className="mt-3">
+                              <p className="text-sm font-montserrat tracking-tight text-neutral-300">
+                                Click to add more images (
+                                {MAX_FILES - temporaryImages.length} remaining)
+                              </p>
+                            </div>
+                          )}
                       </div>
-                      <Input
-                        id="files-input"
-                        type="file"
-                        accept="image/png, image/jpeg, image/jpg, image/webp"
-                        max={3}
-                        className="sr-only absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                        onChange={handleImageChange}
-                      />
+                      {temporaryImages.length < MAX_FILES && (
+                        <Input
+                          id="files-input"
+                          type="file"
+                          multiple
+                          max={MAX_FILES}
+                          accept="image/png, image/jpeg, image/jpg, image/webp"
+                          className="sr-only absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          onChange={handleImageChange}
+                        />
+                      )}
                     </div>
                   </FormControl>
                   <FormMessage className="text-xs text-destructive" />

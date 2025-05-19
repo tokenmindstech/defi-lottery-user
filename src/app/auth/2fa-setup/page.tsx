@@ -1,6 +1,5 @@
 "use client";
 
-import BlueShadowIcon from "@/components/icons/blue-shadow";
 import React, { Fragment } from "react";
 import {
   Card,
@@ -16,6 +15,7 @@ import SkeletonForm from "./_components/skeleton-form";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import { redirect, useSearchParams } from "next/navigation";
+import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 
 const TwoFASetupPage = () => {
   const searchParams = useSearchParams();
@@ -106,7 +106,7 @@ const TwoFASetupPage = () => {
           </CardContent>
         </Card>
       </div>
-      <BlueShadowIcon className="absolute h-full z-10 inset-0 mask-t-from-10%" />
+      <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-10%" />
     </section>
   );
 };

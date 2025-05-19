@@ -1,4 +1,3 @@
-import BlueShadowIcon from "@/components/icons/blue-shadow";
 import React from "react";
 import {
   Card,
@@ -8,6 +7,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import SubscriptionForm from "./_components/subscription-form";
+import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 
 const SubscriptionOffersPage = () => {
   return (
@@ -31,7 +31,7 @@ const SubscriptionOffersPage = () => {
           </CardContent>
         </Card>
       </div>
-      <BlueShadowIcon className="absolute h-full z-10 inset-0 mask-t-from-10%" />
+      <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-10%" />
     </section>
   );
 };

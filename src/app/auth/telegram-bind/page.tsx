@@ -1,6 +1,6 @@
-import BlueShadowIcon from "@/components/icons/blue-shadow";
 import React from "react";
 import BindTelegramForm from "./_components/bind-telegram-form";
+import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 
 const BindTelegramPage = () => {
   return (
@@ -12,7 +12,7 @@ const BindTelegramPage = () => {
       <div className="flex items-center justify-center w-full h-full bg-[url(/assets/images/checkboard-transparent.png)] bg-no-repeat bg-bottom bg-cover rounded-xl">
         <BindTelegramForm />
       </div>
-      <BlueShadowIcon className="absolute h-full z-10 inset-0 mask-t-from-10%" />
+      <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-10%" />
     </section>
   );
 };

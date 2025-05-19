@@ -1,6 +1,6 @@
-import BlueShadowIcon from "@/components/icons/blue-shadow";
 import React from "react";
 import LoginForm from "./_components/login-form";
+import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 
 const AuthPage = () => {
   return (
@@ -12,7 +12,7 @@ const AuthPage = () => {
       <div className="flex items-center justify-center w-full h-full bg-[url(/assets/images/checkboard-transparent.png)] bg-no-repeat bg-bottom bg-cover rounded-xl">
         <LoginForm />
       </div>
-      <BlueShadowIcon className="absolute h-full z-10 inset-0 mask-t-from-10%" />
+      <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-10%" />
     </section>
   );
 };

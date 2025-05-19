@@ -1,6 +1,5 @@
 "use client";
 
-import BlueShadowIcon from "@/components/icons/blue-shadow";
 import React from "react";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { useSearchParams } from "next/navigation";
 import Verify2FAForm from "./_components/verify-2fa-form";
+import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 
 const TwoFAChallengePage = () => {
   const searchParams = useSearchParams();
@@ -40,7 +40,7 @@ const TwoFAChallengePage = () => {
           </CardContent>
         </Card>
       </div>
-      <BlueShadowIcon className="absolute h-full z-10 inset-0 mask-t-from-10%" />
+      <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-10%" />
     </section>
   );
 };

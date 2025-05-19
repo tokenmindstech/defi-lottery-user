@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const BlueShadowIcon = ({ className }: CustomIconProps) => {
+const BlueShadowTop = ({ className }: CustomIconProps) => {
   return (
     <svg
       width="100%"
@@ -11,6 +11,9 @@ const BlueShadowIcon = ({ className }: CustomIconProps) => {
       xmlns="http://www.w3.org/2000/svg"
       className={cn("flex-grow-0 flex-shrink-0 w-full h-screen", className)}
       preserveAspectRatio="none"
+      style={{
+        transform: "rotate(180deg)",
+      }}
     >
       <g filter="url(#filter0_f_221_2641)">
         <ellipse
@@ -204,4 +207,4 @@ const BlueShadowIcon = ({ className }: CustomIconProps) => {
   );
 };
 
-export default BlueShadowIcon;
+export default BlueShadowTop;
