@@ -1,5 +1,5 @@
-import React from "react";
 import OpenTicketForm from "./_components/open-ticket-form";
+import { SupportTicketTable } from "./_components/support-ticket-list";
 
 const SupportPage = () => {
   return (
@@ -10,6 +10,8 @@ const SupportPage = () => {
         </h2>
         <OpenTicketForm />
       </div>
+
+      <SupportTicketTable />
     </section>
   );
 };

@@ -9,12 +9,23 @@ declare global {
   type ProviderType = "GOOGLE" | "TELEGRAM";
   type RoleType = "USER" | "ADMIN" | "AGENT";
   type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
+  type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED";
 
   interface Verifier {
     id: string;
     type: ProviderType;
     preferNotification: boolean;
     userId: string;
+  }
+
+  interface SupportTicket {
+    id: string;
+    subject: string;
+    category: TicketIssueType;
+    description: string;
+    status: TicketStatusType;
+    createdAt: string;
+    updatedAt: string;
   }
 
   interface UserInfoResponse {
