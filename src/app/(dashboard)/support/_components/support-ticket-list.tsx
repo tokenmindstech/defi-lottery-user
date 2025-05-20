@@ -3,54 +3,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./data-table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import dayjs from "dayjs";
-import { Eye, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
-import PagePagination from "@/components/shared/page-pagination";
-import SelectLimitSupport from "./support-select-limit";
-
-// Sample data matching the screenshot
-const tickets: SupportTicket[] = [
-  {
-    id: "#123123",
-    subject: "Can't login",
-    category: "ACCOUNT",
-    status: "RESOLVED",
-    description: "I can't login to my account",
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "Payment issue",
-    category: "BILLING",
-    status: "OPEN",
-    description: "I'm having an issue with my payment",
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    category: "OTHER",
-    status: "CLOSED",
-    description: "I have a general question about your service",
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    category: "TECHNICAL",
-    status: "CLOSED",
-    description: "I have a general question about your service",
-    createdAt: new Date().toLocaleDateString(),
-    updatedAt: new Date().toLocaleDateString(),
-  },
-];
+import { Eye } from "@phosphor-icons/react/dist/ssr";
+import { truncateString } from "@/lib/utils";
 
 // Define columns for the data table
-const columns: ColumnDef<SupportTicket>[] = [
+const columns: ColumnDef<SupportTicketWithUser>[] = [
   {
     accessorKey: "id",
     header: "Ticket ID",
@@ -58,7 +16,9 @@ const columns: ColumnDef<SupportTicket>[] = [
       const id = row.getValue("id") as string;
       return (
         <div className="flex w-28 md:w-24">
-          <span className={`py-1 text-sm text-bgtext-500`}>{id}</span>
+          <span className={`py-1 text-sm text-bgtext-500`}>
+            {truncateString(id, 12)}
+          </span>
         </div>
       );
     },
@@ -156,29 +116,14 @@ const columns: ColumnDef<SupportTicket>[] = [
   },
 ];
 
-export function SupportTicketTable() {
+interface SupportTicketTableProps {
+  tickets: SupportTicketWithUser[];
+}
+
+export function SupportTicketTable({ tickets }: SupportTicketTableProps) {
   return (
-    <div className="w-full bg-bgtext-950 p-5 rounded-xl">
-      <div className="flex items-center justify-between mb-4">
-        <div className="relative w-72">
-          <Input
-            type="text"
-            placeholder="Search..."
-            className="w-full h-10 bg-bgtext-900 border-1 border-bgtext-800 rounded-full text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-            StartIcon={MagnifyingGlass}
-          />
-        </div>
-        <SelectLimitSupport />
-      </div>
-
-      <div className="rounded-md overflow-hidden">
-        <DataTable columns={columns} data={tickets} />
-      </div>
-
-      <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
-        <p className="text-bgtext-500 text-sm">Showing 5 from 1-10</p>
-        <PagePagination currentPage={2} totalPages={10} />
-      </div>
+    <div className="rounded-md overflow-hidden w-full">
+      <DataTable columns={columns} data={tickets} />
     </div>
   );
 }

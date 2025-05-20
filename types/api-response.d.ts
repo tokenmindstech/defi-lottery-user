@@ -28,6 +28,20 @@ declare global {
     updatedAt: string;
   }
 
+  interface SupportTicketWithUser {
+    id: string;
+    subject: string;
+    category: TicketIssueType;
+    description: string;
+    status: TicketStatusType;
+    createdAt: string;
+    updatedAt: string;
+    User: {
+      id: string;
+      name: string;
+    };
+  }
+
   interface UserInfoResponse {
     id: string;
     email: string;
@@ -47,6 +61,7 @@ declare global {
       page?: number;
       limit?: number;
       totalPage?: number;
+      totalCount?: number;
     };
     data?: unknown;
     statusCode: number;
@@ -115,5 +130,11 @@ declare global {
 
   interface APIGetUserProfileResponseDTO extends APIBaseResponse {
     data: UserInfoResponse;
+  }
+
+  interface APIGetSupportTicketsResponseDTO extends APIBaseResponse {
+    data: {
+      supportTickets: SupportTicketWithUser[];
+    };
   }
 }
