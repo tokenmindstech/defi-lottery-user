@@ -69,30 +69,44 @@ export function DataTable<TData, TValue>({
           ))}
         </TableHeader>
         <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow
-              key={row.id}
-              className="bg-bgtext-950 text-bgtext-100 hover:bg-bgtext-700 ease-out transition-all duration-300"
-            >
-              {row.getVisibleCells().map((cell) => {
-                return (
-                  <TableCell
-                    key={cell.id}
-                    className={cn(
-                      "border-y border-bgtext-800 py-4 text-sm font-normal text-gray-300",
-                      cell.column.getIndex() !== 0 &&
-                        "border-l border-bgtext-800",
-                      cell.column.getIndex() !==
-                        row.getVisibleCells().length - 1 &&
-                        "border-r border-bgtext-800"
-                    )}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                );
-              })}
+          {table.getRowModel().rows.length > 0 ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                className="bg-bgtext-950 text-bgtext-100 hover:bg-bgtext-700 ease-out transition-all duration-300"
+              >
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <TableCell
+                      key={cell.id}
+                      className={cn(
+                        "border-y border-bgtext-800 py-4 text-sm font-normal text-gray-300",
+                        cell.column.getIndex() !== 0 &&
+                          "border-l border-bgtext-800",
+                        cell.column.getIndex() !==
+                          row.getVisibleCells().length - 1 &&
+                          "border-r border-bgtext-800"
+                      )}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            ))
+          ) : (
+            <TableRow className="bg-bgtext-950">
+              <TableCell
+                colSpan={columns.length}
+                className="py-5 border-none text-center text-sm font-medium text-bgtext-100 border border-bgtext-800"
+              >
+                No data available
+              </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
     </div>
