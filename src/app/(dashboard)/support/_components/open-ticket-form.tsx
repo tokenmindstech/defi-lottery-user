@@ -26,8 +26,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TICKET_ISSUE_ITEMS } from "@/constant/common";
-import { cn, toBase64 } from "@/lib/utils";
+import { cn, fetchProxy, toBase64 } from "@/lib/utils";
 import Image from "next/image";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 const formSchema = z.object({
   subject: z.string().min(1, {
@@ -39,7 +42,7 @@ const formSchema = z.object({
   category: z.enum(["BILLING", "ACCOUNT", "TECHNICAL", "OTHER"], {
     errorMap: () => ({ message: "Please select a category" }),
   }),
-  files: z.array(z.instanceof(File)).optional(),
+  fileAttachments: z.array(z.instanceof(File)).optional(),
 });
 
 const MAX_FILES = 4;
@@ -48,13 +51,16 @@ const OpenTicketForm = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [temporaryImages, setTemporaryImages] = useState<string[]>([]);
   const [temporaryFiles, setTemporaryFiles] = useState<File[]>([]);
+
+  const queryClient = useQueryClient();
+  const { data: userSession } = useSession();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       subject: "",
       description: "",
       category: "OTHER",
-      files: [],
+      fileAttachments: [],
     },
   });
 
@@ -90,7 +96,7 @@ const OpenTicketForm = () => {
     ]);
 
     form.setValue(
-      "files",
+      "fileAttachments",
       [...temporaryFiles, ...processedFiles.map((item) => item.file)],
       { shouldValidate: true }
     );
@@ -107,9 +113,62 @@ const OpenTicketForm = () => {
     form.reset();
   };
 
+  const mutation = useMutation<
+    API2FAVerifyResponseDTO | APIBaseErrorResponse,
+    Error,
+    z.infer<typeof formSchema>
+  >({
+    mutationKey: [
+      "create-ticket-support",
+      form.getValues("subject"),
+      userSession?.user.id,
+    ],
+    mutationFn: async (data) => {
+      const payload = {
+        subject: data.subject,
+        description: data.description,
+        category: data.category,
+        contactPreference: "TELEGRAM",
+      };
+      const response = await fetchProxy({
+        method: "POST",
+        url: "support-ticket",
+        body: payload,
+        auth: true,
+      });
+      return response;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["my-support-tickets", userSession?.user.id],
+      });
+    },
+  });
+
+  const isErrorResponse = (
+    response: API2FAVerifyResponseDTO | APIBaseErrorResponse
+  ): response is APIBaseErrorResponse => {
+    return "statusCode" in response && response.statusCode >= 400;
+  };
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     console.log("Form submitted", data);
-    // Handle form submission logic here
+    try {
+      const result = await mutation.mutateAsync(data);
+      if (isErrorResponse(result)) {
+        toast.error(
+          Array.isArray(result.message) ? result.message[0] : result.message
+        );
+        return;
+      }
+
+      toast.success("Ticket created successfully");
+      handleResetForm();
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      toast.error("Error creating ticket");
+    }
   };
 
   return (
@@ -230,7 +289,7 @@ const OpenTicketForm = () => {
 
             <FormField
               control={form.control}
-              name="files"
+              name="fileAttachments"
               render={() => (
                 <FormItem className="space-y-0.5 w-full px-1">
                   <FormLabel className="text-bgtext-100 font-inter font-semibold text-sm gap-1">
