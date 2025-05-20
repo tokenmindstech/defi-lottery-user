@@ -191,3 +191,5 @@ export const TICKET_ISSUE_ITEMS: TicketIssue[] = [
     label: "General Inquiry",
   },
 ];
+
+export const PAGINATION_ITEMS: number[] = [10, 20, 50, 100];

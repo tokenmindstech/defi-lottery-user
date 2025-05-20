@@ -1,120 +1,51 @@
 "use client";
 
-import { Eye } from "lucide-react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "./data-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import dayjs from "dayjs";
-
-// Define ticket types and status
-type TicketStatus = "Resolved" | "Open" | "Closed";
-
-interface SupportTicket {
-  id: string;
-  subject: string;
-  issueCategory: string;
-  dateSubmitted: string;
-  status: TicketStatus;
-  lastUpdate: string;
-}
+import { Eye, MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import PagePagination from "@/components/shared/page-pagination";
+import SelectLimitSupport from "./support-select-limit";
 
 // Sample data matching the screenshot
 const tickets: SupportTicket[] = [
   {
     id: "#123123",
     subject: "Can't login",
-    issueCategory: "Technical Support",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
+    category: "ACCOUNT",
+    status: "RESOLVED",
+    description: "I can't login to my account",
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
   },
   {
     id: "#123123",
     subject: "Payment issue",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Open",
-    lastUpdate: new Date().toLocaleDateString(),
+    category: "BILLING",
+    status: "OPEN",
+    description: "I'm having an issue with my payment",
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
   },
   {
     id: "#123123",
     subject: "General question",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Closed",
-    lastUpdate: new Date().toLocaleDateString(),
+    category: "OTHER",
+    status: "CLOSED",
+    description: "I have a general question about your service",
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
   },
   {
     id: "#123123",
     subject: "General question",
-    issueCategory: "General Inquiry",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "Technical Support",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "General Inquiry",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Open",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Closed",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "General Inquiry",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Resolved",
-    lastUpdate: new Date().toLocaleDateString(),
-  },
-  {
-    id: "#123123",
-    subject: "General question",
-    issueCategory: "Billing",
-    dateSubmitted: new Date().toLocaleDateString(),
-    status: "Open",
-    lastUpdate: new Date().toLocaleDateString(),
+    category: "TECHNICAL",
+    status: "CLOSED",
+    description: "I have a general question about your service",
+    createdAt: new Date().toLocaleDateString(),
+    updatedAt: new Date().toLocaleDateString(),
   },
 ];
 
@@ -127,7 +58,7 @@ const columns: ColumnDef<SupportTicket>[] = [
       const id = row.getValue("id") as string;
       return (
         <div className="flex w-28 md:w-24">
-          <span className={`py-1 text-sm`}>{id}</span>
+          <span className={`py-1 text-sm text-bgtext-500`}>{id}</span>
         </div>
       );
     },
@@ -139,31 +70,31 @@ const columns: ColumnDef<SupportTicket>[] = [
       const subject = row.getValue("subject") as string;
       return (
         <div className="flex w-36 md:w-28">
-          <span className={`py-1 text-sm`}>{subject}</span>
+          <span className={`py-1 text-sm text-bgtext-500`}>{subject}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: "issueCategory",
+    accessorKey: "category",
     header: "Issue Category",
     cell: ({ row }) => {
-      const category = row.getValue("issueCategory") as string;
+      const category = row.getValue("category") as string;
       return (
         <div className="flex w-36 md:w-28">
-          <span className={`py-1 text-sm`}>{category}</span>
+          <span className={`py-1 text-sm text-bgtext-500`}>{category}</span>
         </div>
       );
     },
   },
   {
-    accessorKey: "dateSubmitted",
+    accessorKey: "createdAt",
     header: "Date Submitted",
     cell: ({ row }) => {
-      const date = row.getValue("dateSubmitted") as string;
+      const date = row.getValue("createdAt") as string;
       return (
         <div className="flex">
-          <span className={`py-1 text-sm`}>
+          <span className={`py-1 text-sm text-bgtext-500`}>
             {dayjs(date).format("DD/MM/YYYY")}
           </span>
         </div>
@@ -174,16 +105,16 @@ const columns: ColumnDef<SupportTicket>[] = [
     accessorKey: "status",
     header: "Category",
     cell: ({ row }) => {
-      const status = row.getValue("status") as TicketStatus;
+      const status = row.getValue("status") as TicketStatusType;
       return (
-        <div className="flex justify-center">
+        <div className="flex">
           <span
-            className={`px-2 py-1 text-xs rounded-full ${
-              status === "Resolved"
-                ? "bg-green-500/20 text-green-500"
-                : status === "Open"
-                ? "bg-yellow-500/20 text-yellow-500"
-                : "bg-red-500/20 text-red-500"
+            className={`px-3 py-1 rounded-full text-xs ${
+              status === "OPEN"
+                ? "bg-warning-500/20 text-warning-500"
+                : status === "CLOSED"
+                ? "bg-error-500/20 text-error-500"
+                : "bg-success-500/20 text-success-500"
             }`}
           >
             {status}
@@ -193,8 +124,18 @@ const columns: ColumnDef<SupportTicket>[] = [
     },
   },
   {
-    accessorKey: "lastUpdate",
-    header: "Last Update",
+    accessorKey: "updatedAt",
+    header: "Last Updated",
+    cell: ({ row }) => {
+      const date = row.getValue("updatedAt") as string;
+      return (
+        <div className="flex">
+          <span className={`py-1 text-sm text-bgtext-500`}>
+            {dayjs(date).format("DD/MM/YYYY")}
+          </span>
+        </div>
+      );
+    },
   },
   {
     id: "action",
@@ -205,9 +146,9 @@ const columns: ColumnDef<SupportTicket>[] = [
           <Button
             variant="ghost"
             size="icon"
-            className="text-gray-400 hover:text-white"
+            className="bg-bgtext-900 rounded-full cursor-pointer hover:bg-bgtext-900 text-bgtext-700 hover:text-bgtext-100 ease-out transition-all duration-300"
           >
-            <Eye className="h-5 w-5" />
+            <Eye className="size-6 " />
           </Button>
         </div>
       );
@@ -217,103 +158,26 @@ const columns: ColumnDef<SupportTicket>[] = [
 
 export function SupportTicketTable() {
   return (
-    <div className="w-full bg-black text-white">
+    <div className="w-full bg-bgtext-950 p-5 rounded-xl">
       <div className="flex items-center justify-between mb-4">
         <div className="relative w-72">
           <Input
-            placeholder="Search here"
-            className="bg-gray-900 border-gray-800 text-gray-400 pl-8"
+            type="text"
+            placeholder="Search..."
+            className="w-full h-10 bg-bgtext-900 border-1 border-bgtext-800 rounded-full text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
+            StartIcon={MagnifyingGlass}
           />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4 absolute left-2.5 top-2.5 text-gray-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
         </div>
-        <Select defaultValue="10">
-          <SelectTrigger className="w-16 bg-black border-gray-800">
-            <SelectValue placeholder="10" />
-          </SelectTrigger>
-          <SelectContent className="bg-gray-900 border-gray-800">
-            <SelectItem value="5">5</SelectItem>
-            <SelectItem value="10">10</SelectItem>
-            <SelectItem value="20">20</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-          </SelectContent>
-        </Select>
+        <SelectLimitSupport />
       </div>
 
       <div className="rounded-md overflow-hidden">
         <DataTable columns={columns} data={tickets} />
       </div>
 
-      <div className="flex items-center justify-between mt-4 text-sm">
-        <div className="text-gray-500">Showing 5 from 1-10</div>
-        <div className="flex items-center space-x-1">
-          <Button
-            variant="outline"
-            size="icon"
-            className="w-8 h-8 border-gray-800 bg-black text-gray-400"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </Button>
-          {[1, 2, 3, "...", 8, 9, 10].map((page, index) => (
-            <Button
-              key={index}
-              variant={page === 1 ? "default" : "outline"}
-              size="icon"
-              className={`w-8 h-8 ${
-                page === 1
-                  ? "bg-purple-600 text-white border-purple-600"
-                  : "border-gray-800 bg-black text-gray-400"
-              }`}
-            >
-              {page}
-            </Button>
-          ))}
-          <Button
-            variant="outline"
-            size="icon"
-            className="w-8 h-8 border-gray-800 bg-black text-gray-400"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-4 w-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Button>
-        </div>
+      <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
+        <p className="text-bgtext-500 text-sm">Showing 5 from 1-10</p>
+        <PagePagination currentPage={2} totalPages={10} />
       </div>
     </div>
   );
