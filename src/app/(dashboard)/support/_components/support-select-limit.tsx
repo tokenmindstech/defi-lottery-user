@@ -18,7 +18,11 @@ const SelectLimitSupport = () => {
   const router = useRouter();
 
   // Get current limit from URL or default to "10"
-  const activeLimit = searchParams.get("limit") || "10";
+  const activeLimit =
+    searchParams.get("limit") &&
+    !Number.isNaN(parseInt(searchParams.get("limit") as string))
+      ? (searchParams.get("limit") as string)
+      : "10";
 
   const handleLimitChange = (limit: string) => {
     const updatedParams = searchParams.toString();

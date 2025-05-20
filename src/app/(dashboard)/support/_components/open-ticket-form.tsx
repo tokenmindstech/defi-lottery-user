@@ -152,7 +152,6 @@ const OpenTicketForm = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("Form submitted", data);
     try {
       const result = await mutation.mutateAsync(data);
       if (isErrorResponse(result)) {

@@ -5,13 +5,32 @@ import { DataTable } from "./data-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { Eye } from "@phosphor-icons/react/dist/ssr";
-import { truncateString } from "@/lib/utils";
+import { cn, truncateString } from "@/lib/utils";
+import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
 
 // Define columns for the data table
 const columns: ColumnDef<SupportTicketWithUser>[] = [
   {
     accessorKey: "id",
-    header: "Ticket ID",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Ticket ID</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const id = row.getValue("id") as string;
       return (
@@ -25,7 +44,25 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   },
   {
     accessorKey: "subject",
-    header: "Subject",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Subject</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const subject = row.getValue("subject") as string;
       return (
@@ -37,7 +74,27 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   },
   {
     accessorKey: "category",
-    header: "Issue Category",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>
+            Issue Category
+          </p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       return (
@@ -49,13 +106,33 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   },
   {
     accessorKey: "createdAt",
-    header: "Date Submitted",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>
+            Date Submitted
+          </p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const date = row.getValue("createdAt") as string;
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY")}
+            {dayjs(date).format("DD/MM/YYYY HH:mm A")}
           </span>
         </div>
       );
@@ -63,7 +140,25 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   },
   {
     accessorKey: "status",
-    header: "Category",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Status</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const status = row.getValue("status") as TicketStatusType;
       return (
@@ -85,13 +180,33 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   },
   {
     accessorKey: "updatedAt",
-    header: "Last Updated",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>
+            Last Updated
+          </p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const date = row.getValue("updatedAt") as string;
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY")}
+            {dayjs(date).format("DD/MM/YYYY HH:mm A")}
           </span>
         </div>
       );
