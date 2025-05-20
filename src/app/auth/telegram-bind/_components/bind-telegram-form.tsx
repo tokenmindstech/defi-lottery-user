@@ -86,7 +86,6 @@ const BindTelegramForm = () => {
           window.location.pathname
         );
         toast.success("Login successful!", { id: "login" });
-        setIsLoading(false);
         delay(2000).then(() => {
           router.refresh();
         });
@@ -95,6 +94,7 @@ const BindTelegramForm = () => {
       console.error("JWT request failed:", error);
       // Reset the flag in case of error to allow retry
       jwtRequestedRef.current = false;
+    } finally {
       setIsLoading(false);
     }
   }, [router, web3Auth]);
@@ -124,6 +124,7 @@ const BindTelegramForm = () => {
         }
       } catch (error) {
         console.error("Login failed:", error);
+      } finally {
         setIsLoading(false);
       }
     },
@@ -144,6 +145,7 @@ const BindTelegramForm = () => {
       }
 
       try {
+        setIsLoading(true);
         const jwtToken = searchParams.get("token");
 
         // Handle JWT token from URL
@@ -158,6 +160,8 @@ const BindTelegramForm = () => {
         }
       } catch (error) {
         console.error("Auth status check failed:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 

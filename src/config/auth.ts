@@ -169,6 +169,8 @@ export const authConfig: NextAuthOptions = {
             throw new CustomError(`${AUTH_ERROR}${response.message}`);
           }
 
+          console.log("response", response);
+
           // Check if TELEGRAM is exist in verifiers
           const telegramVerifier = response.data.user.verifiers.find(
             (verifier) => verifier.type === "TELEGRAM"

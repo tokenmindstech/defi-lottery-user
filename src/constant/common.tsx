@@ -29,49 +29,6 @@ export const MENU_ITEMS: MenuItems[] = [
     href: "/",
   },
   {
-    icon: "lucky-draw",
-    title: "My Referrals",
-    href: "/referrals",
-  },
-  {
-    icon: "lucky-draw",
-    title: "Commissions",
-    href: "/commissions",
-  },
-  {
-    icon: "lucky-draw",
-    title: "Lucky Draw",
-    href: "/lucky-draw",
-  },
-  {
-    icon: "perks",
-    title: "Perks",
-    href: "/perks",
-  },
-  {
-    icon: "claim-rewards",
-    title: "Claim Rewards",
-    href: "/claim-rewards",
-  },
-  {
-    icon: "my-profile",
-    title: "My Profile",
-    href: "/profile",
-  },
-  {
-    icon: "support",
-    title: "Support",
-    href: "/support",
-  },
-];
-
-export const AGENT_MENU_ITEMS: MenuItems[] = [
-  {
-    icon: "dashboard",
-    title: "Dashboard",
-    href: "/",
-  },
-  {
     icon: "referral",
     title: "My Referrals",
     href: "/referrals",
@@ -80,34 +37,6 @@ export const AGENT_MENU_ITEMS: MenuItems[] = [
     icon: "commission",
     title: "Commissions",
     href: "/commissions",
-  },
-  {
-    icon: "lucky-draw",
-    title: "Lucky Draw",
-    href: "/lucky-draw",
-  },
-  {
-    icon: "rewards",
-    title: "Rewards",
-    href: "/rewards",
-  },
-  {
-    icon: "my-profile",
-    title: "My Profile",
-    href: "/profile",
-  },
-  {
-    icon: "support",
-    title: "Support",
-    href: "/support",
-  },
-];
-
-export const USER_MENU_ITEMS: MenuItems[] = [
-  {
-    icon: "dashboard",
-    title: "Dashboard",
-    href: "/",
   },
   {
     icon: "lucky-draw",

@@ -105,7 +105,6 @@ const LoginForm = () => {
           window.location.pathname
         );
         toast.success("Login successful!", { id: "login" });
-        setIsLoading(false);
         delay(2000).then(() => {
           router.refresh();
         });
@@ -114,6 +113,7 @@ const LoginForm = () => {
       console.error("JWT request failed:", error);
       // Reset the flag in case of error to allow retry
       jwtRequestedRef.current = false;
+    } finally {
       setIsLoading(false);
     }
   }, [router, web3Auth]);
@@ -148,6 +148,7 @@ const LoginForm = () => {
         }
       } catch (error) {
         console.error("Login failed:", error);
+      } finally {
         setIsLoading(false);
       }
     },
@@ -166,6 +167,7 @@ const LoginForm = () => {
       }
 
       try {
+        setIsLoading(true);
         const action = searchParams.get("action");
         const jwtToken = searchParams.get("token");
 
@@ -195,6 +197,8 @@ const LoginForm = () => {
         }
       } catch (error) {
         console.error("Auth status check failed:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 

@@ -12,7 +12,7 @@ import {
 import { List } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import Image from "next/image";
-import { AGENT_MENU_ITEMS, USER_MENU_ITEMS } from "@/constant/common";
+import { MENU_ITEMS } from "@/constant/common";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import RenderIcon from "../icons/render-icon";
@@ -20,16 +20,9 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 
-interface MobileSidebarLayoutProps {
-  isAgent?: boolean;
-}
-
-const MobileSidebarLayout = ({ isAgent }: MobileSidebarLayoutProps) => {
+const MobileSidebarLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-
-  const MENU_ITEMS = isAgent ? AGENT_MENU_ITEMS : USER_MENU_ITEMS;
-
   const handleOpenChange = () => {
     setIsOpen((prev) => !prev);
   };

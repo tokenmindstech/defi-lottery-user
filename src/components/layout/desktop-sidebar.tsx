@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { Separator } from "../ui/separator";
-import { AGENT_MENU_ITEMS, USER_MENU_ITEMS } from "@/constant/common";
+import { MENU_ITEMS } from "@/constant/common";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -11,16 +11,8 @@ import RenderIcon from "../icons/render-icon";
 import { Button } from "../ui/button";
 import { signOut } from "next-auth/react";
 
-interface DesktopSidebarLayoutProps {
-  isAgent?: boolean;
-}
-
-const DesktopSidebarLayout = ({
-  isAgent = false,
-}: DesktopSidebarLayoutProps) => {
+const DesktopSidebarLayout = () => {
   const pathname = usePathname();
-
-  const MENU_ITEMS = isAgent ? AGENT_MENU_ITEMS : USER_MENU_ITEMS;
 
   return (
     <div className="hidden lg:flex flex-col space-y-5 min-w-[290px] max-w-[290px] h-screen bg-black border-r border-bgtext-800">
