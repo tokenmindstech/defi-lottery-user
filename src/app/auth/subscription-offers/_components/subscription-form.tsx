@@ -4,7 +4,6 @@ import React from "react";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -16,7 +15,7 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 import { Spinner, Question } from "@phosphor-icons/react/dist/ssr";
-import { cn } from "@/lib/utils";
+import { cn, delay, fetchProxy } from "@/lib/utils";
 import toast from "react-hot-toast";
 import {
   Tooltip,
@@ -24,58 +23,71 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { SUBSCRIPTION_ITEMS } from "@/constant/common";
+import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
-  subscription: z.enum(["basic", "premium", "explore"], {
+  subscription: z.enum(["BASIC", "PREMIUM", "EXPLORE"], {
     required_error: "You need to select a subscription plan",
   }),
 });
 
-const subscriptionOptions = [
-  {
-    value: "basic",
-    label: "Basic ($30/month)",
-    information:
-      "Access to essential features with limited benefits (1 tickets/day).",
-  },
-  {
-    value: "premium",
-    label: "Premium ($300/month)",
-    information:
-      "Full access to all features and premium support (10 tickets/day).",
-  },
-  {
-    value: "explore",
-    label: "I'm only exploring",
-    information: "Browse our platform with limited functionality.",
-  },
-];
+type FormValues = z.infer<typeof formSchema>;
 
 const SubscriptionForm = () => {
-  const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      subscription: "premium",
+      subscription: "PREMIUM",
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const subscriptionName = subscriptionOptions.find(
-      (option) => option.value === data.subscription
-    )?.label;
+  const mutation = useMutation<
+    APICreatePaymentResponseDTO | APIBaseErrorResponse,
+    Error,
+    FormValues
+  >({
+    mutationKey: [
+      "create-payment-subscription",
+      form.getValues("subscription"),
+    ],
+    mutationFn: async (data) => {
+      return await fetchProxy({
+        method: "POST",
+        url: "payment",
+        auth: true,
+        body: {
+          type: data.subscription,
+        },
+      });
+    },
+  });
 
-    // Show toast based on subscription type
-    if (data.subscription === "explore") {
-      toast.success(`Welcome! You're exploring our platform.`);
-    } else {
-      toast.success(`You've selected the ${subscriptionName} plan!`);
+  const isErrorResponse = (
+    response: APICreatePaymentResponseDTO | APIBaseErrorResponse
+  ): response is APIBaseErrorResponse => {
+    return "statusCode" in response && response.statusCode >= 400;
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      const result = await mutation.mutateAsync(data);
+      if (isErrorResponse(result)) {
+        toast.error(
+          Array.isArray(result.message) ? result.message[0] : result.message
+        );
+        return;
+      }
+      toast.success(
+        "Payment created. We will redirect you to the payment page."
+      );
+      await delay(2000);
+      window.location.href = result.data.invoiceUrl;
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    } finally {
+      form.reset();
     }
-
-    // Navigate to home page after a short delay
-    setTimeout(() => {
-      router.push("/");
-    }, 1500);
   };
 
   return (
@@ -90,9 +102,9 @@ const SubscriptionForm = () => {
                 <RadioGroup
                   onValueChange={field.onChange}
                   defaultValue={field.value}
-                  className="flex flex-col space-y-1 w-full"
+                  className="flex flex-col w-full space-y-1"
                 >
-                  {subscriptionOptions.map((option, idx) => (
+                  {SUBSCRIPTION_ITEMS.map((option, idx) => (
                     <FormItem
                       key={idx}
                       className={cn(
@@ -110,7 +122,7 @@ const SubscriptionForm = () => {
                         />
                       </FormControl>
                       <FormLabel className="flex flex-row items-center justify-between w-full space-x-2">
-                        <p className="font-normal text-bgtext-100 font-inter text-base w-full cursor-pointer">
+                        <p className="w-full text-base font-normal cursor-pointer text-bgtext-100 font-inter">
                           {option.label}
                         </p>
                         <TooltipProvider>
@@ -119,7 +131,7 @@ const SubscriptionForm = () => {
                               <Question className="size-5 text-bgtext-100 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
-                              <p className="text-bgtext-100 font-inter text-sm">
+                              <p className="text-sm text-bgtext-100 font-inter">
                                 {option.information}
                               </p>
                             </TooltipContent>
@@ -135,16 +147,16 @@ const SubscriptionForm = () => {
           )}
         />
 
-        <div className="w-full flex items-center justify-center">
+        <div className="flex items-center justify-center w-full">
           <Button
             type="submit"
             disabled={form.formState.isSubmitting}
-            className="cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg ease-out transition-all duration-300"
+            className="transition-all duration-300 ease-out border-2 rounded-lg cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50"
           >
             {form.formState.isSubmitting ? (
               <div className="flex flex-row items-center justify-center space-x-2">
                 <Spinner className="size-5 fill-bgtext-100 animate-spin" />
-                <p className="text-bgtext-100 font-inter font-medium text-base">
+                <p className="text-base font-medium text-bgtext-100 font-inter">
                   Processing...
                 </p>
               </div>

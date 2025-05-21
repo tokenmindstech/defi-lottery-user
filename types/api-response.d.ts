@@ -10,6 +10,7 @@ declare global {
   type RoleType = "USER" | "ADMIN";
   type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
   type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED";
+  type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
 
   interface Verifier {
     id: string;
@@ -148,6 +149,12 @@ declare global {
   interface APIGetSupportTicketsResponseDTO extends APIBaseResponse {
     data: {
       supportTickets: SupportTicketWithUser[];
+    };
+  }
+
+  interface APICreatePaymentResponseDTO extends APIBaseResponse {
+    data: {
+      invoiceUrl: string;
     };
   }
 }

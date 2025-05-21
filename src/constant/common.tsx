@@ -16,6 +16,12 @@ interface TicketIssue {
   label: string;
 }
 
+interface SubscriptionItems {
+  value: SubscriptionType;
+  label: string;
+  information: string;
+}
+
 export const REQUIRED_2FA_SETUP = "required_2fa_setup";
 export const REQUIRED_AUTHENTICATION = "required_authentication";
 export const REQUIRED_BIND_TELEGRAM = "required_bind_telegram";
@@ -122,3 +128,23 @@ export const TICKET_ISSUE_ITEMS: TicketIssue[] = [
 ];
 
 export const PAGINATION_ITEMS: number[] = [10, 20, 50, 100];
+
+export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
+  {
+    value: "BASIC",
+    label: "Basic ($30/month)",
+    information:
+      "Access to essential features with limited benefits (1 tickets/day).",
+  },
+  {
+    value: "PREMIUM",
+    label: "Premium ($300/month)",
+    information:
+      "Full access to all features and premium support (10 tickets/day).",
+  },
+  {
+    value: "EXPLORE",
+    label: "I'm only exploring",
+    information: "Browse our platform with limited functionality.",
+  },
+];

@@ -37,13 +37,6 @@ const MembershipForm = () => {
           <p className="text-sm text-bgtext-100 font-inter font-medium">
             <span className="text-linsea-start">30</span> tickets per month
           </p>
-
-          <Button
-            variant="link"
-            className="text-base font-inter font-medium text-linsea-start"
-          >
-            Upgrade Plan
-          </Button>
         </div>
       </div>
 
