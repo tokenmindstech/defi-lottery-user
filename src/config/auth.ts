@@ -7,6 +7,7 @@ import {
 } from "@/constant/common";
 import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { cookies } from "next/headers";
 
 type ErrorType =
   | "AccessDenied"
@@ -131,6 +132,9 @@ export const authConfig: NextAuthOptions = {
         jwt: { label: "JWT", type: "text" },
       },
       authorize: async (credentials): Promise<User | null> => {
+        const cookieStore = await cookies();
+        const referral = cookieStore.get("ref")?.value;
+
         try {
           if (credentials?.type === AUTH_LOGIN_2FA) {
             const userData =
@@ -160,6 +164,7 @@ export const authConfig: NextAuthOptions = {
               body: JSON.stringify({
                 role: credentials?.role,
                 jwt: credentials?.jwt,
+                referral: referral ? referral : undefined,
               }),
             }
           );

@@ -9,31 +9,75 @@ export function middleware(request: NextRequest) {
     request.cookies.get("next-auth.session-token")?.value ||
     request.cookies.get("__Secure-next-auth.session-token")?.value;
 
+  // Check if we're on the auth page
   const isAuthPage = pathname.startsWith("/auth");
   const hasSession = !!sessionToken;
 
-  // User has no session and is NOT on auth page => redirect to auth
-  if (!hasSession && !isAuthPage) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/auth";
-    url.search = "";
-    return NextResponse.redirect(url);
+  // Extract ref parameter
+  const searchParams = request.nextUrl.searchParams;
+  const ref = searchParams.get("ref");
+  const isExistRef = request.cookies.get("ref")?.value;
+
+  // Handle auth logic
+  if (isAuthPage) {
+    return handleReferral(request);
   }
 
-  // User has no session and is on auth page => continue
+  // Auth protection logic for non-auth pages
+  if (!hasSession) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth";
+
+    // Include ref parameter in the redirect URL if it exists
+    if (ref) {
+      url.searchParams.set("ref", ref);
+    } else if (isExistRef) {
+      // If ref is in cookie but not in URL, add it to URL
+      url.searchParams.set("ref", isExistRef);
+    } else {
+      url.search = ""; // Clear search params only if no ref to preserve
+    }
+
+    const redirectResponse = NextResponse.redirect(url);
+
+    // If there's a referral code and no existing ref cookie, set it even during redirect
+    if (!isExistRef && ref) {
+      redirectResponse.cookies.set("ref", ref, { maxAge: 60 * 60 * 24 * 7 }); // 1 week
+      console.log("Setting ref cookie during redirect:", ref);
+    }
+
+    return redirectResponse;
+  }
+
+  // User has session and is on protected page
+  return handleReferral(request);
+}
+
+// Helper function to handle referral parameters
+function handleReferral(request: NextRequest): NextResponse {
+  const searchParams = request.nextUrl.searchParams;
+  const ref = searchParams.get("ref");
+  const isExistRef = request.cookies.get("ref")?.value;
+
+  console.log("Existing ref cookie:", isExistRef);
+
+  if (!isExistRef && ref) {
+    // Set the cookie with the ref value
+    const response = NextResponse.next();
+    response.cookies.set("ref", ref, { maxAge: 60 * 60 * 24 * 7 }); // 1 week
+    return response;
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - /auth/* (auth pages)
-     * - /_next/* (Next.js internals)
-     * - /api/* (API routes)
-     * - /static/* (static files)
-     * - .*\.(.*)$ (files with extensions like favicon.ico etc.)
-     */
+    // Auth pages - for referral processing
+    "/auth",
+    "/auth/:path*",
+
+    // Protected pages that require authentication
     "/((?!auth|_next|api|static|.*\\..*$).*)",
   ],
 };

@@ -7,7 +7,7 @@ export {};
 
 declare global {
   type ProviderType = "GOOGLE" | "TELEGRAM";
-  type RoleType = "USER" | "ADMIN" | "AGENT";
+  type RoleType = "USER" | "ADMIN";
   type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
   type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED";
 
@@ -37,6 +37,15 @@ declare global {
     createdAt: string;
     updatedAt: string;
     User: {
+      id: string;
+      name: string;
+    };
+  }
+
+  interface ReferredUser {
+    id: string;
+    earnings: number;
+    user: {
       id: string;
       name: string;
     };
@@ -83,6 +92,10 @@ declare global {
         verifiers: Verifier[];
         isTwoFactorSetup: boolean;
         authenticated: boolean;
+        ownedReferral: {
+          id: string;
+          referred: ReferredUser[];
+        };
       };
       access_token: string;
     };

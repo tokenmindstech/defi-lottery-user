@@ -59,6 +59,7 @@ const LoginForm = () => {
       jwtRequestedRef.current = true;
 
       const user = await web3Auth.getUserInfo();
+      console.log("user", user);
       const result = await signIn("credentials", {
         jwt: user.idToken,
         role: "USER",
@@ -170,6 +171,7 @@ const LoginForm = () => {
         setIsLoading(true);
         const action = searchParams.get("action");
         const jwtToken = searchParams.get("token");
+        console.log("jwtToken", jwtToken);
 
         // Reset JWT requested flag on logout
         if (action === "logout") {
