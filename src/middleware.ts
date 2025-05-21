@@ -42,7 +42,7 @@ export function middleware(request: NextRequest) {
 
     // If there's a referral code and no existing ref cookie, set it even during redirect
     if (!isExistRef && ref) {
-      redirectResponse.cookies.set("ref", ref); // No expiration time
+      redirectResponse.cookies.set("ref", ref, { maxAge: 60 * 5 }); // 5 minutes in seconds
     }
 
     return redirectResponse;
@@ -61,7 +61,7 @@ function handleReferral(request: NextRequest): NextResponse {
   if (!isExistRef && ref) {
     // Set the cookie with the ref value
     const response = NextResponse.next();
-    response.cookies.set("ref", ref); // No expiration time
+    response.cookies.set("ref", ref, { maxAge: 60 * 5 }); // 5 minutes in seconds
     return response;
   }
 
