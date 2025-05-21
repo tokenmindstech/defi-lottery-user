@@ -65,6 +65,17 @@ declare global {
     subscription: unknown | null;
   }
 
+  interface InvoiceSubscription {
+    id: string;
+    amount: number;
+    currency: string;
+    isPaid: boolean;
+    referenceId: string;
+    paymentUrl: string;
+    createdAt: string;
+    subscriptionId: string;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -156,5 +167,15 @@ declare global {
     data: {
       invoiceUrl: string;
     };
+  }
+
+  interface APIGetMembershipResponseDTO extends APIBaseResponse {
+    data: {
+      id: string;
+      type: SubscriptionType;
+      validUntil: string;
+      userId: string;
+      invoices: InvoiceSubscription[];
+    } | null;
   }
 }

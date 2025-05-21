@@ -5,7 +5,6 @@ import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
 import React, { useCallback, useContext, useEffect, useState } from "react";
 import { cn, fetchProxy } from "@/lib/utils";
 import GeneralForm from "./general-form";
-import MembershipForm from "./membership-form";
 import PaymentDetailsForm from "./payment-details";
 import AccountSetting from "./account-setting";
 import { useSearchParams } from "next/navigation";
@@ -14,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import SubscriptionForm from "./subscription-form";
 
 interface ProfileMenuProps {
   isEditing: boolean;
@@ -214,7 +214,7 @@ const ProfileMenu = ({
             userInfoResponse={userInfoResponse}
           />
         )}
-        {activeTab === "membership" && <MembershipForm />}
+        {activeTab === "subscription" && <SubscriptionForm />}
         {activeTab === "payment" && <PaymentDetailsForm />}
         {activeTab === "account" && <AccountSetting />}
       </div>

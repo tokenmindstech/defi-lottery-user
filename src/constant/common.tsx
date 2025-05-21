@@ -1,4 +1,8 @@
-export type ProfileMenuType = "general" | "membership" | "payment" | "account";
+export type ProfileMenuType =
+  | "general"
+  | "subscription"
+  | "payment"
+  | "account";
 
 interface MenuItems {
   icon: string;
@@ -20,6 +24,7 @@ interface SubscriptionItems {
   value: SubscriptionType;
   label: string;
   information: string;
+  tickets: number;
 }
 
 export const REQUIRED_2FA_SETUP = "required_2fa_setup";
@@ -95,8 +100,8 @@ export const PROFILE_MENU_ITEMS: ProfileMenuItems[] = [
     label: "General Settings",
   },
   {
-    value: "membership",
-    label: "Membership",
+    value: "subscription",
+    label: "Subscription",
   },
   {
     value: "payment",
@@ -135,16 +140,19 @@ export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
     label: "Basic ($30/month)",
     information:
       "Access to essential features with limited benefits (1 tickets/day).",
+    tickets: 0,
   },
   {
     value: "PREMIUM",
     label: "Premium ($300/month)",
     information:
       "Full access to all features and premium support (10 tickets/day).",
+    tickets: 30,
   },
   {
     value: "EXPLORE",
     label: "I'm only exploring",
     information: "Browse our platform with limited functionality.",
+    tickets: 300,
   },
 ];

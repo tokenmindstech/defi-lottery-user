@@ -1,0 +1,134 @@
+"use client";
+
+import React, { Fragment } from "react";
+import { Button } from "@/components/ui/button";
+import dayjs from "dayjs";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProxy } from "@/lib/utils";
+import SubscriptionSkeleton from "./subscription-skeleton";
+import { SUBSCRIPTION_ITEMS } from "@/constant/common";
+
+const SubscriptionForm = () => {
+  const { data: userSession } = useSession();
+  const { data: subscriptionData, isLoading } =
+    useQuery<APIGetMembershipResponseDTO>({
+      queryKey: ["membership", userSession?.user.id],
+      queryFn: async () =>
+        fetchProxy({
+          url: "subscription",
+          method: "GET",
+          auth: true,
+        }),
+      enabled: !!userSession,
+      staleTime: 0,
+    });
+
+  console.log("membershipData", subscriptionData);
+  console.log("isLoading", isLoading);
+  return (
+    <div className="flex flex-col p-2 space-y-5">
+      <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
+        Subscription Overview
+      </h2>
+
+      {isLoading ? (
+        <SubscriptionSkeleton />
+      ) : (
+        subscriptionData !== undefined &&
+        subscriptionData !== null && (
+          <Fragment>
+            <div className="flex flex-col w-full space-y-3">
+              <p className="text-sm font-medium text-bgtext-100 font-inter">
+                Current Plan
+              </p>
+              <div className="flex flex-row items-center justify-between p-3 rounded-lg bg-bgtext-900 border-1 border-bgtext-800">
+                <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
+                  {subscriptionData.data
+                    ? subscriptionData.data.type
+                    : "EXPLORE"}
+                </p>
+
+                {subscriptionData.data === null && (
+                  <Button
+                    variant="link"
+                    className="text-base font-medium font-inter text-linsea-start"
+                  >
+                    Upgrade Plan
+                  </Button>
+                )}
+
+                {subscriptionData.data &&
+                  subscriptionData.data.type !== "PREMIUM" && (
+                    <Button
+                      variant="link"
+                      className="text-base font-medium font-inter text-linsea-start"
+                    >
+                      Upgrade Plan
+                    </Button>
+                  )}
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full space-y-3">
+              <p className="text-sm font-medium text-bgtext-100 font-inter">
+                Ticket Allocation
+              </p>
+              <div className="flex flex-row items-center justify-between p-3 rounded-lg bg-bgtext-900 border-1 border-bgtext-800">
+                <p className="text-sm font-medium text-bgtext-100 font-inter">
+                  <span className="text-linsea-start">
+                    {subscriptionData.data
+                      ? SUBSCRIPTION_ITEMS.find(
+                          (item) => item.value === subscriptionData.data?.type
+                        )?.tickets
+                      : 0}
+                  </span>{" "}
+                  tickets per month
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full space-y-3">
+              <p className="text-sm font-medium text-bgtext-100 font-inter">
+                Status
+              </p>
+              <div className="flex flex-row items-center justify-between p-3 rounded-lg bg-bgtext-900 border-1 border-bgtext-800">
+                <p className="text-sm font-medium text-linsea-start font-inter">
+                  Active
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col w-full space-y-3">
+              <p className="text-sm font-medium text-bgtext-100 font-inter">
+                Renewal Date
+              </p>
+              <div className="flex flex-row items-center justify-between p-3 rounded-lg bg-bgtext-900 border-1 border-bgtext-800">
+                <div className="flex flex-row items-center space-x-2">
+                  <p className="text-sm font-medium text-linsea-start font-inter">
+                    {dayjs().format("DD/MM/YYYY")}
+                  </p>
+                  <Button
+                    variant="link"
+                    className="text-sm font-medium font-inter text-destructive"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+
+                <Button
+                  variant="link"
+                  className="text-base font-medium font-inter text-linsea-start"
+                >
+                  Renew
+                </Button>
+              </div>
+            </div>
+          </Fragment>
+        )
+      )}
+    </div>
+  );
+};
+
+export default SubscriptionForm;
