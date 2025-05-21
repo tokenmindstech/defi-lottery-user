@@ -5,13 +5,23 @@ import { Button } from "@/components/ui/button";
 import ProfileMenu from "./components/menu";
 import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProxy } from "@/lib/utils";
+import { fetchProxy, formUrlQuery } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import ProfileSkeleton from "./components/skeleton";
+import { useRouter, useSearchParams } from "next/navigation";
+import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
 
 const ProfilePage = () => {
+  const searchParams = useSearchParams();
   const [isEditing, setIsEditing] = useState(false);
+  const [activeTab, setActiveTab] = useState<ProfileMenuType>(
+    (searchParams.get("tab") as ProfileMenuType) &&
+      PROFILE_MENU_ITEMS.some((item) => item.value === searchParams.get("tab"))
+      ? (searchParams.get("tab") as ProfileMenuType)
+      : "general"
+  );
 
+  const router = useRouter();
   const { data: userSession } = useSession();
   const { data: userData, isLoading } = useQuery<APIGetUserProfileResponseDTO>({
     queryKey: ["profile", userSession?.user.id],
@@ -25,6 +35,19 @@ const ProfilePage = () => {
     staleTime: 0,
   });
 
+  const handleChangeMenu = (menu: ProfileMenuType) => {
+    setActiveTab(menu);
+    const updatedParams = searchParams.toString();
+
+    const newUrl = formUrlQuery({
+      params: updatedParams.replace("/?", ""),
+      key: "tab",
+      value: menu,
+    });
+
+    router.push(decodeURIComponent(newUrl), { scroll: false });
+  };
+
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -37,9 +60,9 @@ const ProfilePage = () => {
         userData !== undefined &&
         userData !== null && (
           <Fragment>
-            <div className="flex flex-col lg:flex-row space-y-5 lg:space-y-0 items-start justify-start lg:items-center lg:justify-between w-full h-full p-5">
-              <div className="flex flex-row space-x-5 items-center justify-center">
-                <Avatar className="w-20 h-20 bg-bgtext-800 rounded-xl cursor-pointer">
+            <div className="flex flex-col items-start justify-start w-full h-full p-5 space-y-5 lg:flex-row lg:space-y-0 lg:items-center lg:justify-between">
+              <div className="flex flex-row items-center justify-center space-x-5">
+                <Avatar className="w-20 h-20 cursor-pointer bg-bgtext-800 rounded-xl">
                   <AvatarImage
                     src="/assets/images/user.jpeg"
                     alt="User Avatar"
@@ -53,7 +76,7 @@ const ProfilePage = () => {
                     {userData.data.name}
                   </h2>
 
-                  <p className="text-base text-bgtext-100 font-inter py-1 px-4 bg-gradient-to-b from-lindeepgreen-start/40 to-black rounded-lg border-2 border-bgtext-800">
+                  <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
                     Premium
                   </p>
                 </div>
@@ -61,9 +84,9 @@ const ProfilePage = () => {
 
               <Button
                 onClick={() => setIsEditing(!isEditing)}
-                className="w-fit bg-bgtext-800 border border-bgtext-700 hover:bg-bgtext-700 rounded-lg cursor-pointer"
+                className="border rounded-lg cursor-pointer w-fit bg-bgtext-800 border-bgtext-700 hover:bg-bgtext-700"
               >
-                <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
+                <p className="py-4 text-sm font-medium text-bgtext-100 font-inter">
                   Edit Profile
                 </p>
               </Button>
@@ -73,6 +96,8 @@ const ProfilePage = () => {
               userInfoResponse={userData.data}
               isEditing={isEditing}
               setIsEditing={setIsEditing}
+              activeTab={activeTab}
+              handleChangeMenu={handleChangeMenu}
             />
           </Fragment>
         )

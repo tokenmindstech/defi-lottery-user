@@ -19,14 +19,17 @@ interface ProfileMenuProps {
   isEditing: boolean;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
   userInfoResponse: UserInfoResponse;
+  activeTab: ProfileMenuType;
+  handleChangeMenu: (menu: ProfileMenuType) => void;
 }
 
 const ProfileMenu = ({
   isEditing,
   setIsEditing,
   userInfoResponse,
+  activeTab,
+  handleChangeMenu,
 }: ProfileMenuProps) => {
-  const [activeTab, setActiveTab] = useState<ProfileMenuType>("general");
   const [isLoading, setIsLoading] = useState(false);
 
   const { isInitialized, web3Auth } = useContext(Web3AuthContext);
@@ -162,31 +165,31 @@ const ProfileMenu = ({
 
   if (isLoading || !isInitialized) {
     return (
-      <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <div className="col-span-3 lg:col-span-1 flex flex-col space-y-5 rounded-xl px-4 py-4">
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+      <div className="grid w-full grid-cols-1 gap-5 lg:grid-cols-3">
+        <div className="flex flex-col col-span-3 px-4 py-4 space-y-5 lg:col-span-1 rounded-xl">
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
         </div>
-        <div className="col-span-3 lg:col-span-2 flex flex-col space-y-5 rounded-xl px-4 py-4">
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
-          <Skeleton className="h-8 w-full rounded-lg bg-bgtext-900" />
+        <div className="flex flex-col col-span-3 px-4 py-4 space-y-5 lg:col-span-2 rounded-xl">
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
+          <Skeleton className="w-full h-8 rounded-lg bg-bgtext-900" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-5">
-      <div className="flex h-fit flex-col col-span-3 lg:col-span-1 space-y-5 bg-bgtext-950 rounded-xl px-4 py-4">
+    <div className="grid w-full grid-cols-1 gap-5 lg:grid-cols-3">
+      <div className="flex flex-col col-span-3 px-4 py-4 space-y-5 h-fit lg:col-span-1 bg-bgtext-950 rounded-xl">
         {PROFILE_MENU_ITEMS.map((item, idx) => (
           <Button
             key={idx}
             onClick={() => {
-              setActiveTab(item.value);
+              handleChangeMenu(item.value);
               setIsEditing(false);
             }}
             className={cn(
@@ -196,14 +199,14 @@ const ProfileMenu = ({
                 : "text-bgtext-600"
             )}
           >
-            <p className="w-full text-left font-inter font-medium text-base py-2">
+            <p className="w-full py-2 text-base font-medium text-left font-inter">
               {item.label}
             </p>
           </Button>
         ))}
       </div>
 
-      <div className="flex flex-col col-span-3 lg:col-span-2 space-y-5 bg-bgtext-950 rounded-xl px-4 py-4">
+      <div className="flex flex-col col-span-3 px-4 py-4 space-y-5 lg:col-span-2 bg-bgtext-950 rounded-xl">
         {activeTab === "general" && (
           <GeneralForm
             isEditing={isEditing}
