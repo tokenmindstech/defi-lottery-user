@@ -8,16 +8,9 @@ import HistoryDraw from "./_components/history";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
-import LuckyDrawSkeleton from "./_components/skeleton";
+import LuckyDrawSkeleton from "./_components/lucky-draw-skeleton";
 
 const LuckyDrawPage = () => {
-  const now = new Date();
-  const nextDrawDate = new Date();
-  nextDrawDate.setHours(0, 10, 0, 0); // Set to 00:10
-  if (nextDrawDate <= now) {
-    nextDrawDate.setDate(nextDrawDate.getDate() + 1); // Move to tomorrow if today's 00:10 has passed
-  }
-
   const { data: userSession } = useSession();
   const { data: rewardDraw, isLoading } =
     useQuery<APIGetTodaysRewardDrawResponseDTO>({
@@ -46,8 +39,6 @@ const LuckyDrawPage = () => {
       },
       enabled: !!userSession,
     });
-
-  console.log("rewardDraw", rewardDraw);
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">

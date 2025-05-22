@@ -85,6 +85,13 @@ declare global {
     createdAt: string;
   }
 
+  interface DrawTicket {
+    id: string;
+    drawNumbers: string;
+    createdAt: string;
+    userId: string;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -190,5 +197,11 @@ declare global {
 
   interface APIGetTodaysRewardDrawResponseDTO extends APIBaseResponse {
     data: TodaysDraw | null;
+  }
+
+  interface APIGetHistoryDrawResponseDTO extends APIBaseResponse {
+    data: {
+      drawTickets: DrawTicket[];
+    };
   }
 }

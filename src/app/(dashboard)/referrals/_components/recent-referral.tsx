@@ -58,7 +58,7 @@ export default function AgentRecentReferrall() {
                 </td>
                 <td className="p-4 border-r border-bgtext-800">
                   <p className="text-bgtext-500 font-inter text-base whitespace-nowrap">
-                    {dayjs().format("DD/MM/YYYY | HH:mm:ss EST")}
+                    {dayjs().format("DD/MM/YYYY | HH:mm:ss UTC")}
                   </p>
                 </td>
                 <td className="p-4">
