@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchProxy } from "@/lib/utils";
+import { capitalizeFirstLetter, fetchProxy } from "@/lib/utils";
 import SubscriptionSkeleton from "./subscription-skeleton";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import DialogUpgradeSubscription from "./dialog-upgrade";
+import SubscriptionRenew from "./subscription-renew";
 
 const SubscriptionForm = () => {
   const { data: userSession } = useSession();
@@ -22,7 +23,6 @@ const SubscriptionForm = () => {
           auth: true,
         }),
       enabled: !!userSession,
-      staleTime: 0,
     });
 
   // Extract subscription plan data for cleaner access
@@ -52,7 +52,7 @@ const SubscriptionForm = () => {
             <p className={sectionTitle}>Current Plan</p>
             <div className={containerStyle}>
               <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
-                {subscriptionType}
+                {capitalizeFirstLetter(subscriptionType)}
               </p>
 
               {(!subscription || !isPremium) && (
@@ -100,12 +100,7 @@ const SubscriptionForm = () => {
               </div>
 
               {subscription && (
-                <Button
-                  variant="link"
-                  className="text-base font-medium font-inter text-linsea-start cursor-pointer"
-                >
-                  Renew Now
-                </Button>
+                <SubscriptionRenew currentPlan={subscriptionType} />
               )}
             </div>
           </div>

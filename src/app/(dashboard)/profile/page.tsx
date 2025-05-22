@@ -82,14 +82,16 @@ const ProfilePage = () => {
                 </div>
               </div>
 
-              <Button
-                onClick={() => setIsEditing(!isEditing)}
-                className="border rounded-lg cursor-pointer w-fit bg-bgtext-800 border-bgtext-700 hover:bg-bgtext-700"
-              >
-                <p className="py-4 text-sm font-medium text-bgtext-100 font-inter">
-                  Edit Profile
-                </p>
-              </Button>
+              {activeTab === "general" && (
+                <Button
+                  onClick={() => setIsEditing(!isEditing)}
+                  className="border rounded-lg cursor-pointer w-fit bg-bgtext-800 border-bgtext-700 hover:bg-bgtext-700"
+                >
+                  <p className="py-4 text-sm font-medium text-bgtext-100 font-inter">
+                    Edit Profile
+                  </p>
+                </Button>
+              )}
             </div>
 
             <ProfileMenu

@@ -25,6 +25,7 @@ interface SubscriptionItems {
   label: string;
   information: string;
   tickets: number;
+  price: number;
 }
 
 export const REQUIRED_2FA_SETUP = "required_2fa_setup";
@@ -141,6 +142,7 @@ export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
     information:
       "Access to essential features with limited benefits (1 tickets/day).",
     tickets: 30,
+    price: 30,
   },
   {
     value: "PREMIUM",
@@ -148,11 +150,13 @@ export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
     information:
       "Full access to all features and premium support (10 tickets/day).",
     tickets: 300,
+    price: 300,
   },
   {
     value: "EXPLORE",
     label: "I'm only exploring",
     information: "Browse our platform with limited functionality.",
     tickets: 0,
+    price: 0,
   },
 ];
