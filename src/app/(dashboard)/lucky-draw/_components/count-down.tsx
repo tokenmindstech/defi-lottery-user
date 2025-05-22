@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@phosphor-icons/react/dist/ssr";
 import React, { useEffect, useState } from "react";
 
 interface CountDownDrawProps {
@@ -8,7 +9,16 @@ interface CountDownDrawProps {
 
 const CountDownDraw = ({ targetDate }: CountDownDrawProps) => {
   // Use our custom hook
-  const timeLeft = useCountdown(targetDate);
+  const { timeLeft, isLoading } = useCountdown(targetDate);
+
+  // Don't render anything while loading to prevent flash
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <Spinner className="animate-spin text-bgtext-100 size-18" />
+      </div>
+    );
+  }
 
   // Split each time unit into individual digits
   const [daysFirstDigit, daysSecondDigit] = getDigits(timeLeft.days % 100); // Limit to 2 digits
@@ -89,6 +99,7 @@ const useCountdown = (targetDate: Date | string) => {
     minutes: 0,
     seconds: 0,
   });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Function to calculate remaining time
@@ -99,6 +110,7 @@ const useCountdown = (targetDate: Date | string) => {
       // If countdown is finished
       if (difference <= 0) {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        setIsLoading(false);
         return;
       }
 
@@ -111,6 +123,10 @@ const useCountdown = (targetDate: Date | string) => {
       const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
       setTimeLeft({ days, hours, minutes, seconds });
+
+      if (isLoading) {
+        setIsLoading(false);
+      }
     };
 
     // Calculate immediately
@@ -121,9 +137,9 @@ const useCountdown = (targetDate: Date | string) => {
 
     // Clean up interval on unmount
     return () => clearInterval(timer);
-  }, [targetTime]);
+  }, [targetTime, isLoading]);
 
-  return timeLeft;
+  return { timeLeft, isLoading };
 };
 
 // Helper function to split a number into digits

@@ -6,7 +6,11 @@ import HistoryDraw from "./_components/history";
 
 const LuckyDrawPage = () => {
   const now = new Date();
-  const nextDrawDate = new Date(now.getTime() + 23 * 60 * 60 * 1000); // Next draw in 24 hours
+  const nextDrawDate = new Date();
+  nextDrawDate.setHours(0, 10, 0, 0); // Set to 00:10
+  if (nextDrawDate <= now) {
+    nextDrawDate.setDate(nextDrawDate.getDate() + 1); // Move to tomorrow if today's 00:10 has passed
+  }
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
