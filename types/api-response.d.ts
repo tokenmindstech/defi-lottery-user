@@ -204,4 +204,14 @@ declare global {
       drawTickets: DrawTicket[];
     };
   }
+
+  interface APICancelSubscriptionResponseDTO extends APIBaseResponse {
+    data: {
+      id: string;
+      type: SubscriptionType;
+      validUntil: string;
+      requestCancellation: boolean;
+      userId: string;
+    };
+  }
 }

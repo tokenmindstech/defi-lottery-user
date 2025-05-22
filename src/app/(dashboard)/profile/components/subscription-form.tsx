@@ -1,7 +1,6 @@
 "use client";
 
 import React, { Fragment } from "react";
-import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +9,7 @@ import SubscriptionSkeleton from "./subscription-skeleton";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import DialogUpgradeSubscription from "./dialog-upgrade";
 import SubscriptionRenew from "./subscription-renew";
+import SubscriptionCancel from "./subscription-cancel";
 
 const SubscriptionForm = () => {
   const { data: userSession } = useSession();
@@ -90,12 +90,7 @@ const SubscriptionForm = () => {
                     : "N/A"}
                 </p>
                 {subscription && (
-                  <Button
-                    variant="link"
-                    className="text-sm font-medium font-inter text-destructive cursor-pointer"
-                  >
-                    Cancel
-                  </Button>
+                  <SubscriptionCancel currentPlan={subscriptionType} />
                 )}
               </div>
 
