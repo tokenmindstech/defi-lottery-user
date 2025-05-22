@@ -76,6 +76,15 @@ declare global {
     subscriptionId: string;
   }
 
+  interface TodaysDraw {
+    id: string;
+    drawType: string;
+    drawNumbers: string;
+    nextDrawDate: string;
+    prizePool: number;
+    createdAt: string;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -177,5 +186,9 @@ declare global {
       userId: string;
       invoices: InvoiceSubscription[];
     } | null;
+  }
+
+  interface APIGetTodaysRewardDrawResponseDTO extends APIBaseResponse {
+    data: TodaysDraw | null;
   }
 }

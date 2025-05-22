@@ -1,23 +1,28 @@
 "use client";
 
-import { Spinner } from "@phosphor-icons/react/dist/ssr";
 import React, { useEffect, useState } from "react";
 
 interface CountDownDrawProps {
-  targetDate: Date | string;
+  drawData: TodaysDraw | null;
 }
 
-const CountDownDraw = ({ targetDate }: CountDownDrawProps) => {
-  // Use our custom hook
-  const { timeLeft, isLoading } = useCountdown(targetDate);
+const CountDownDraw = ({ drawData }: CountDownDrawProps) => {
+  // Use our custom hook with internally calculated target date
+  const { timeLeft, isLoading } = useCountdown();
+
+  if (drawData === null) {
+    return (
+      <div className="flex items-center justify-center w-full h-full">
+        <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
+          ON PROGRESS
+        </p>
+      </div>
+    );
+  }
 
   // Don't render anything while loading to prevent flash
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center w-full h-full">
-        <Spinner className="animate-spin text-bgtext-100 size-18" />
-      </div>
-    );
+    return null;
   }
 
   // Split each time unit into individual digits
@@ -85,14 +90,20 @@ const CountDownDraw = ({ targetDate }: CountDownDrawProps) => {
   );
 };
 
-// Custom hook to handle countdown logic
-const useCountdown = (targetDate: Date | string) => {
-  // Convert string date to Date object if needed
-  const targetTime =
-    typeof targetDate === "string"
-      ? new Date(targetDate).getTime()
-      : targetDate.getTime();
+// Custom hook to handle countdown logic with internal target date calculation
+const useCountdown = () => {
+  // Calculate the next draw date
+  const calculateNextDrawDate = () => {
+    const now = new Date();
+    const nextDrawDate = new Date();
+    nextDrawDate.setHours(0, 10, 0, 0); // Set to 00:10
+    if (nextDrawDate <= now) {
+      nextDrawDate.setDate(nextDrawDate.getDate() + 1); // Move to tomorrow if today's 00:10 has passed
+    }
+    return nextDrawDate.getTime();
+  };
 
+  const [targetTime, setTargetTime] = useState(calculateNextDrawDate());
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -107,11 +118,11 @@ const useCountdown = (targetDate: Date | string) => {
       const now = new Date().getTime();
       const difference = targetTime - now;
 
-      // If countdown is finished
+      // If countdown is finished, recalculate the next target time
       if (difference <= 0) {
-        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-        setIsLoading(false);
-        return;
+        const newTargetTime = calculateNextDrawDate();
+        setTargetTime(newTargetTime);
+        return; // Skip this update cycle
       }
 
       // Calculate time units
