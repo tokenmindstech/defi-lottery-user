@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import React from "react";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { MENU_ITEMS } from "@/constant/common";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import RenderIcon from "../icons/render-icon";
-import { Button } from "../ui/button";
+import RenderIcon from "@/components/icons/render-icon";
+import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
 const DesktopSidebarLayout = () => {

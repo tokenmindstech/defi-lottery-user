@@ -1,10 +1,10 @@
 import React from "react";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { MagnifyingGlass, Plus } from "@phosphor-icons/react/dist/ssr";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MobileSidebarLayout from "./mobile-sidebar";
 import NotificationDropdown from "./notification-dropdown";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const HeaderLayout = () => {
   return (

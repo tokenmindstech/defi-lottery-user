@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { cn, truncateString } from "@/lib/utils";
 import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
-import { DataTable } from "../../support/_components/data-table";
+import { DataTable } from "@/components/shared/data-table";
 import Image from "next/image";
 
 // Define columns for the data table

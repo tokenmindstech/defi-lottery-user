@@ -15,9 +15,9 @@ import Image from "next/image";
 import { MENU_ITEMS } from "@/constant/common";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import RenderIcon from "../icons/render-icon";
-import { Separator } from "../ui/separator";
-import { Button } from "../ui/button";
+import RenderIcon from "@/components/icons/render-icon";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 
 const MobileSidebarLayout = () => {

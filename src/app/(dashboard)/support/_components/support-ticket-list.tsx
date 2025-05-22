@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "./data-table";
+import { DataTable } from "@/components/shared/data-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { Eye } from "@phosphor-icons/react/dist/ssr";
