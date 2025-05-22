@@ -98,10 +98,11 @@ const columns: ColumnDef<DrawTicket>[] = [
       );
     },
     cell: () => {
-      const winingNumbers = "3 20 25 26 36";
+      const winningNumbers = "3 20 25 26 36";
+
       return (
         <div className="flex gap-2 justify-center">
-          {winingNumbers.split(" ").map((number, index) => (
+          {winningNumbers.split(" ").map((number, index) => (
             <div
               key={index}
               className="flex items-center justify-center w-8 h-8 bg-gradient-to-b from-linprimary-start to-transparent rounded-full border border-bgtext-800"
@@ -139,19 +140,27 @@ const columns: ColumnDef<DrawTicket>[] = [
       );
     },
     cell: ({ row }) => {
+      const winningNumbers = "3 20 25 26 36".split(" ");
       const yourNumbers = row.getValue("drawNumbers") as string;
       return (
         <div className="flex gap-2 justify-center">
-          {yourNumbers.split(" ").map((number, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-center w-8 h-8 bg-gradient-to-b from-linprimary-start to-transparent rounded-full border border-bgtext-800"
-            >
-              <span className="text-bgtext-100 text-lg font-bold">
-                {number}
-              </span>
-            </div>
-          ))}
+          {yourNumbers.split(" ").map((number, index) => {
+            const isWinningNumber = winningNumbers.includes(number);
+            return (
+              <div
+                key={index}
+                className={`flex items-center justify-center w-8 h-8 ${
+                  isWinningNumber
+                    ? "bg-gradient-to-b from-linprimary-start to-transparent"
+                    : "bg-bgtext-900"
+                } rounded-full border border-bgtext-800`}
+              >
+                <span className="text-bgtext-100 text-lg font-bold">
+                  {number}
+                </span>
+              </div>
+            );
+          })}
         </div>
       );
     },
@@ -175,7 +184,7 @@ const columns: ColumnDef<DrawTicket>[] = [
               currency: "USD",
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(1000)}
+            }).format(0)}
           </span>
         </div>
       );
