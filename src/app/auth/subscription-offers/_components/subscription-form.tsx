@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/tooltip";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   subscription: z.enum(["BASIC", "PREMIUM", "EXPLORE"], {
@@ -34,11 +35,20 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SubscriptionForm = () => {
+interface SubscriptionFormProps {
+  currentPlan?: SubscriptionType;
+  setIsOpen?: (isOpen: boolean) => void;
+}
+
+const SubscriptionForm = ({
+  currentPlan,
+  setIsOpen,
+}: SubscriptionFormProps) => {
+  const router = useRouter();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      subscription: "PREMIUM",
+      subscription: currentPlan || "PREMIUM",
     },
   });
 
@@ -71,6 +81,17 @@ const SubscriptionForm = () => {
 
   const onSubmit = async (data: FormValues) => {
     try {
+      if (data.subscription === "EXPLORE") {
+        toast.success("Enjoy your exploration!");
+
+        if (currentPlan) {
+          setIsOpen?.(false);
+          return;
+        }
+        await delay(2000);
+        router.push("/");
+      }
+
       const result = await mutation.mutateAsync(data);
       if (isErrorResponse(result)) {
         toast.error(

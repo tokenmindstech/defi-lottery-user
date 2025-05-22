@@ -140,19 +140,19 @@ export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
     label: "Basic ($30/month)",
     information:
       "Access to essential features with limited benefits (1 tickets/day).",
-    tickets: 0,
+    tickets: 30,
   },
   {
     value: "PREMIUM",
     label: "Premium ($300/month)",
     information:
       "Full access to all features and premium support (10 tickets/day).",
-    tickets: 30,
+    tickets: 300,
   },
   {
     value: "EXPLORE",
     label: "I'm only exploring",
     information: "Browse our platform with limited functionality.",
-    tickets: 300,
+    tickets: 0,
   },
 ];
