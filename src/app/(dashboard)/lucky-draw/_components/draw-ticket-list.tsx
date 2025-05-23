@@ -66,7 +66,7 @@ const columns: ColumnDef<DrawTicket>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.createdAt).format("DD/MM/YYYY HH:mm A")}
+            {dayjs(row.original.createdAt).format("DD/MM/YYYY | HH:mm:ss UTC")}
           </span>
         </div>
       );

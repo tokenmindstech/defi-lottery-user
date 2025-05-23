@@ -132,7 +132,7 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY HH:mm A")}
+            {dayjs(date).format("DD/MM/YYYY | HH:mm:ss UTC")}
           </span>
         </div>
       );
@@ -206,7 +206,7 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY HH:mm A")}
+            {dayjs(date).format("DD/MM/YYYY | HH:mm:ss UTC")}
           </span>
         </div>
       );

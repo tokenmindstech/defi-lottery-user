@@ -53,6 +53,8 @@ const SupportPage = () => {
       enabled: !!userSession?.user.id,
     });
 
+  console.log("supportData", supportData);
+
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <div className="flex flex-row items-center justify-between w-full">
