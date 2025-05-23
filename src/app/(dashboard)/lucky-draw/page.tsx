@@ -15,28 +15,12 @@ const LuckyDrawPage = () => {
   const { data: rewardDraw, isLoading } =
     useQuery<APIGetTodaysRewardDrawResponseDTO>({
       queryKey: ["reward-draw", userSession?.user.id],
-      queryFn: async () => {
-        const now = new Date();
-        const nextDrawDate = new Date();
-        nextDrawDate.setHours(0, 10, 0, 0); // Set to 00:10
-        if (nextDrawDate <= now) {
-          nextDrawDate.setDate(nextDrawDate.getDate() + 1); // Move to tomorrow if today's 00:10 has passed
-        }
-
-        const result = await fetchProxy({
+      queryFn: async () =>
+        fetchProxy({
           url: "reward-draw",
           method: "GET",
           auth: true,
-        });
-
-        return {
-          ...result,
-          data: {
-            ...result.data,
-            nextDrawDate: nextDrawDate,
-          },
-        };
-      },
+        }),
       enabled: !!userSession,
     });
 

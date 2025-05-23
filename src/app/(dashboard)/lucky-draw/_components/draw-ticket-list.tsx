@@ -32,11 +32,10 @@ const columns: ColumnDef<DrawTicket>[] = [
       );
     },
     cell: ({ row }) => {
-      const id = row.getValue("id") as string;
       return (
         <div className="flex w-28 md:w-24">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {truncateString(id, 12)}
+            {truncateString(row.original.id, 12)}
           </span>
         </div>
       );
@@ -64,11 +63,10 @@ const columns: ColumnDef<DrawTicket>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = row.getValue("createdAt") as string;
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY HH:mm A")}
+            {dayjs(row.original.createdAt).format("DD/MM/YYYY HH:mm A")}
           </span>
         </div>
       );
@@ -97,12 +95,14 @@ const columns: ColumnDef<DrawTicket>[] = [
         </div>
       );
     },
-    cell: () => {
-      const winningNumbers = "3 20 25 26 36";
+    cell: ({ row }) => {
+      const winningNumbers = row.original.rewardDraw
+        ? row.original.rewardDraw.drawNumbers.split(" ")
+        : [];
 
       return (
         <div className="flex gap-2 justify-center">
-          {winningNumbers.split(" ").map((number, index) => (
+          {winningNumbers.map((number, index) => (
             <div
               key={index}
               className="flex items-center justify-center w-8 h-8 bg-gradient-to-b from-linprimary-start to-transparent rounded-full border border-bgtext-800"
@@ -140,11 +140,13 @@ const columns: ColumnDef<DrawTicket>[] = [
       );
     },
     cell: ({ row }) => {
-      const winningNumbers = "3 20 25 26 36".split(" ");
-      const yourNumbers = row.getValue("drawNumbers") as string;
+      const winningNumbers = row.original.rewardDraw
+        ? row.original.rewardDraw.drawNumbers.split(" ")
+        : [];
+      const yourNumbers = row.original.drawNumbers.split(" ");
       return (
         <div className="flex gap-2 justify-center">
-          {yourNumbers.split(" ").map((number, index) => {
+          {yourNumbers.map((number, index) => {
             const isWinningNumber = winningNumbers.includes(number);
             return (
               <div
@@ -168,7 +170,7 @@ const columns: ColumnDef<DrawTicket>[] = [
   {
     id: "winningAmount",
     header: "Winning Amount",
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <div className="flex flex-row space-x-2 w-full h-full items-center justify-center">
           <Image
@@ -184,7 +186,7 @@ const columns: ColumnDef<DrawTicket>[] = [
               currency: "USD",
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(0)}
+            }).format(row.original.amount)}
           </span>
         </div>
       );
