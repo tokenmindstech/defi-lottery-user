@@ -112,6 +112,11 @@ declare global {
     statusCode: number;
   }
 
+  interface APIBaseGenerateUploadResponse {
+    uploadUrl: string;
+    url: string;
+  }
+
   interface APILoginResponseDTO extends APIBaseResponse {
     data: {
       user: {

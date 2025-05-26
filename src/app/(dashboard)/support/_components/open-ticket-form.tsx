@@ -102,6 +102,38 @@ const OpenTicketForm = () => {
     );
   };
 
+  const handleUploadImages = async (): Promise<string[]> => {
+    const uploadedUrls: string[] = [];
+
+    if (temporaryFiles.length > 0) {
+      for (const file of temporaryFiles) {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const uploadResult = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_URL}/api/upload?folderName=supports`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!uploadResult.ok) {
+          throw new Error("Failed to upload image");
+        }
+
+        const result = await uploadResult.json();
+        uploadedUrls.push(result.url);
+      }
+
+      // Clear temporary files after successful upload
+      setTemporaryFiles([]);
+      setTemporaryImages([]);
+    }
+
+    return uploadedUrls;
+  };
+
   const handleRemoveImage = (index: number) => {
     setTemporaryImages((prev) => prev.filter((_, i) => i !== index));
     setTemporaryFiles((prev) => prev.filter((_, i) => i !== index));
@@ -124,11 +156,19 @@ const OpenTicketForm = () => {
       userSession?.user.id,
     ],
     mutationFn: async (data) => {
+      console.log("Tempfiles:", temporaryFiles);
+      let attachments: string[] = [];
+      if (temporaryFiles.length > 0) {
+        toast.loading("Uploading attachments...");
+        attachments = await handleUploadImages();
+      }
+      console.log("Attachments:", attachments);
       const payload = {
         subject: data.subject,
         description: data.description,
         category: data.category,
         contactPreference: "TELEGRAM",
+        attachments,
       };
       const response = await fetchProxy({
         method: "POST",
