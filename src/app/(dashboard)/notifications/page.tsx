@@ -13,6 +13,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import NotificationSkeleton from "./components/skeleton";
 import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 const NotificationPage = () => {
   const { data: userSession } = useSession();
@@ -79,6 +87,19 @@ const NotificationPage = () => {
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
         Notification
       </h2>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink
+              asChild
+              className="font-medium text-bgtext-100 font-inter whitespace-nowrap hover:text-bgtext-100"
+            >
+              <Link href="/notifications">Notification</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="flex flex-col w-full h-full space-y-5">
         {isLoading ? (

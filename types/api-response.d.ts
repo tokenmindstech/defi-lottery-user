@@ -239,4 +239,8 @@ declare global {
       unreadCount: number;
     };
   }
+
+  interface APIGetNotificationDetailsResponseDTO extends APIBaseResponse {
+    data: UserNotification;
+  }
 }
