@@ -81,17 +81,14 @@ export const NOTIFICATION_MENU_ITEMS = [
   {
     value: "all",
     label: "All",
-    count: "",
   },
   {
     value: "unread",
     label: "Unread",
-    count: "2",
   },
   {
     value: "read",
     label: "Read",
-    count: "",
   },
 ];
 

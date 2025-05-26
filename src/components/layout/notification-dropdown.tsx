@@ -15,9 +15,42 @@ import { Badge } from "@/components/ui/badge";
 import NotificationAllTab from "@/app/(dashboard)/notifications/components/tabs/all";
 import NotificationReadTab from "@/app/(dashboard)/notifications/components/tabs/read";
 import NotificationUnreadTab from "@/app/(dashboard)/notifications/components/tabs/unread";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProxy } from "@/lib/utils";
+import NotificationSkeleton from "@/app/(dashboard)/notifications/components/skeleton";
 
 const NotificationDropdown = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+  const { data: userSession } = useSession();
+
+  const { data: notifications, isLoading } = useQuery<
+    APIQueryNotificationResponseDTO[]
+  >({
+    queryKey: ["notifications", userSession?.user.id, 1, 3],
+    queryFn: async () => {
+      return await Promise.all([
+        fetchProxy({
+          url: "notifications/my?page=1&limit=3",
+          method: "GET",
+          auth: true,
+        }),
+        fetchProxy({
+          url: "notifications/my?page=1&limit=3&isRead=false",
+          method: "GET",
+          auth: true,
+        }),
+        fetchProxy({
+          url: "notifications/my?page=1&limit=3&isRead=true",
+          method: "GET",
+          auth: true,
+        }),
+      ]);
+    },
+    enabled: !!userSession,
+  });
+
+  console.log("Notifications:", notifications);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -34,33 +67,51 @@ const NotificationDropdown = () => {
         <DropdownMenuLabel className="text-bgtext-100 font-medium text-base mb-3 p-3 pb-0">
           Notification
         </DropdownMenuLabel>
-        <Tabs
-          defaultValue={NOTIFICATION_MENU_ITEMS[0].value}
-          className="w-full bg-transparent"
-        >
-          <TabsList className="bg-transparent">
-            {NOTIFICATION_MENU_ITEMS.map((item, idx) => (
-              <TabsTrigger
-                key={idx}
-                value={item.value}
-                className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none text-bgtext-600 data-[state=active]:text-bgtext-100 border-0 data-[state=active]:border-b-2 border-linprimary-start rounded-none px-2 cursor-pointer"
+        <div className="flex flex-col w-full h-full space-y-5">
+          {isLoading ? (
+            <NotificationSkeleton />
+          ) : (
+            notifications !== undefined &&
+            notifications !== null && (
+              <Tabs
+                defaultValue={NOTIFICATION_MENU_ITEMS[0].value}
+                className="w-full bg-transparent"
               >
-                {item.label}
-                {item.count !== "" && (
-                  <Badge
-                    variant="destructive"
-                    className="rounded-full text-xs border-0"
-                  >
-                    {item.count}
-                  </Badge>
-                )}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-          <NotificationAllTab handleOpen={handleOpen} />
-          <NotificationUnreadTab handleOpen={handleOpen} />
-          <NotificationReadTab handleOpen={handleOpen} />
-        </Tabs>
+                <TabsList className="bg-transparent">
+                  {NOTIFICATION_MENU_ITEMS.map((item, idx) => (
+                    <TabsTrigger
+                      key={idx}
+                      value={item.value}
+                      className="bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none text-bgtext-600 data-[state=active]:text-bgtext-100 border-0 data-[state=active]:border-b-2 border-linprimary-start rounded-none px-2 cursor-pointer"
+                    >
+                      {item.label}
+                      {idx === 1 && notifications[0].data.unreadCount > 0 && (
+                        <Badge
+                          variant="destructive"
+                          className="rounded-full text-xs border-0"
+                        >
+                          {notifications[0].data.unreadCount}
+                        </Badge>
+                      )}
+                    </TabsTrigger>
+                  ))}
+                </TabsList>
+                <NotificationAllTab
+                  handleOpen={handleOpen}
+                  notifications={notifications[0].data.notifications}
+                />
+                <NotificationUnreadTab
+                  handleOpen={handleOpen}
+                  notifications={notifications[1].data.notifications}
+                />
+                <NotificationReadTab
+                  handleOpen={handleOpen}
+                  notifications={notifications[2].data.notifications}
+                />
+              </Tabs>
+            )
+          )}
+        </div>
 
         <Link href="/notifications" onClick={() => setOpen(false)}>
           <p className="text-bgtext-100 text-sm text-center border-0 border-t-1 py-2 border-bgtext-800 hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer">

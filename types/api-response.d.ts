@@ -12,6 +12,7 @@ declare global {
   type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED";
   type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
   type TierType = "TIER1" | "TIER2" | "TIER3";
+  type NotificationType = "INFO" | "DRAW";
 
   interface Verifier {
     id: string;
@@ -92,6 +93,16 @@ declare global {
     amount: number;
     createdAt: string;
     rewardDraw: TodaysDraw | null;
+  }
+
+  interface UserNotification {
+    id: string;
+    title: string;
+    message: string;
+    createdAt: string;
+    isRead: boolean;
+    type: NotificationType;
+    userId: string;
   }
 
   interface APIBaseResponse {
@@ -219,6 +230,13 @@ declare global {
       validUntil: string;
       requestCancellation: boolean;
       userId: string;
+    };
+  }
+
+  interface APIQueryNotificationResponseDTO extends APIBaseResponse {
+    data: {
+      notifications: UserNotification[];
+      unreadCount: number;
     };
   }
 }

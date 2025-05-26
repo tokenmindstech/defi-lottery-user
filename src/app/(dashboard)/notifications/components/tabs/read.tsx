@@ -2,46 +2,41 @@ import { TabsContent } from "@/components/ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import React from "react";
 import NotificationItem from "../item";
-import { Ticket } from "@phosphor-icons/react/dist/ssr";
+import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationReadTabProps {
   handleOpen?: () => void;
+  notifications: UserNotification[];
 }
 
-const NotificationReadTab = ({ handleOpen }: NotificationReadTabProps) => {
+const NotificationReadTab = ({
+  handleOpen,
+  notifications,
+}: NotificationReadTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[2].value}
       className="bg-transparent text-bgtext-100 font-inter"
     >
-      <NotificationItem
-        Icon={Ticket}
-        title="Weekly Draw"
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={true}
-        time={new Date(Date.now() - 30 * 60 * 1000)}
-        href="/notifications"
-        handleOpen={handleOpen}
-      />
-      <NotificationItem
-        Icon={Ticket}
-        title="Weekly Draw"
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={true}
-        time={new Date(Date.now() - 2 * 60 * 60 * 1000)}
-        href="/notifications"
-        handleOpen={handleOpen}
-      />
-      <NotificationItem
-        Icon={Ticket}
-        title="Weekly Draw"
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={true}
-        time={new Date(Date.now() - 79 * 60 * 60 * 1000)}
-        href="/notifications"
-        handleOpen={handleOpen}
-        isLastItem={true}
-      />
+      {notifications.length === 0 ? (
+        <div className="flex flex-col items-center justify-center w-full h-full space-y-5 p-5">
+          <p className="text-bgtext-500">No notifications found.</p>
+        </div>
+      ) : (
+        notifications.map((notification, index) => (
+          <NotificationItem
+            key={index}
+            Icon={notification.type === "DRAW" ? Ticket : Info}
+            title={notification.title}
+            description={notification.message}
+            isRead={notification.isRead}
+            time={new Date(notification.createdAt)}
+            handleOpen={handleOpen}
+            href={`/notifications/${notification.id}`}
+            isLastItem={index === notifications.length - 1}
+          />
+        ))
+      )}
     </TabsContent>
   );
 };

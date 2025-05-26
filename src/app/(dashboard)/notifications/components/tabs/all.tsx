@@ -6,43 +6,37 @@ import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationAllTabProps {
   handleOpen?: () => void;
+  notifications: UserNotification[];
 }
 
-const NotificationAllTab = ({ handleOpen }: NotificationAllTabProps) => {
+const NotificationAllTab = ({
+  handleOpen,
+  notifications,
+}: NotificationAllTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[0].value}
       className="bg-transparent w-full text-bgtext-100 font-inter"
     >
-      <NotificationItem
-        Icon={Ticket}
-        title="Weekly Draw"
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={false}
-        time={new Date(Date.now() - 0.55 * 60 * 1000)}
-        handleOpen={handleOpen}
-        href="/notifications"
-      />
-      <NotificationItem
-        Icon={Info}
-        title="Your account is pending verification."
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={false}
-        time={new Date(Date.now() - 25 * 60 * 60 * 1000)}
-        handleOpen={handleOpen}
-        isLastItem={false}
-        href="/notifications"
-      />
-      <NotificationItem
-        Icon={Info}
-        title="Your account is pending verification."
-        description="Secure your integration with the new token management system to safeguard your API keys."
-        isRead={true}
-        time={new Date(Date.now() - 25 * 60 * 60 * 1000)}
-        handleOpen={handleOpen}
-        isLastItem={true}
-        href="/notifications"
-      />
+      {notifications.length === 0 ? (
+        <div className="flex flex-col items-center justify-center w-full h-full space-y-5 p-5">
+          <p className="text-bgtext-500">No notifications found.</p>
+        </div>
+      ) : (
+        notifications.map((notification, index) => (
+          <NotificationItem
+            key={index}
+            Icon={notification.type === "DRAW" ? Ticket : Info}
+            title={notification.title}
+            description={notification.message}
+            isRead={notification.isRead}
+            time={new Date(notification.createdAt)}
+            handleOpen={handleOpen}
+            href={`/notifications/${notification.id}`}
+            isLastItem={index === notifications.length - 1}
+          />
+        ))
+      )}
     </TabsContent>
   );
 };
