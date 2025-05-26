@@ -156,13 +156,11 @@ const OpenTicketForm = () => {
       userSession?.user.id,
     ],
     mutationFn: async (data) => {
-      console.log("Tempfiles:", temporaryFiles);
       let attachments: string[] = [];
       if (temporaryFiles.length > 0) {
         toast.loading("Uploading attachments...");
         attachments = await handleUploadImages();
       }
-      console.log("Attachments:", attachments);
       const payload = {
         subject: data.subject,
         description: data.description,

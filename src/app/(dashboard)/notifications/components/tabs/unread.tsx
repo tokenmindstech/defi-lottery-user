@@ -2,7 +2,6 @@ import { TabsContent } from "@/components/ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import React from "react";
 import NotificationItem from "../item";
-import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationUnreadTabProps {
   handleOpen?: () => void;
@@ -10,7 +9,6 @@ interface NotificationUnreadTabProps {
 }
 
 const NotificationUnreadTab = ({
-  handleOpen,
   notifications,
 }: NotificationUnreadTabProps) => {
   return (
@@ -26,13 +24,7 @@ const NotificationUnreadTab = ({
         notifications.map((notification, index) => (
           <NotificationItem
             key={index}
-            Icon={notification.type === "DRAW" ? Ticket : Info}
-            title={notification.title}
-            description={notification.message}
-            isRead={notification.isRead}
-            time={new Date(notification.createdAt)}
-            handleOpen={handleOpen}
-            href={`/notifications/${notification.id}`}
+            notification={notification}
             isLastItem={index === notifications.length - 1}
           />
         ))

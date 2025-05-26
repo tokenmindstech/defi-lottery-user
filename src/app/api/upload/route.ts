@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
       }
     );
     const result = (await response.json()) as APIBaseGenerateUploadResponse;
-    console.log(`Response from backend:`, result);
     const { uploadUrl, url } = result;
     response = await fetch(result.uploadUrl, {
       method: "PUT",

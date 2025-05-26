@@ -2,17 +2,13 @@ import { TabsContent } from "@/components/ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import React from "react";
 import NotificationItem from "../item";
-import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationReadTabProps {
   handleOpen?: () => void;
   notifications: UserNotification[];
 }
 
-const NotificationReadTab = ({
-  handleOpen,
-  notifications,
-}: NotificationReadTabProps) => {
+const NotificationReadTab = ({ notifications }: NotificationReadTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[2].value}
@@ -26,13 +22,7 @@ const NotificationReadTab = ({
         notifications.map((notification, index) => (
           <NotificationItem
             key={index}
-            Icon={notification.type === "DRAW" ? Ticket : Info}
-            title={notification.title}
-            description={notification.message}
-            isRead={notification.isRead}
-            time={new Date(notification.createdAt)}
-            handleOpen={handleOpen}
-            href={`/notifications/${notification.id}`}
+            notification={notification}
             isLastItem={index === notifications.length - 1}
           />
         ))
