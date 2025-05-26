@@ -21,7 +21,7 @@ import { fetchProxy } from "@/lib/utils";
 import NotificationSkeleton from "@/app/(dashboard)/notifications/components/skeleton";
 
 const NotificationDropdown = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { data: userSession } = useSession();
 
   const { data: notifications, isLoading } = useQuery<
@@ -49,8 +49,6 @@ const NotificationDropdown = () => {
     },
     enabled: !!userSession,
   });
-
-  console.log("Notifications:", notifications);
 
   const handleOpen = () => {
     setOpen(!open);
