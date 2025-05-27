@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/form";
 import { fetchProxy } from "@/lib/utils";
 import { Gift, Spinner } from "@phosphor-icons/react/dist/ssr";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import {
@@ -31,9 +31,13 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Separator } from "@radix-ui/react-separator";
+import { useSession } from "next-auth/react";
 
 interface ClaimRewardButtonProps {
   totalTickets: number;
+  page: number;
+  limit: number;
+  search: string | null | undefined;
 }
 
 const formSchema = z.object({
@@ -48,9 +52,16 @@ const formSchema = z.object({
 });
 type FormType = z.infer<typeof formSchema>;
 
-const ClaimRewardButton = ({ totalTickets }: ClaimRewardButtonProps) => {
+const ClaimRewardButton = ({
+  totalTickets,
+  page,
+  limit,
+  search,
+}: ClaimRewardButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const { data: userSession } = useSession();
+  const queryClient = useQueryClient();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,7 +74,7 @@ const ClaimRewardButton = ({ totalTickets }: ClaimRewardButtonProps) => {
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<
-    APIBaseResponse | APIBaseErrorResponse,
+    APIClaimRewardResponseDTO | APIBaseErrorResponse,
     Error,
     FormType
   >({
@@ -78,11 +89,19 @@ const ClaimRewardButton = ({ totalTickets }: ClaimRewardButtonProps) => {
         },
       });
     },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [
+          ["claim-rewards-stats", userSession?.user.id],
+          ["claim-rewards-history", userSession?.user.id, page, limit, search],
+        ],
+      });
+    },
   });
 
   const isErrorResponse = (
-    response: APIBaseResponse | APIBaseErrorResponse
-  ): response is APIBaseResponse => {
+    response: APIClaimRewardResponseDTO | APIBaseErrorResponse
+  ): response is APIClaimRewardResponseDTO => {
     return "statusCode" in response && response.statusCode >= 400;
   };
 

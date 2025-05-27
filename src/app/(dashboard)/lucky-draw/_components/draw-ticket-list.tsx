@@ -33,7 +33,7 @@ const columns: ColumnDef<DrawTicket>[] = [
     },
     cell: ({ row }) => {
       return (
-        <div className="flex w-28 md:w-24">
+        <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
             {truncateString(row.original.id, 12)}
           </span>

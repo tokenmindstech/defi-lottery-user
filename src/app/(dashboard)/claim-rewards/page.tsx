@@ -47,7 +47,13 @@ const ClaimRewardsPage = () => {
 
   const { data: claimHistory, isLoading: claimHistoryLoading } =
     useQuery<APIQueryClaimRewardsResponseDTO>({
-      queryKey: ["claim-rewards-history", userSession?.user.id, page, limit],
+      queryKey: [
+        "claim-rewards-history",
+        userSession?.user.id,
+        page,
+        limit,
+        search,
+      ],
       queryFn: async () =>
         fetchProxy({
           method: "GET",
@@ -117,7 +123,12 @@ const ClaimRewardsPage = () => {
               </div>
             </div>
 
-            <ClaimRewardButton totalTickets={claimStats.data.totalTickets} />
+            <ClaimRewardButton
+              totalTickets={claimStats.data.totalTickets}
+              page={page}
+              limit={limit}
+              search={search}
+            />
           </div>
         )
       )}

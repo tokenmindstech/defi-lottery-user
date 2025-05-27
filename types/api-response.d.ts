@@ -117,10 +117,14 @@ declare global {
 
   interface ClaimHistory {
     id: string;
-    drawTicketId: string;
     txHash: string;
-    userId: string;
     claimedAt: string;
+    drawTicket: DrawTicket;
+  }
+
+  interface ClaimedReward {
+    id: string;
+    amount: number;
   }
 
   interface APIBaseResponse {
@@ -272,6 +276,12 @@ declare global {
     data: {
       totalAmount: number;
       totalTickets: number;
+    };
+  }
+
+  interface APIClaimRewardResponseDTO extends APIBaseResponse {
+    data: {
+      claimedRewards: ClaimedReward[];
     };
   }
 }
