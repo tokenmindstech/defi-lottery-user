@@ -29,21 +29,21 @@ const NotificationDropdown = () => {
   const { data: notifications, isLoading } = useQuery<
     APIQueryNotificationResponseDTO[]
   >({
-    queryKey: ["notifications", userSession?.user.id, 1, 3],
+    queryKey: ["notifications", userSession?.user.id, 1, 10],
     queryFn: async () => {
       return await Promise.all([
         fetchProxy({
-          url: "notifications/my?page=1&limit=3",
+          url: "notifications/my?page=1&limit=10",
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: "notifications/my?page=1&limit=3&isRead=false",
+          url: "notifications/my?page=1&limit=10&isRead=false",
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: "notifications/my?page=1&limit=3&isRead=true",
+          url: "notifications/my?page=1&limit=10&isRead=true",
           method: "GET",
           auth: true,
         }),
@@ -129,15 +129,21 @@ const NotificationDropdown = () => {
                 </TabsList>
                 <NotificationAllTab
                   handleOpen={handleOpen}
-                  notifications={notifications[0].data.notifications}
+                  notifications={
+                    notifications[0]?.data?.notifications?.slice(0, 3) || []
+                  }
                 />
                 <NotificationUnreadTab
                   handleOpen={handleOpen}
-                  notifications={notifications[1].data.notifications}
+                  notifications={
+                    notifications[1]?.data?.notifications?.slice(0, 3) || []
+                  }
                 />
                 <NotificationReadTab
                   handleOpen={handleOpen}
-                  notifications={notifications[2].data.notifications}
+                  notifications={
+                    notifications[2]?.data?.notifications?.slice(0, 3) || []
+                  }
                 />
               </Tabs>
             )

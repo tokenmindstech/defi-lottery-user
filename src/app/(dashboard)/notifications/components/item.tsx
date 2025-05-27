@@ -6,16 +6,19 @@ import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationItemProps {
   notification: UserNotification;
+  handleOpen?: () => void;
   isLastItem?: boolean; // New prop to determine if this is the last item
 }
 
 const NotificationItem = ({
   notification,
   isLastItem = false, // Default to false
+  handleOpen,
 }: NotificationItemProps) => {
   return (
     <Link
       href={`/notifications/${notification.id}`}
+      onClick={handleOpen}
       className={`w-full flex flex-row space-x-5 p-2 ${
         !isLastItem ? "border-b-1 border-bgtext-800" : ""
       } hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer`}

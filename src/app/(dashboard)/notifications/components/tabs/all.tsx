@@ -8,7 +8,10 @@ interface NotificationAllTabProps {
   notifications: UserNotification[];
 }
 
-const NotificationAllTab = ({ notifications }: NotificationAllTabProps) => {
+const NotificationAllTab = ({
+  notifications,
+  handleOpen,
+}: NotificationAllTabProps) => {
   return (
     <TabsContent
       value={NOTIFICATION_MENU_ITEMS[0].value}
@@ -24,6 +27,7 @@ const NotificationAllTab = ({ notifications }: NotificationAllTabProps) => {
             key={index}
             notification={notification}
             isLastItem={index === notifications.length - 1}
+            handleOpen={handleOpen}
           />
         ))
       )}
