@@ -64,7 +64,7 @@ const NotificationDropdown = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["notifications", userSession?.user.id, 1, 3],
+        queryKey: ["notifications", userSession?.user.id, 1, 10],
       });
     },
   });

@@ -54,17 +54,27 @@ declare global {
     };
   }
 
+  interface NextSubscription {
+    id: string;
+    type: SubscriptionType;
+    validUntil: string;
+  }
+
+  interface Subscription {
+    id: string;
+    type: SubscriptionType;
+    validUntil: string;
+    requestCancellation: boolean;
+    nextSubscription: NextSubscription | null;
+  }
+
   interface UserInfoResponse {
     id: string;
-    email: string;
+    email: string | null;
     name: string;
     roles: RoleType[];
-    createdAt: string;
-    updatedAt: string;
-    twoFactorAuthId: string | null;
-    subscriptionId: string | null;
     verifiers: Verifier[];
-    subscription: unknown | null;
+    subscription: Subscription | null;
   }
 
   interface InvoiceSubscription {
@@ -103,6 +113,14 @@ declare global {
     isRead: boolean;
     type: NotificationType;
     userId: string;
+  }
+
+  interface ClaimHistory {
+    id: string;
+    drawTicketId: string;
+    txHash: string;
+    userId: string;
+    claimedAt: string;
   }
 
   interface APIBaseResponse {
@@ -242,5 +260,18 @@ declare global {
 
   interface APIGetNotificationDetailsResponseDTO extends APIBaseResponse {
     data: UserNotification;
+  }
+
+  interface APIQueryClaimRewardsResponseDTO extends APIBaseResponse {
+    data: {
+      claimHistory: ClaimHistory[];
+    };
+  }
+
+  interface APIGetUnclaimedStatisticsResponseDTO extends APIBaseResponse {
+    data: {
+      totalAmount: number;
+      totalTickets: number;
+    };
   }
 }

@@ -2,31 +2,19 @@
 
 import React, { Fragment } from "react";
 import dayjs from "dayjs";
-import { useSession } from "next-auth/react";
-import { useQuery } from "@tanstack/react-query";
-import { capitalizeFirstLetter, fetchProxy } from "@/lib/utils";
-import SubscriptionSkeleton from "./subscription-skeleton";
+import { capitalizeFirstLetter } from "@/lib/utils";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import DialogUpgradeSubscription from "./dialog-upgrade";
 import SubscriptionRenew from "./subscription-renew";
 import SubscriptionCancel from "./subscription-cancel";
 
-const SubscriptionForm = () => {
-  const { data: userSession } = useSession();
-  const { data: subscriptionData, isLoading } =
-    useQuery<APIGetMembershipResponseDTO>({
-      queryKey: ["membership", userSession?.user.id],
-      queryFn: async () =>
-        fetchProxy({
-          url: "subscription",
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!userSession,
-    });
+interface SubscriptionFormProps {
+  userInfoResponse: UserInfoResponse;
+}
 
+const SubscriptionForm = ({ userInfoResponse }: SubscriptionFormProps) => {
   // Extract subscription plan data for cleaner access
-  const subscription = subscriptionData?.data;
+  const subscription = userInfoResponse.subscription;
   const isPremium = subscription?.type === "PREMIUM";
   const subscriptionType = subscription?.type || "EXPLORE";
   const tickets = subscription
@@ -44,63 +32,59 @@ const SubscriptionForm = () => {
         Subscription Overview
       </h2>
 
-      {isLoading ? (
-        <SubscriptionSkeleton />
-      ) : (
-        <Fragment>
-          <div className="flex flex-col w-full space-y-3">
-            <p className={sectionTitle}>Current Plan</p>
-            <div className={containerStyle}>
-              <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
-                {capitalizeFirstLetter(subscriptionType)}
-              </p>
+      <Fragment>
+        <div className="flex flex-col w-full space-y-3">
+          <p className={sectionTitle}>Current Plan</p>
+          <div className={containerStyle}>
+            <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
+              {capitalizeFirstLetter(subscriptionType)}
+            </p>
 
-              {(!subscription || !isPremium) && (
-                <DialogUpgradeSubscription currentPlan={subscriptionType} />
-              )}
-            </div>
+            {(!subscription || !isPremium) && (
+              <DialogUpgradeSubscription currentPlan={subscriptionType} />
+            )}
           </div>
+        </div>
 
-          <div className="flex flex-col w-full space-y-3">
-            <p className={sectionTitle}>Ticket Allocation</p>
-            <div className={containerStyle}>
-              <p className="text-sm font-medium text-bgtext-100 font-inter">
-                <span className="text-linsea-start">{tickets}</span> tickets per
-                month
-              </p>
-            </div>
+        <div className="flex flex-col w-full space-y-3">
+          <p className={sectionTitle}>Ticket Allocation</p>
+          <div className={containerStyle}>
+            <p className="text-sm font-medium text-bgtext-100 font-inter">
+              <span className="text-linsea-start">{tickets}</span> tickets per
+              month
+            </p>
           </div>
+        </div>
 
-          <div className="flex flex-col w-full space-y-3">
-            <p className={sectionTitle}>Status</p>
-            <div className={containerStyle}>
+        <div className="flex flex-col w-full space-y-3">
+          <p className={sectionTitle}>Status</p>
+          <div className={containerStyle}>
+            <p className="text-sm font-medium text-linsea-start font-inter">
+              {subscription ? "ACTIVE" : "INACTIVE"}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex flex-col w-full space-y-3">
+          <p className={sectionTitle}>Renewal Date</p>
+          <div className={containerStyle}>
+            <div className="flex flex-row items-center space-x-2">
               <p className="text-sm font-medium text-linsea-start font-inter">
-                {subscription ? "ACTIVE" : "INACTIVE"}
+                {subscription?.validUntil
+                  ? dayjs(subscription.validUntil).format("DD/MM/YYYY")
+                  : "N/A"}
               </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col w-full space-y-3">
-            <p className={sectionTitle}>Renewal Date</p>
-            <div className={containerStyle}>
-              <div className="flex flex-row items-center space-x-2">
-                <p className="text-sm font-medium text-linsea-start font-inter">
-                  {subscription?.validUntil
-                    ? dayjs(subscription.validUntil).format("DD/MM/YYYY")
-                    : "N/A"}
-                </p>
-                {subscription && (
-                  <SubscriptionCancel currentPlan={subscriptionType} />
-                )}
-              </div>
-
               {subscription && (
-                <SubscriptionRenew currentPlan={subscriptionType} />
+                <SubscriptionCancel currentPlan={subscriptionType} />
               )}
             </div>
+
+            {subscription && (
+              <SubscriptionRenew currentPlan={subscriptionType} />
+            )}
           </div>
-        </Fragment>
-      )}
+        </div>
+      </Fragment>
     </div>
   );
 };

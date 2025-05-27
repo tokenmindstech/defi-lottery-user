@@ -34,7 +34,7 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
     cell: ({ row }) => {
       const id = row.getValue("id") as string;
       return (
-        <div className="flex w-28 md:w-24">
+        <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
             {truncateString(id, 12)}
           </span>
@@ -66,8 +66,10 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
     cell: ({ row }) => {
       const subject = row.getValue("subject") as string;
       return (
-        <div className="flex w-36 md:w-28">
-          <span className={`py-1 text-sm text-bgtext-500`}>{subject}</span>
+        <div className="flex">
+          <span className={`py-1 text-sm text-bgtext-500`}>
+            {truncateString(subject, 20)}
+          </span>
         </div>
       );
     },
@@ -98,7 +100,7 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       return (
-        <div className="flex w-36 md:w-28">
+        <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>{category}</span>
         </div>
       );

@@ -214,7 +214,9 @@ const ProfileMenu = ({
             userInfoResponse={userInfoResponse}
           />
         )}
-        {activeTab === "subscription" && <SubscriptionForm />}
+        {activeTab === "subscription" && (
+          <SubscriptionForm userInfoResponse={userInfoResponse} />
+        )}
         {activeTab === "payment" && <PaymentDetailsForm />}
         {activeTab === "account" && <AccountSetting />}
       </div>
