@@ -53,15 +53,14 @@ const NotificationDropdown = () => {
   });
 
   const mutation = useMutation({
-    mutationKey: ["read-all-notifications", userSession?.user.id],
-    mutationFn: async () => {
-      return await fetchProxy({
+    mutationKey: ["read-all-notifications"],
+    mutationFn: async () =>
+      fetchProxy({
         url: "notifications/read-all",
         method: "POST",
         auth: true,
         body: {},
-      });
-    },
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["notifications", userSession?.user.id, 1, 10],

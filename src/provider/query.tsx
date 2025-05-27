@@ -9,8 +9,11 @@ const QueryProvider = ({ children }: PropsWithChildren) => {
     () =>
       new QueryClient({
         defaultOptions: {
+          mutations: {
+            retry: 3,
+          },
           queries: {
-            staleTime: 60 * 1000, // 1 minute
+            retry: 3,
           },
         },
       })

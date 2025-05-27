@@ -24,15 +24,13 @@ const NotificationPage = () => {
   const { data: notification, isLoading } =
     useQuery<APIGetNotificationDetailsResponseDTO>({
       queryKey: ["notification", userSession?.user.id, notificationId],
-      queryFn: async () => {
-        return await fetchProxy({
+      queryFn: async () =>
+        fetchProxy({
           url: `notifications/${notificationId}`,
           method: "GET",
           auth: true,
-        });
-      },
+        }),
       enabled: !!userSession,
-      staleTime: 0,
     });
 
   return (

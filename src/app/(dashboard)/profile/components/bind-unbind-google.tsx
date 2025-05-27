@@ -51,7 +51,7 @@ const BindUnbindGoogle = ({
     <Button
       variant="link"
       type="button"
-      className="w-fit text-info-500 cursor-pointer px-0"
+      className="w-fit text-linsea-start cursor-pointer px-0"
       onClick={loginWithWeb3Auth}
       disabled={isLoading}
     >

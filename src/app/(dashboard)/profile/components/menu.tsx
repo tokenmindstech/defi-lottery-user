@@ -43,8 +43,8 @@ const ProfileMenu = ({
     Verifier[]
   >({
     mutationKey: ["update-account"],
-    mutationFn: async (data: Verifier[]) => {
-      return await fetchProxy({
+    mutationFn: async (data: Verifier[]) =>
+      fetchProxy({
         method: "PATCH",
         url: "user/profile",
         body: {
@@ -52,8 +52,7 @@ const ProfileMenu = ({
           verifiers: data,
         },
         auth: true,
-      });
-    },
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["profile", userSession?.user.id],

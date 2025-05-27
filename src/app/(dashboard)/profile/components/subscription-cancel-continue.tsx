@@ -25,14 +25,13 @@ const SubscriptionCancelContinue = ({
     Error
   >({
     mutationKey: ["cancel-subscription", currentPlan],
-    mutationFn: async () => {
-      return await fetchProxy({
+    mutationFn: async () =>
+      fetchProxy({
         method: "POST",
         url: "subscription/cancel",
         auth: true,
         body: {},
-      });
-    },
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["profile", userSession?.user.id],

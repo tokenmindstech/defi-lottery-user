@@ -6,10 +6,10 @@ import { SupportTicketTable } from "./_components/support-ticket-list";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import SupportSkeleton from "./_components/skeleton";
-import QuerySupport from "./_components/query";
 import PagePagination from "@/components/shared/page-pagination";
 import { useSearchParams } from "next/navigation";
 import { Fragment } from "react";
+import QuerySearch from "@/components/shared/query-search";
 
 const SupportPage = () => {
   const searchParams = useSearchParams();
@@ -63,7 +63,7 @@ const SupportPage = () => {
       </div>
 
       <div className="flex flex-col w-full h-full space-y-5 bg-bgtext-950 p-5 rounded-xl">
-        <QuerySupport page={page} />
+        <QuerySearch page={page} />
         {isLoading ? (
           <SupportSkeleton />
         ) : (

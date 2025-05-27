@@ -100,8 +100,8 @@ const GeneralForm = ({
     { name: string; verifiers: Verifier[] }
   >({
     mutationKey: ["update-account"],
-    mutationFn: async ({ name, verifiers }) => {
-      return await fetchProxy({
+    mutationFn: async ({ name, verifiers }) =>
+      fetchProxy({
         method: "PATCH",
         url: "user/profile",
         body: {
@@ -109,8 +109,7 @@ const GeneralForm = ({
           verifiers,
         },
         auth: true,
-      });
-    },
+      }),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["profile", userSession?.user.id],

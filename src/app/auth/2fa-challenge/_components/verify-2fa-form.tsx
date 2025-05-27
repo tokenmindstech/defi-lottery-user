@@ -67,8 +67,8 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
     z.infer<typeof formSchema>
   >({
     mutationKey: ["verify-2fa"],
-    mutationFn: async (data) => {
-      const response = await fetchProxy({
+    mutationFn: async (data) =>
+      fetchProxy({
         method: "POST",
         url: "two-factor/verify",
         body: {
@@ -77,9 +77,7 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
         customHeaders: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      return response;
-    },
+      }),
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {

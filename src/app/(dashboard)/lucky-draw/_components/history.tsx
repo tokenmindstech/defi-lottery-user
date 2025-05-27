@@ -27,16 +27,12 @@ const HistoryDraw = () => {
   const { data: historyDraw, isLoading } =
     useQuery<APIGetHistoryDrawResponseDTO>({
       queryKey: ["draw-ticket", userSession?.user.id, page, limit],
-      queryFn: async () => {
-        const url = `draw-ticket?page=${page}&limit=${limit}`;
-        const result = await fetchProxy({
-          url,
+      queryFn: async () =>
+        fetchProxy({
+          url: `draw-ticket?page=${page}&limit=${limit}`,
           method: "GET",
           auth: true,
-        });
-
-        return result;
-      },
+        }),
       enabled: !!userSession,
     });
 

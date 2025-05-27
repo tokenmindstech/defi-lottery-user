@@ -75,8 +75,8 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
     z.infer<typeof formSchema>
   >({
     mutationKey: ["bind-2fa"],
-    mutationFn: async (data) => {
-      const response = await fetchProxy({
+    mutationFn: async (data) =>
+      fetchProxy({
         method: "POST",
         url: "two-factor/bind",
         body: {
@@ -87,9 +87,7 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
         customHeaders: {
           Authorization: `Bearer ${token}`,
         },
-      });
-      return response;
-    },
+      }),
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {

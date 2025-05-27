@@ -18,16 +18,15 @@ const SubscriptionRenew = ({ currentPlan }: SubscriptionRenewProps) => {
     SubscriptionType
   >({
     mutationKey: ["create-payment-subscription", currentPlan],
-    mutationFn: async (data) => {
-      return await fetchProxy({
+    mutationFn: async (data) =>
+      fetchProxy({
         method: "POST",
         url: "payment",
         auth: true,
         body: {
           type: data,
         },
-      });
-    },
+      }),
   });
 
   const isErrorResponse = (

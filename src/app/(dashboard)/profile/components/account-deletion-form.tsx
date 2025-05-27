@@ -54,14 +54,13 @@ const AccountDeletionForm = () => {
     z.infer<typeof formSchema>
   >({
     mutationKey: ["delete-account"],
-    mutationFn: async () => {
-      return await fetchProxy({
+    mutationFn: async () =>
+      fetchProxy({
         method: "DELETE",
         url: "user/account",
         auth: true,
         body: {},
-      });
-    },
+      }),
   });
 
   const isErrorResponse = (

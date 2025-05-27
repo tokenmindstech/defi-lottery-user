@@ -1,16 +1,16 @@
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
-import SelectLimitSupport from "./support-select-limit";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounceCallback } from "usehooks-ts";
+import SelectLimit from "./select-limit";
 
-interface QuerySupportProps {
+interface QuerySearchProps {
   page: number;
 }
 
-const QuerySupport = ({ page }: QuerySupportProps) => {
+const QuerySearch = ({ page }: QuerySearchProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -60,9 +60,9 @@ const QuerySupport = ({ page }: QuerySupportProps) => {
           StartIcon={MagnifyingGlass}
         />
       </div>
-      <SelectLimitSupport />
+      <SelectLimit />
     </div>
   );
 };
 
-export default QuerySupport;
+export default QuerySearch;

@@ -61,16 +61,15 @@ const SubscriptionForm = ({
       "create-payment-subscription",
       form.getValues("subscription"),
     ],
-    mutationFn: async (data) => {
-      return await fetchProxy({
+    mutationFn: async (data) =>
+      fetchProxy({
         method: "POST",
         url: "payment",
         auth: true,
         body: {
           type: data.subscription,
         },
-      });
-    },
+      }),
   });
 
   const isErrorResponse = (

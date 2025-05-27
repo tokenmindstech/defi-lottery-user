@@ -32,7 +32,6 @@ const ProfilePage = () => {
         auth: true,
       }),
     enabled: !!userSession,
-    staleTime: 0,
   });
 
   const handleChangeMenu = (menu: ProfileMenuType) => {

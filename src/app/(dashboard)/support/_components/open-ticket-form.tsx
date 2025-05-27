@@ -150,11 +150,7 @@ const OpenTicketForm = () => {
     Error,
     z.infer<typeof formSchema>
   >({
-    mutationKey: [
-      "create-ticket-support",
-      form.getValues("subject"),
-      userSession?.user.id,
-    ],
+    mutationKey: ["create-ticket-support", form.getValues("subject")],
     mutationFn: async (data) => {
       let attachments: string[] = [];
       if (temporaryFiles.length > 0) {

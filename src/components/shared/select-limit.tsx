@@ -13,7 +13,7 @@ import { PAGINATION_ITEMS } from "@/constant/common";
 import { useRouter, useSearchParams } from "next/navigation";
 import { formUrlQuery } from "@/lib/utils";
 
-const SelectLimitSupport = () => {
+const SelectLimit = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -56,4 +56,4 @@ const SelectLimitSupport = () => {
   );
 };
 
-export default SelectLimitSupport;
+export default SelectLimit;
