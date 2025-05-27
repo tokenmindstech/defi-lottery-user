@@ -1,18 +1,21 @@
-import { getServerSession } from "next-auth";
+"use client";
+
+import DashboardSkeleton from "./_components/dashboard-skeleton";
 import DashboardLottery from "./_components/lottery";
 import DashboardOngoingUpcoming from "./_components/ongoing-upcoming";
 import DashboardStatistic from "./_components/user-statistic";
-import { authConfig } from "@/config/auth";
 import { truncateString } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
-const DashboardPage = async () => {
-  const session = await getServerSession(authConfig);
+const DashboardPage = () => {
+  const { data: userSession } = useSession();
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
+      <DashboardSkeleton />
       <div className="flex flex-row items-start justify-between space-x-5 w-full h-full md:justify-between">
         <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
-          Welcome {truncateString(session?.user?.name || "", 8)}
+          Welcome {truncateString(userSession?.user?.name || "", 8)}
         </h2>
 
         <div className="flex flex-col md:flex-row space-y-5 md:space-y-0 md:space-x-10 justify-between lg:justify-start">
