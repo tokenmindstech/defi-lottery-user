@@ -6,7 +6,7 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import DialogUpgradeSubscription from "./dialog-upgrade";
 import SubscriptionRenew from "./subscription-renew";
-import SubscriptionCancel from "./subscription-cancel";
+import SubscriptionCancelContinue from "./subscription-cancel-continue";
 
 interface SubscriptionFormProps {
   userInfoResponse: UserInfoResponse;
@@ -70,18 +70,27 @@ const SubscriptionForm = ({ userInfoResponse }: SubscriptionFormProps) => {
           <div className={containerStyle}>
             <div className="flex flex-row items-center space-x-2">
               <p className="text-sm font-medium text-linsea-start font-inter">
-                {subscription?.validUntil
-                  ? dayjs(subscription.validUntil).format("DD/MM/YYYY")
+                {subscription
+                  ? subscription.nextSubscription !== null
+                    ? dayjs(subscription.nextSubscription.validUntil).format(
+                        "DD/MM/YYYY"
+                      )
+                    : dayjs(subscription.validUntil).format("DD/MM/YYYY")
                   : "N/A"}
               </p>
               {subscription && (
-                <SubscriptionCancel currentPlan={subscriptionType} />
+                <SubscriptionCancelContinue
+                  requestCancellation={subscription.requestCancellation}
+                  currentPlan={subscriptionType}
+                />
               )}
             </div>
 
-            {subscription && (
-              <SubscriptionRenew currentPlan={subscriptionType} />
-            )}
+            {subscription &&
+              subscription.nextSubscription === null &&
+              subscription.requestCancellation && (
+                <SubscriptionRenew currentPlan={subscriptionType} />
+              )}
           </div>
         </div>
       </Fragment>

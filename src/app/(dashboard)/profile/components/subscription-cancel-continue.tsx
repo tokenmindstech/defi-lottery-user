@@ -1,17 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { fetchProxy } from "@/lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { cn, fetchProxy } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-interface SubscriptionCancelProps {
+interface SubscriptionCancelContinueProps {
+  requestCancellation: boolean;
   currentPlan: SubscriptionType;
 }
 
-const SubscriptionCancel = ({ currentPlan }: SubscriptionCancelProps) => {
+const SubscriptionCancelContinue = ({
+  requestCancellation,
+  currentPlan,
+}: SubscriptionCancelContinueProps) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const { data: userSession } = useSession();
+  const queryClient = useQueryClient();
   const mutation = useMutation<
     APICancelSubscriptionResponseDTO | APIBaseErrorResponse,
     Error
@@ -23,6 +31,11 @@ const SubscriptionCancel = ({ currentPlan }: SubscriptionCancelProps) => {
         url: "subscription/cancel",
         auth: true,
         body: {},
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
       });
     },
   });
@@ -50,9 +63,9 @@ const SubscriptionCancel = ({ currentPlan }: SubscriptionCancelProps) => {
       }
 
       if (result.data.requestCancellation) {
-        toast.success("Your subscription has been cancelled.");
-      } else {
         toast.success("Your subscription has activated.");
+      } else {
+        toast.success("Your subscription has been cancelled.");
       }
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -67,11 +80,18 @@ const SubscriptionCancel = ({ currentPlan }: SubscriptionCancelProps) => {
         onSubmit(currentPlan);
       }}
       disabled={isLoading}
-      className="text-sm font-medium font-inter text-destructive cursor-pointer"
+      className={cn(
+        "text-sm font-medium font-inter cursor-pointer",
+        requestCancellation ? "text-destructive" : "text-linsea-start"
+      )}
     >
-      {isLoading ? "Cancelling..." : "Cancel"}
+      {isLoading
+        ? "Processing..."
+        : requestCancellation
+        ? "Cancel Subscription"
+        : "Continue Subscription"}
     </Button>
   );
 };
 
-export default SubscriptionCancel;
+export default SubscriptionCancelContinue;
