@@ -6,6 +6,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { OngoingTable } from "./ongoing-list";
+import { UpcomingTable } from "./upcoming-list";
 
 const DashboardOngoingUpcoming = () => {
   return (
@@ -22,34 +24,7 @@ const DashboardOngoingUpcoming = () => {
           </div>
         </CardHeader>
         <CardContent className="w-full h-full">
-          <div className="border border-bgtext-800 rounded-xl overflow-x-auto no-scrollbar">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-bgtext-900">
-                  <th className="p-4 text-left border-r border-bgtext-800 bg-bgtext-900">
-                    <span className="text-bgtext-100">Title</span>
-                  </th>
-                  <th className="p-4 text-left bg-bgtext-900">
-                    <span className="text-bgtext-100">Time</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-black">
-                <tr>
-                  <td className="p-4 border-r border-bgtext-800">
-                    <p className="text-bgtext-500 font-inter text-base">
-                      Draw 1 ABCDE
-                    </p>
-                  </td>
-                  <td className="p-4 border-r border-bgtext-800">
-                    <p className="text-bgtext-500 font-inter text-base">
-                      2023-10-01 12:00:00
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <OngoingTable />
         </CardContent>
       </Card>
 
@@ -65,34 +40,7 @@ const DashboardOngoingUpcoming = () => {
           </div>
         </CardHeader>
         <CardContent className="w-full h-full">
-          <div className="border border-bgtext-800 rounded-xl overflow-x-auto no-scrollbar">
-            <table className="w-full border-collapse">
-              <thead>
-                <tr className="bg-bgtext-900">
-                  <th className="p-4 text-left border-r border-bgtext-800 bg-bgtext-900">
-                    <span className="text-bgtext-100">Title</span>
-                  </th>
-                  <th className="p-4 text-left bg-bgtext-900">
-                    <span className="text-bgtext-100">Time</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-black">
-                <tr>
-                  <td className="p-4 border-r border-bgtext-800">
-                    <p className="text-bgtext-500 font-inter text-base">
-                      Draw 1 ABCDE
-                    </p>
-                  </td>
-                  <td className="p-4 border-r border-bgtext-800">
-                    <p className="text-bgtext-500 font-inter text-base">
-                      2023-10-01 12:00:00
-                    </p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <UpcomingTable />
         </CardContent>
       </Card>
     </div>
