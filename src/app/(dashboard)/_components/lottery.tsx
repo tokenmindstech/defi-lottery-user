@@ -11,7 +11,17 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 
-const DashboardLottery = () => {
+interface DashboardLotteryProps {
+  totalEarnings: number;
+  totalTickets: number;
+  totalWinningTickets: number;
+}
+
+const DashboardLottery = ({
+  totalEarnings,
+  totalTickets,
+  totalWinningTickets,
+}: DashboardLotteryProps) => {
   return (
     <Card className="bg-bgtext-950 border border-bgtext-800">
       <CardHeader className="flex flex-row items-center justify-between w-full">
@@ -23,7 +33,7 @@ const DashboardLottery = () => {
             View you lottery ticket statistics
           </CardDescription>
         </div>
-        <Link href={"/dashboard/stats"}>
+        <Link href={"/claim-rewards"}>
           <Button className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300">
             View Details
           </Button>
@@ -49,7 +59,7 @@ const DashboardLottery = () => {
                 currency: "USD",
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
-              }).format(150)}
+              }).format(totalEarnings)}
             </p>
           </div>
         </LotteryStats>
@@ -66,7 +76,7 @@ const DashboardLottery = () => {
             </div>
 
             <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-              50
+              {totalTickets}
             </p>
           </div>
         </LotteryStats>
@@ -81,7 +91,7 @@ const DashboardLottery = () => {
             </div>
 
             <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-              3
+              {totalWinningTickets}
             </p>
           </div>
         </LotteryStats>

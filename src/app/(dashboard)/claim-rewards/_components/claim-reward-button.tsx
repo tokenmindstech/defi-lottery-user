@@ -34,7 +34,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { useSession } from "next-auth/react";
 
 interface ClaimRewardButtonProps {
-  totalTickets: number;
+  totalClaimable: number;
   page: number;
   limit: number;
   search: string | null | undefined;
@@ -53,7 +53,7 @@ const formSchema = z.object({
 type FormType = z.infer<typeof formSchema>;
 
 const ClaimRewardButton = ({
-  totalTickets,
+  totalClaimable,
   page,
   limit,
   search,
@@ -148,7 +148,7 @@ const ClaimRewardButton = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          disabled={totalTickets === 0}
+          disabled={totalClaimable === 0}
           className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300"
         >
           <div className="flex flex-row space-x-3 items-center justify-start">

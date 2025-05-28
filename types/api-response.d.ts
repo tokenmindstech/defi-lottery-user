@@ -127,6 +127,12 @@ declare global {
     amount: number;
   }
 
+  interface MonthlyStats {
+    date: string;
+    winningTickets: number;
+    totalTickets: number;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -274,14 +280,25 @@ declare global {
 
   interface APIGetUnclaimedStatisticsResponseDTO extends APIBaseResponse {
     data: {
-      totalAmount: number;
-      totalTickets: number;
+      totalEarnings: number;
+      totalClaimable: number;
     };
   }
 
   interface APIClaimRewardResponseDTO extends APIBaseResponse {
     data: {
       claimedRewards: ClaimedReward[];
+    };
+  }
+
+  interface APIDashboardStatsResponseDTO extends APIBaseResponse {
+    data: {
+      stats: {
+        totalTickets: number;
+        totalWinningTickets: number;
+        totalEarnings: number;
+      };
+      monthlyData: MonthlyStats[];
     };
   }
 }

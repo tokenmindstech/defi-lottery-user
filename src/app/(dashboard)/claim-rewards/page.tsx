@@ -96,7 +96,7 @@ const ClaimRewardsPage = () => {
                       currency: "USD",
                       minimumFractionDigits: 0,
                       maximumFractionDigits: 0,
-                    }).format(claimStats.data.totalAmount)}
+                    }).format(claimStats.data.totalEarnings)}
                   </p>
                 </div>
               </div>
@@ -117,14 +117,14 @@ const ClaimRewardsPage = () => {
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-                    {claimStats.data.totalTickets}
+                    {claimStats.data.totalClaimable}
                   </p>
                 </div>
               </div>
             </div>
 
             <ClaimRewardButton
-              totalTickets={claimStats.data.totalTickets}
+              totalClaimable={claimStats.data.totalClaimable}
               page={page}
               limit={limit}
               search={search}

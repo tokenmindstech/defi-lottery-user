@@ -1,18 +1,32 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import DashboardSkeleton from "./_components/dashboard-skeleton";
 import DashboardLottery from "./_components/lottery";
 import DashboardOngoingUpcoming from "./_components/ongoing-upcoming";
-import DashboardStatistic from "./_components/user-statistic";
-import { truncateString } from "@/lib/utils";
+import { fetchProxy, truncateString } from "@/lib/utils";
 import { useSession } from "next-auth/react";
+import { Fragment } from "react";
+import TicketPerformance from "./_components/ticket-performance";
 
 const DashboardPage = () => {
   const { data: userSession } = useSession();
+  const { data: dashboardData, isLoading } =
+    useQuery<APIDashboardStatsResponseDTO>({
+      queryKey: ["dashboard-stats"],
+      queryFn: async () =>
+        fetchProxy({
+          url: "user/dashboard",
+          method: "GET",
+          auth: true,
+        }),
+      enabled: !!userSession?.user?.id,
+    });
+
+  console.log("Dashboard Data:", dashboardData);
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
-      <DashboardSkeleton />
       <div className="flex flex-row items-start justify-between space-x-5 w-full h-full md:justify-between">
         <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
           Welcome {truncateString(userSession?.user?.name || "", 8)}
@@ -37,9 +51,22 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      <DashboardLottery />
-      <DashboardStatistic />
-      <DashboardOngoingUpcoming />
+      {isLoading ? (
+        <DashboardSkeleton />
+      ) : (
+        dashboardData !== undefined &&
+        dashboardData !== null && (
+          <Fragment>
+            <DashboardLottery
+              totalEarnings={dashboardData.data.stats.totalEarnings}
+              totalTickets={dashboardData.data.stats.totalTickets}
+              totalWinningTickets={dashboardData.data.stats.totalWinningTickets}
+            />
+            <TicketPerformance monthlyData={dashboardData.data.monthlyData} />
+            <DashboardOngoingUpcoming />
+          </Fragment>
+        )
+      )}
     </section>
   );
 };
