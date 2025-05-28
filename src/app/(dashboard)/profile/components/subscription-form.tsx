@@ -2,11 +2,11 @@
 
 import React, { Fragment } from "react";
 import dayjs from "dayjs";
-import { capitalizeFirstLetter } from "@/lib/utils";
 import { SUBSCRIPTION_ITEMS } from "@/constant/common";
 import DialogUpgradeSubscription from "./dialog-upgrade";
 import SubscriptionRenew from "./subscription-renew";
 import SubscriptionCancelContinue from "./subscription-cancel-continue";
+import PlanBadge from "@/components/shared/plan-badge";
 
 interface SubscriptionFormProps {
   userInfoResponse: UserInfoResponse;
@@ -36,9 +36,7 @@ const SubscriptionForm = ({ userInfoResponse }: SubscriptionFormProps) => {
         <div className="flex flex-col w-full space-y-3">
           <p className={sectionTitle}>Current Plan</p>
           <div className={containerStyle}>
-            <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
-              {capitalizeFirstLetter(subscriptionType)}
-            </p>
+            <PlanBadge type={subscriptionType} />
 
             {(!subscription || !isPremium) && (
               <DialogUpgradeSubscription currentPlan={subscriptionType} />

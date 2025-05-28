@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import ProfileSkeleton from "./components/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
+import PlanBadge from "@/components/shared/plan-badge";
 
 const ProfilePage = () => {
   const searchParams = useSearchParams();
@@ -47,8 +48,6 @@ const ProfilePage = () => {
     router.push(decodeURIComponent(newUrl), { scroll: false });
   };
 
-  console.log("Profile Data: ", userData);
-
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -77,9 +76,9 @@ const ProfilePage = () => {
                     {userData.data.name}
                   </h2>
 
-                  <p className="px-4 py-1 text-base border-2 rounded-lg text-bgtext-100 font-inter bg-gradient-to-b from-lindeepgreen-start/40 to-black border-bgtext-800">
-                    Premium
-                  </p>
+                  <PlanBadge
+                    type={userData.data.subscription?.type || "EXPLORE"}
+                  />
                 </div>
               </div>
 

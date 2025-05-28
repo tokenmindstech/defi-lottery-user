@@ -108,7 +108,6 @@ const ClaimRewardButton = ({
   const onSubmit = async (data: FormType) => {
     try {
       const response = await mutation.mutateAsync(data);
-      console.log("Claim Reward Response:", response);
       if (isErrorResponse(response)) {
         toast.error(
           Array.isArray(response.message)

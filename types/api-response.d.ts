@@ -298,6 +298,8 @@ declare global {
         totalWinningTickets: number;
         totalEarnings: number;
       };
+      remainingTickets: number;
+      subscriptionType: SubscriptionType | null;
       monthlyData: MonthlyStats[];
     };
   }
