@@ -2,23 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 
-interface CountDownDrawProps {
-  drawData: TodaysDraw | null;
-}
-
-const CountDownDraw = ({ drawData }: CountDownDrawProps) => {
+const CountDownDraw = () => {
   // Use our custom hook with internally calculated target date
   const { timeLeft, isLoading } = useCountdown();
-
-  if (drawData === null) {
-    return (
-      <div className="flex items-center justify-center w-full h-full">
-        <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-          ON PROGRESS
-        </p>
-      </div>
-    );
-  }
 
   // Don't render anything while loading to prevent flash
   if (isLoading) {
@@ -96,7 +82,7 @@ const useCountdown = () => {
   const calculateNextDrawDate = () => {
     const now = new Date();
     const nextDrawDate = new Date();
-    nextDrawDate.setHours(0, 10, 0, 0); // Set to 00:10
+    nextDrawDate.setHours(22, 0, 0, 0); // Set to 22:00
     if (nextDrawDate <= now) {
       nextDrawDate.setDate(nextDrawDate.getDate() + 1); // Move to tomorrow if today's 00:10 has passed
     }

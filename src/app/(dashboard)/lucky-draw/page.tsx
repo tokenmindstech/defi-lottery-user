@@ -44,14 +44,12 @@ const LuckyDrawPage = () => {
                       Prize Pool
                     </p>
                     <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-                      {rewardDraw.data === null
-                        ? "ON PROGRESS"
-                        : new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "USD",
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 0,
-                          }).format(rewardDraw.data.prizePool)}
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                      }).format(rewardDraw.data?.prizePool || 1000)}
                     </p>
                   </div>
 
@@ -73,7 +71,7 @@ const LuckyDrawPage = () => {
                 <p className="text-base text-bgtext-100 font-inter">
                   Next Draw In
                 </p>
-                <CountDownDraw drawData={rewardDraw.data} />
+                <CountDownDraw />
               </div>
             </div>
 
@@ -85,16 +83,8 @@ const LuckyDrawPage = () => {
 
                 <div className="w-full flex justify-center">
                   <div className="flex gap-2 justify-center">
-                    {rewardDraw.data === null ? (
-                      <div className="flex items-center justify-center w-full h-full">
-                        <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-                          ON PROGRESS
-                        </p>
-                      </div>
-                    ) : (
-                      rewardDraw.data.drawNumbers
-                        ?.split(" ")
-                        .map((number, index) => (
+                    {rewardDraw.data === null
+                      ? "? ? ? ? ?".split(" ").map((number, index) => (
                           <div
                             key={index}
                             className="flex items-center justify-center w-12 h-12 bg-gradient-to-b from-linblue-start to-transparent rounded-lg border border-bgtext-800"
@@ -104,7 +94,18 @@ const LuckyDrawPage = () => {
                             </span>
                           </div>
                         ))
-                    )}
+                      : rewardDraw.data.drawNumbers
+                          ?.split(" ")
+                          .map((number, index) => (
+                            <div
+                              key={index}
+                              className="flex items-center justify-center w-12 h-12 bg-gradient-to-b from-linblue-start to-transparent rounded-lg border border-bgtext-800"
+                            >
+                              <span className="text-bgtext-100 text-xl font-bold">
+                                {number}
+                              </span>
+                            </div>
+                          ))}
                   </div>
                 </div>
               </div>
