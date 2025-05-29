@@ -48,6 +48,7 @@ declare global {
   interface ReferredUser {
     id: string;
     earnings: number;
+    createdAt: string;
     user: {
       id: string;
       name: string;
@@ -176,10 +177,6 @@ declare global {
         verifiers: Verifier[];
         isTwoFactorSetup: boolean;
         authenticated: boolean;
-        ownedReferral: {
-          id: string;
-          referred: ReferredUser[];
-        };
       };
       access_token: string;
     };
@@ -326,6 +323,12 @@ declare global {
         commisionTrends: CommissionTrends[];
         referralGrowth: ReferralGrowth[];
       };
+    };
+  }
+
+  interface APIQueryReferredUsersResponseDTO extends APIBaseResponse {
+    data: {
+      referredUsers: ReferredUser[];
     };
   }
 }

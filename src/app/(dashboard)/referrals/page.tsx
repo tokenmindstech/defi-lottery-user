@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link as LinkIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import AgentDashboardPerformance from "./_components/performance";
-import AgentRecentReferrall from "./_components/recent-referral";
 import AgentDashboardTraining from "./_components/training";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
@@ -15,10 +14,32 @@ import { TelegramLogo } from "@phosphor-icons/react/dist/ssr";
 import { Fragment } from "react";
 import Link from "next/link";
 import AgentDashboardStatistic from "./_components/statistic";
+import { useSearchParams } from "next/navigation";
+import ReferralListSkeleton from "./_components/referral-list-skeleton";
+import QuerySearch from "@/components/shared/query-search";
+import PagePagination from "@/components/shared/page-pagination";
+import { ReferralsTable } from "./_components/referral-list";
 
 const ReferralPage = () => {
   const { data: userSession } = useSession();
-  const { data: referralStats, isLoading } =
+  const searchParams = useSearchParams();
+
+  const page =
+    searchParams.get("page") &&
+    !Number.isNaN(parseInt(searchParams.get("page") as string))
+      ? parseInt(searchParams.get("page") as string)
+      : 1;
+  const limit =
+    searchParams.get("limit") &&
+    !Number.isNaN(parseInt(searchParams.get("limit") as string))
+      ? parseInt(searchParams.get("limit") as string)
+      : 10;
+  const search =
+    searchParams.get("q") && searchParams.get("q") !== "undefined"
+      ? searchParams.get("q")
+      : undefined;
+
+  const { data: referralStats, isLoading: referralStatsLoading } =
     useQuery<APIGetReferralStatsResponseDTO>({
       queryKey: ["referralStats", userSession?.user.id],
       queryFn: async () =>
@@ -30,7 +51,17 @@ const ReferralPage = () => {
       enabled: !!userSession?.user?.id,
     });
 
-  console.log("referralStats", referralStats);
+  const { data: referredUsers, isLoading: referredUsersLoading } =
+    useQuery<APIQueryReferredUsersResponseDTO>({
+      queryKey: ["referred-users", userSession?.user.id, page, limit, search],
+      queryFn: async () =>
+        fetchProxy({
+          method: "GET",
+          url: `referrals?page=${page}&limit=${limit}&search=${search || ""}`,
+          auth: true,
+        }),
+      enabled: !!userSession?.user.id,
+    });
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
@@ -45,7 +76,7 @@ const ReferralPage = () => {
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
-      {isLoading ? (
+      {referralStatsLoading ? (
         <ReferralSkeleton />
       ) : (
         referralStats !== undefined &&
@@ -131,13 +162,37 @@ const ReferralPage = () => {
               commisionTrends={referralStats.data.charts.commisionTrends}
               referralGrowth={referralStats.data.charts.referralGrowth}
             />
-
-            <AgentRecentReferrall />
-
-            <AgentDashboardTraining />
           </Fragment>
         )
       )}
+
+      <div className="flex flex-col w-full h-full space-y-5 bg-bgtext-950 p-5 rounded-xl">
+        <QuerySearch page={page} />
+        {referredUsersLoading ? (
+          <ReferralListSkeleton />
+        ) : (
+          referredUsers !== undefined &&
+          referredUsers !== null && (
+            <Fragment>
+              <ReferralsTable
+                referredUsers={referredUsers.data.referredUsers}
+              />
+              <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
+                <p className="text-bgtext-500 text-sm">
+                  Showing {referredUsers?.metadata?.totalCount || 0} results of{" "}
+                  {referredUsers?.metadata?.totalCount || 0}
+                </p>
+                <PagePagination
+                  currentPage={page}
+                  totalPages={referredUsers?.metadata?.totalPage || 1}
+                />
+              </div>
+            </Fragment>
+          )
+        )}
+      </div>
+
+      <AgentDashboardTraining />
     </section>
   );
 };
