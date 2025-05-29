@@ -133,6 +133,16 @@ declare global {
     totalTickets: number;
   }
 
+  interface CommissionTrends {
+    date: string;
+    totalEarnings: number;
+  }
+
+  interface ReferralGrowth {
+    date: string;
+    totalAmount: number;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -301,6 +311,21 @@ declare global {
       remainingTickets: number;
       subscriptionType: SubscriptionType | null;
       monthlyData: MonthlyStats[];
+    };
+  }
+
+  interface APIGetReferralStatsResponseDTO extends APIBaseResponse {
+    data: {
+      stats: {
+        totalSignUps: number;
+        totalEarnings: number;
+        referralCode: string;
+        referralLink: string;
+      };
+      charts: {
+        commisionTrends: CommissionTrends[];
+        referralGrowth: ReferralGrowth[];
+      };
     };
   }
 }

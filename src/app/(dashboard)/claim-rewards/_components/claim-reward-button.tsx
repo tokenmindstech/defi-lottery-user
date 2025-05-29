@@ -101,7 +101,7 @@ const ClaimRewardButton = ({
 
   const isErrorResponse = (
     response: APIClaimRewardResponseDTO | APIBaseErrorResponse
-  ): response is APIClaimRewardResponseDTO => {
+  ): response is APIBaseErrorResponse => {
     return "statusCode" in response && response.statusCode >= 400;
   };
 

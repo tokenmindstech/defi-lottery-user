@@ -18,6 +18,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
   const accessToken = session.user.accessToken;
+  console.log("Access Token:", accessToken);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,

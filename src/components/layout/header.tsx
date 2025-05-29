@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MobileSidebarLayout from "./mobile-sidebar";
 import NotificationDropdown from "./notification-dropdown";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const HeaderLayout = () => {
   return (
@@ -41,14 +42,16 @@ const HeaderLayout = () => {
             </Button>
           </div>
           <NotificationDropdown />
-          <Avatar className="w-10 h-10 bg-bgtext-800 rounded-full cursor-pointer">
-            <AvatarImage
-              src="/assets/images/user.jpeg"
-              alt="User Avatar"
-              className="object-cover"
-            />
-            <AvatarFallback>DF</AvatarFallback>
-          </Avatar>
+          <Link href={"/profile"}>
+            <Avatar className="w-10 h-10 bg-bgtext-800 rounded-full cursor-pointer">
+              <AvatarImage
+                src="/assets/images/user.jpeg"
+                alt="User Avatar"
+                className="object-cover"
+              />
+              <AvatarFallback>DF</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       </div>
     </div>
