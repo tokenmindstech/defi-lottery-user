@@ -23,7 +23,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import BarGradient from "./BarGradient";
+import BarGradient from "@/components/shared/BarGradient";
 import dayjs from "dayjs";
 
 const chartConfig = {

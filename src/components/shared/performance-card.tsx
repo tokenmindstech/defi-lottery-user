@@ -1,12 +1,9 @@
 import CircleShadowIcon from "@/components/icons/circle-shadow";
-import { TrendingDown, TrendingUp } from "lucide-react";
 
 interface PerformanceCardProps {
   icon: React.ReactNode;
   title: string;
   value: string;
-  trend: string;
-  trendUp: boolean;
   variant?: "default" | "checkerboard";
 }
 
@@ -14,8 +11,6 @@ const PerformanceCard = ({
   icon,
   title,
   value,
-  trend,
-  trendUp,
   variant,
 }: PerformanceCardProps) => {
   return (
@@ -29,18 +24,6 @@ const PerformanceCard = ({
       <div className="flex items-center justify-between mb-4">
         <div className="flex p-2 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end text-bgtext-100">
           {icon}
-        </div>
-        <div
-          className={`flex items-center space-x-1 text-xs ${
-            trendUp
-              ? "text-success-500 bg-success-500/10 py-1 px-2 rounded-full"
-              : "text-error-500 bg-red-500/10 py-1 px-2 rounded-full"
-          }`}
-        >
-          <span>
-            {trendUp ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
-          </span>
-          <span>{trend}</span>
         </div>
       </div>
 

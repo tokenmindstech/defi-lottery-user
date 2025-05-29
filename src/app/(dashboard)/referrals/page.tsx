@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link as LinkIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import AgentDashboardPerformance from "./_components/performance";
-import AgentDasboardStatistic from "./_components/statistic";
 import AgentRecentReferrall from "./_components/recent-referral";
 import AgentDashboardTraining from "./_components/training";
 import { useSession } from "next-auth/react";
@@ -15,6 +14,7 @@ import ReferralSkeleton from "./_components/referral-skeleton";
 import { TelegramLogo } from "@phosphor-icons/react/dist/ssr";
 import { Fragment } from "react";
 import Link from "next/link";
+import AgentDashboardStatistic from "./_components/statistic";
 
 const ReferralPage = () => {
   const { data: userSession } = useSession();
@@ -29,6 +29,8 @@ const ReferralPage = () => {
         }),
       enabled: !!userSession?.user?.id,
     });
+
+  console.log("referralStats", referralStats);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard
@@ -121,9 +123,14 @@ const ReferralPage = () => {
               </CardContent>
             </Card>
 
-            <AgentDashboardPerformance />
-
-            <AgentDasboardStatistic />
+            <AgentDashboardPerformance
+              totalSignUps={referralStats.data.stats.totalSignUps}
+              totalEarnings={referralStats.data.stats.totalEarnings}
+            />
+            <AgentDashboardStatistic
+              commisionTrends={referralStats.data.charts.commisionTrends}
+              referralGrowth={referralStats.data.charts.referralGrowth}
+            />
 
             <AgentRecentReferrall />
 

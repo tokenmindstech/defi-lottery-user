@@ -18,23 +18,39 @@ import {
   YAxis,
 } from "recharts";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import dayjs from "dayjs";
+import BarGradient from "@/components/shared/BarGradient";
 
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
-const chartConfig = {} satisfies ChartConfig;
+interface AgentDashboardStatisticProps {
+  commisionTrends: CommissionTrends[];
+  referralGrowth: ReferralGrowth[];
+}
 
-const AgentDasboardStatistic = () => {
+const AgentDashboardStatistic = ({
+  commisionTrends,
+  referralGrowth,
+}: AgentDashboardStatisticProps) => {
+  const referralData = referralGrowth.map((data) => {
+    const [day, month, year] = data.date.split("/");
+    const dateObject = dayjs(`${month}/${day}/${year}`);
+    return {
+      month: dateObject.format("MMM YYYY"),
+      amount: data.totalAmount,
+    };
+  });
+  const commissionData = commisionTrends.map((data) => {
+    const [day, month, year] = data.date.split("/");
+    const dateObject = dayjs(`${month}/${day}/${year}`);
+
+    return {
+      month: dateObject.format("MMM YYYY"),
+      earning: data.totalEarnings,
+    };
+  });
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {/* Bar Chart */}
@@ -50,21 +66,16 @@ const AgentDasboardStatistic = () => {
           </div>
         </CardHeader>
         <CardContent className="w-full h-full">
-          <ChartContainer config={chartConfig}>
+          <ChartContainer
+            config={{
+              referralGrowth: {
+                label: "Total Referrals",
+                color: "hsl(var(--chart-1))",
+              },
+            }}
+          >
             <ResponsiveContainer width={"100%"} height={100}>
-              <BarChart accessibilityLayer data={chartData}>
-                <defs>
-                  <linearGradient
-                    id="desktopGradient"
-                    x1="0"
-                    y1="0"
-                    x2="0"
-                    y2="1"
-                  >
-                    <stop offset="30%" stopColor="#7b61ff" />
-                    <stop offset="70%" stopColor="#887cff" />
-                  </linearGradient>
-                </defs>
+              <BarChart accessibilityLayer data={referralData}>
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="month"
@@ -81,8 +92,21 @@ const AgentDasboardStatistic = () => {
                 <Bar
                   barSize={50}
                   radius={[5, 5, 5, 5]}
-                  dataKey="desktop"
-                  fill="url(#desktopGradient)"
+                  dataKey="amount"
+                  shape={
+                    <BarGradient
+                      stopColor1={{ offset: "0%", stopColor: "#7259FD" }}
+                      stopColor2={{ offset: "64.43%", stopColor: "#9986FF" }}
+                      stopColor3={{ offset: "100%", stopColor: "#7259FD" }}
+                    />
+                  }
+                  activeBar={
+                    <BarGradient
+                      stopColor1={{ offset: "0%", stopColor: "#7259FD" }}
+                      stopColor2={{ offset: "64.43%", stopColor: "#9986FF" }}
+                      stopColor3={{ offset: "100%", stopColor: "#7259FD" }}
+                    />
+                  }
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -103,9 +127,16 @@ const AgentDasboardStatistic = () => {
           </div>
         </CardHeader>
         <CardContent className="w-full h-full">
-          <ChartContainer config={chartConfig}>
+          <ChartContainer
+            config={{
+              commissionTrends: {
+                label: "Total Earnings",
+                color: "hsl(var(--chart-2))",
+              },
+            }}
+          >
             <ResponsiveContainer width={"100%"} height={100}>
-              <LineChart accessibilityLayer data={chartData}>
+              <LineChart accessibilityLayer data={commissionData}>
                 <CartesianGrid vertical={false} />
                 <XAxis
                   dataKey="month"
@@ -120,7 +151,7 @@ const AgentDasboardStatistic = () => {
                   content={<ChartTooltipContent indicator="dashed" />}
                 />
 
-                <Line type="monotone" dataKey="desktop" strokeWidth={2} />
+                <Line type="monotone" dataKey="earning" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
           </ChartContainer>
@@ -130,4 +161,4 @@ const AgentDasboardStatistic = () => {
   );
 };
 
-export default AgentDasboardStatistic;
+export default AgentDashboardStatistic;
