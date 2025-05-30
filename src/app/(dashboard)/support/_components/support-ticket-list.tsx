@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { Eye } from "@phosphor-icons/react/dist/ssr";
 import { cn, truncateString } from "@/lib/utils";
 import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
 
 // Define columns for the data table
 const columns: ColumnDef<SupportTicketWithUser>[] = [
@@ -217,16 +218,18 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
   {
     id: "action",
     header: "Action",
-    cell: () => {
+    cell: ({ row }) => {
       return (
         <div className="flex justify-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-bgtext-900 rounded-full cursor-pointer hover:bg-bgtext-900 text-bgtext-700 hover:text-bgtext-100 ease-out transition-all duration-300"
-          >
-            <Eye className="size-6 " />
-          </Button>
+          <Link href={`/support/${row.original.id}`}>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="bg-bgtext-900 rounded-full cursor-pointer hover:bg-bgtext-900 text-bgtext-700 hover:text-bgtext-100 ease-out transition-all duration-300"
+            >
+              <Eye className="size-6 " />
+            </Button>
+          </Link>
         </div>
       );
     },

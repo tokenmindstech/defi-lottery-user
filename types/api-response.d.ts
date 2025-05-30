@@ -226,10 +226,14 @@ declare global {
     data: UserInfoResponse;
   }
 
-  interface APIGetSupportTicketsResponseDTO extends APIBaseResponse {
+  interface APIQuerySupportTicketsResponseDTO extends APIBaseResponse {
     data: {
       supportTickets: SupportTicketWithUser[];
     };
+  }
+
+  interface APIGetSupportTicketDetailsResponseDTO extends APIBaseResponse {
+    data: SupportTicketWithUser;
   }
 
   interface APICreatePaymentResponseDTO extends APIBaseResponse {

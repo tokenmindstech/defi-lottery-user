@@ -31,9 +31,9 @@ const SupportPage = () => {
       : undefined;
 
   const { data: supportData, isLoading } =
-    useQuery<APIGetSupportTicketsResponseDTO>({
+    useQuery<APIQuerySupportTicketsResponseDTO>({
       queryKey: [
-        "my-support-tickets",
+        "query-support-tickets",
         userSession?.user.id,
         page,
         limit,
