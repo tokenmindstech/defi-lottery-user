@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useSession } from "next-auth/react";
-import { fetchProxy } from "@/lib/utils";
+import { fetchProxy, getTimestamp } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import {
@@ -13,7 +13,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import SupportSkeleton from "../_components/skeleton";
+import SupportDetailSkeleton from "./_components/support-detail-skeleton";
 
 const NotificationPage = () => {
   const { data: userSession } = useSession();
@@ -32,8 +32,6 @@ const NotificationPage = () => {
       enabled: !!userSession,
     });
 
-  console.log("Notification Data:", supportData);
-
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -41,7 +39,7 @@ const NotificationPage = () => {
       </h2>
 
       {isLoading ? (
-        <SupportSkeleton />
+        <SupportDetailSkeleton />
       ) : (
         supportData !== null &&
         supportData !== undefined && (
@@ -62,7 +60,7 @@ const NotificationPage = () => {
                     asChild
                     className="font-medium text-bgtext-500 font-inter whitespace-nowrap hover:text-bgtext-100"
                   >
-                    <Link href={`/notifications/${supportId}`}>
+                    <Link href={`/support/${supportId}`}>
                       {supportData.data.subject || "Ticket Subject"}
                     </Link>
                   </BreadcrumbLink>
@@ -70,28 +68,38 @@ const NotificationPage = () => {
               </BreadcrumbList>
             </Breadcrumb>
 
-            {/* <div
+            <div
               className={`w-full flex flex-row space-x-5 p-2 ease-out transition-all duration-300`}
             >
-              <div className="w-fit flex items-start justify-start">
-                <div className="bg-gradient-to-b from-linblue-start to-linblue-end rounded-full p-2 flex items-center justify-center">
-                  {notification.data.type === "DRAW" ? (
-                    <Ticket weight="fill" className="text-bgtext-100 size-8" />
-                  ) : (
-                    <Info weight="fill" className="text-bgtext-100 size-8" />
-                  )}
-                </div>
-              </div>
-
               <div className="w-full flex flex-col space-y-2">
+                <div className="flex flex-row space-x-2">
+                  <p className="text-bgtext-100 font-inter text-lg font-medium">
+                    {supportData.data.category} -{" "}
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs ${
+                        supportData.data.status === "OPEN"
+                          ? "bg-warning-500/20 text-warning-500"
+                          : supportData.data.status === "CLOSED"
+                          ? "bg-error-500/20 text-error-500"
+                          : "bg-success-500/20 text-success-500"
+                      }`}
+                    >
+                      {supportData.data.status}
+                    </span>
+                  </p>
+                </div>
                 <p className="text-bgtext-500 font-inter text-sm">
-                  {notification.data.message || "No message provided."}
+                  {supportData.data.description || "Ticket Subject"}
                 </p>
                 <p className="text-bgtext-600 font-inter text-xs">
-                  {getTimestamp(new Date(notification.data.createdAt))}
+                  Opened: {getTimestamp(new Date(supportData.data.createdAt))}
+                </p>
+                <p className="text-bgtext-600 font-inter text-xs">
+                  Last Updated:{" "}
+                  {getTimestamp(new Date(supportData.data.updatedAt))}
                 </p>
               </div>
-            </div> */}
+            </div>
           </div>
         )
       )}
