@@ -148,11 +148,14 @@ declare global {
     id: string;
     description: string;
     amount: number;
-    status: boolean;
+    isClaimed: boolean;
     txHash: string | null;
     referredUser: {
       id: string;
-      name: string;
+      user: {
+        id: string;
+        name: string;
+      };
     };
     createdAt: string;
     updatedAt: string;
@@ -347,6 +350,19 @@ declare global {
   interface APIQueryReferredUsersResponseDTO extends APIBaseResponse {
     data: {
       referredUsers: ReferredUser[];
+    };
+  }
+
+  interface APIGetCommissionStatisticsResponseDTO extends APIBaseResponse {
+    data: {
+      totalEarnings: number;
+      unclaimedEarnings: number;
+    };
+  }
+
+  interface APIQueryCommissionHistoryResponseDTO extends APIBaseResponse {
+    data: {
+      commissions: Commission[];
     };
   }
 }

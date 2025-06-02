@@ -112,7 +112,7 @@ const columns: ColumnDef<Commission>[] = [
     accessorKey: "amount",
     header: ({ column }) => {
       return (
-        <div className="flex items-center justify-center space-x-1">
+        <div className="flex w-full items-center justify-center space-x-1">
           <p className={cn("text-sm font-medium text-bgtext-100")}>Amount</p>
           <Button
             variant="ghost"
@@ -152,10 +152,10 @@ const columns: ColumnDef<Commission>[] = [
     },
   },
   {
-    accessorKey: "status",
+    accessorKey: "isClaimed",
     header: ({ column }) => {
       return (
-        <div className="flex items-center justify-center space-x-1">
+        <div className="flex w-full items-center justify-center space-x-1">
           <p className={cn("text-sm font-medium text-bgtext-100")}>Status</p>
           <Button
             variant="ghost"
@@ -175,10 +175,10 @@ const columns: ColumnDef<Commission>[] = [
     cell: ({ row }) => {
       return (
         <div className="flex flex-row space-x-2 w-full h-full items-center justify-center">
-          {row.original.status === true ? (
-            <span className="text-green-500">Claimed</span>
+          {row.original.isClaimed === true ? (
+            <span className="text-linsea-start">Claimed</span>
           ) : (
-            <span className="text-red-500">Not Claimed</span>
+            <span className="text-destructive">Not Claimed</span>
           )}
         </div>
       );
