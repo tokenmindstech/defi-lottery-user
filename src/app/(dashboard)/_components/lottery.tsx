@@ -1,6 +1,5 @@
 import React from "react";
 import { CreditCard, Medal, Ticket } from "@phosphor-icons/react/dist/ssr";
-import LotteryStats from "@/components/shared/lottery-stats";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +9,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import Link from "next/link";
+import StatisticItem from "@/components/shared/lottery-stats";
 
 interface DashboardLotteryProps {
   totalEarnings: number;
@@ -40,7 +40,7 @@ const DashboardLottery = ({
         </Link>
       </CardHeader>
       <CardContent className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        <LotteryStats
+        <StatisticItem
           variant="checkerboard"
           className="md:col-span-2 lg:col-span-1"
         >
@@ -62,8 +62,8 @@ const DashboardLottery = ({
               }).format(totalEarnings)}
             </p>
           </div>
-        </LotteryStats>
-        <LotteryStats>
+        </StatisticItem>
+        <StatisticItem>
           <div className="flex flex-col w-full h-full">
             <div className="flex flex-row items-center justify-between">
               <p className="text-bgtext-600 font-inter text-xs">
@@ -79,8 +79,8 @@ const DashboardLottery = ({
               {totalTickets}
             </p>
           </div>
-        </LotteryStats>
-        <LotteryStats>
+        </StatisticItem>
+        <StatisticItem>
           <div className="flex flex-col w-full h-full">
             <div className="flex flex-row items-center justify-between">
               <p className="text-bgtext-600 font-inter text-xs">Wins</p>
@@ -94,7 +94,7 @@ const DashboardLottery = ({
               {totalWinningTickets}
             </p>
           </div>
-        </LotteryStats>
+        </StatisticItem>
       </CardContent>
     </Card>
   );

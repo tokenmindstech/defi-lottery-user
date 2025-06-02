@@ -1,17 +1,17 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-interface LotteryStatsProps {
+interface StatisticItemProps {
   variant?: "default" | "checkerboard";
   className?: string;
   children?: React.ReactNode;
 }
 
-const LotteryStats = ({
+const StatisticItem = ({
   variant = "default",
   className,
   children,
-}: LotteryStatsProps) => {
+}: StatisticItemProps) => {
   if (variant === "checkerboard") {
     return (
       <div
@@ -34,4 +34,4 @@ const LotteryStats = ({
   );
 };
 
-export default LotteryStats;
+export default StatisticItem;

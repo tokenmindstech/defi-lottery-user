@@ -144,6 +144,20 @@ declare global {
     totalAmount: number;
   }
 
+  interface Commission {
+    id: string;
+    description: string;
+    amount: number;
+    status: boolean;
+    txHash: string | null;
+    referredUser: {
+      id: string;
+      name: string;
+    };
+    createdAt: string;
+    updatedAt: string;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {

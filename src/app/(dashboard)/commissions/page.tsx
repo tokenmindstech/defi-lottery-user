@@ -1,16 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Icon } from "@phosphor-icons/react";
-import {
-  CurrencyDollar,
-  ArrowLeft,
-  ArrowRight,
-  MagnifyingGlass,
-  User,
-} from "@phosphor-icons/react/dist/ssr";
-import { DollarSign } from "lucide-react";
+import { Trophy, Clock } from "@phosphor-icons/react/dist/ssr";
+import { Separator } from "@/components/ui/separator";
+import ClaimCommissionButton from "./_components/claim-commission-button";
+import QuerySearch from "@/components/shared/query-search";
+import { Fragment } from "react";
+import { CommissionHistoryTable } from "./_components/commission-history-list";
+import PagePagination from "@/components/shared/page-pagination";
 
 const EarningsPage = () => {
   return (
@@ -19,241 +15,73 @@ const EarningsPage = () => {
         My Earnings
       </h2>
 
-      {/* Earnings Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <EarningsCard
-          Icon={CurrencyDollar}
-          title="Today's Earnings"
-          value="$4,589"
-          trend="+7.25%"
-          trendUp={true}
-        />
-        <EarningsCard
-          Icon={User}
-          title="Total Earnings"
-          value="$310"
-          trend="+7.25%"
-          trendUp={true}
-        />
-      </div>
-
-      {/* Claim Commission */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-gradient-to-r from-linblue-start to-linblue-end p-6 rounded-xl flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-medium text-bgtext-100 mb-2">
-              Claim Commission
-            </h3>
-            <p className="text-3xl font-bold text-bgtext-100">$ 5,000</p>
-          </div>
-          <div className="h-24 w-24">
-            <div className="h-full w-full rounded-full bg-white/20 flex items-center justify-center">
-              <div className="h-16 w-16 rounded-full bg-white/30 flex items-center justify-center">
-                <div className="h-10 w-10 rounded-full bg-white/50"></div>
+      <div className="flex w-full h-full flex-col md:flex-row space-y-5 md:space-y-0 items-start justify-between bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
+        <div className="flex flex-row w-full space-x-5 items-center justify-start">
+          <div className="flex flex-row space-x-3 items-center justify-start bg-gradient-to-b from-linprimary-start to-linprimary-end  p-5 rounded-xl">
+            <div className="flex flex-col w-full h-full relative rounded-xl">
+              <div className="flex flex-row space-x-10 items-center justify-between">
+                <p className="text-bgtext-100 font-inter text-xs">
+                  Total Earnings
+                </p>
+                <div className="flex bg-bgtext-900 rounded-full p-1.5">
+                  <Trophy className="size-5 text-bgtext-100" />
+                </div>
               </div>
+              <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }).format(500)}
+              </p>
+            </div>
+          </div>
+
+          <Separator
+            className="data-[orientation=vertical]:h-[100px] bg-bgtext-700"
+            orientation="vertical"
+          />
+
+          <div className="flex flex-row space-x-3 items-center justify-start bg-transparent p-5 rounded-xl">
+            <div className="flex flex-col w-full h-full relative rounded-xl">
+              <div className="flex flex-row space-x-10 items-center justify-between">
+                <p className="text-bgtext-100 font-inter text-xs">
+                  Pending Claimable
+                </p>
+                <div className="flex bg-bgtext-900 rounded-full p-1.5">
+                  <Clock className="size-5 text-bgtext-100" />
+                </div>
+              </div>
+              <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
+                {500}
+              </p>
             </div>
           </div>
         </div>
-        <div className="bg-bgtext-900 p-6 rounded-xl">
-          <h3 className="text-lg font-medium text-bgtext-100 mb-4">
-            Wallet Address (USDT)
-          </h3>
-          <Input
-            placeholder="Enter your USDT wallet address"
-            className="bg-bgtext-800 border-none text-bgtext-100 mb-4"
-          />
-          <Button className="bg-linprimary-start hover:bg-linprimary-end text-white w-full rounded-lg">
-            <DollarSign className="h-4 w-4 mr-2" />
-            Claim Commission
-          </Button>
-        </div>
+
+        <ClaimCommissionButton
+          totalClaimable={500}
+          page={1}
+          limit={1}
+          search={""}
+        />
       </div>
 
-      {/* Commission & Payout Summary */}
-      <div className="bg-bgtext-900 rounded-xl p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-medium text-bgtext-100">
-            Commission & Payout Summary
-          </h3>
-          <div className="flex items-center space-x-2">
-            <div className="relative">
-              <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-bgtext-400" />
-              <Input
-                placeholder="Search here"
-                className="pl-9 bg-bgtext-800 border-none text-bgtext-100 rounded-lg"
-              />
-            </div>
-            <div className="flex items-center space-x-2 bg-bgtext-800 rounded-lg px-3 py-2">
-              <span className="text-bgtext-100">10</span>
-              <ArrowRight className="h-4 w-4 text-bgtext-400" />
-            </div>
-          </div>
-        </div>
+      <div className="flex flex-col w-full h-full space-y-5 bg-bgtext-950 p-5 rounded-xl">
+        <QuerySearch page={1} />
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-bgtext-400 text-sm">
-                <th className="text-left py-2 px-4">Request ID</th>
-                <th className="text-left py-2 px-4">Date and Time Joined</th>
-                <th className="text-left py-2 px-4">Amount</th>
-                <th className="text-left py-2 px-4">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                {
-                  id: "#123",
-                  date: "05-05-2025 | 14:30:00",
-                  amount: "$1,000",
-                  status: "Approved",
-                },
-                {
-                  id: "#123",
-                  date: "05-05-2025 | 14:30:00",
-                  amount: "$1,000",
-                  status: "Pending",
-                },
-                {
-                  id: "#123",
-                  date: "05-05-2025 | 14:30:00",
-                  amount: "$1,000",
-                  status: "Expired",
-                },
-                {
-                  id: "#123",
-                  date: "05-05-2025 | 14:30:00",
-                  amount: "$1,000",
-                  status: "Claimed",
-                },
-                {
-                  id: "#123",
-                  date: "05-05-2025 | 14:30:00",
-                  amount: "$1,000",
-                  status: "Claimed",
-                },
-              ].map((transaction, index) => (
-                <tr key={index} className="border-t border-bgtext-800">
-                  <td className="py-4 px-4 text-bgtext-100">
-                    {transaction.id}
-                  </td>
-                  <td className="py-4 px-4 text-bgtext-100">
-                    {transaction.date}
-                  </td>
-                  <td className="py-4 px-4">
-                    <div className="flex items-center space-x-2">
-                      <div className="h-3 w-3 rounded-full bg-linprimary-start"></div>
-                      <span className="text-bgtext-100">
-                        {transaction.amount}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="py-4 px-4">
-                    <span
-                      className={`px-3 py-1 rounded-md text-xs ${
-                        transaction.status === "Approved"
-                          ? "bg-linblue-start/20 text-linblue-start"
-                          : transaction.status === "Pending"
-                          ? "bg-warning-500/20 text-warning-500"
-                          : transaction.status === "Expired"
-                          ? "bg-error-500/20 text-error-500"
-                          : "bg-success-500/20 text-success-500"
-                      }`}
-                    >
-                      {transaction.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-4 text-sm">
-          <div className="text-bgtext-400">Showing 5 from 1-10</div>
-          <div className="flex items-center space-x-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-md bg-bgtext-800 border-none"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            {[1, 2, 3].map((page) => (
-              <Button
-                key={page}
-                variant={page === 1 ? "default" : "outline"}
-                size="icon"
-                className={`h-8 w-8 rounded-md ${
-                  page === 1
-                    ? "bg-linprimary-start text-white"
-                    : "bg-bgtext-800 border-none text-bgtext-100"
-                }`}
-              >
-                {page}
-              </Button>
-            ))}
-            <span className="text-bgtext-400">...</span>
-            {[8, 9, 10].map((page) => (
-              <Button
-                key={page}
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-md bg-bgtext-800 border-none text-bgtext-100"
-              >
-                {page}
-              </Button>
-            ))}
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8 rounded-md bg-bgtext-800 border-none"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+        <Fragment>
+          <CommissionHistoryTable histories={[]} />
+          <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
+            <p className="text-bgtext-500 text-sm">
+              Showing {0} results of {0}
+            </p>
+            <PagePagination currentPage={1} totalPages={1} />
           </div>
-        </div>
+        </Fragment>
       </div>
     </section>
-  );
-};
-
-interface EarningsCardProps {
-  Icon: Icon;
-  title: string;
-  value: string;
-  trend: string;
-  trendUp: boolean;
-}
-
-const EarningsCard = ({
-  Icon,
-  title,
-  value,
-  trend,
-  trendUp,
-}: EarningsCardProps) => {
-  return (
-    <div className="bg-bgtext-900 p-4 rounded-xl">
-      <div className="flex items-center justify-between mb-4">
-        <div className="bg-bgtext-800/30 p-2 rounded-md">
-          <Icon className="h-5 w-5 text-bgtext-100" />
-        </div>
-        <div
-          className={`flex items-center space-x-1 text-xs ${
-            trendUp ? "text-success-500" : "text-error-500"
-          }`}
-        >
-          <span>{trendUp ? "↑" : "↓"}</span>
-          <span>{trend}</span>
-        </div>
-      </div>
-      <div className="space-y-1">
-        <p className="text-sm text-bgtext-400">{title}</p>
-        <p className="text-2xl font-bold text-bgtext-100">{value}</p>
-      </div>
-    </div>
   );
 };
 

@@ -1,22 +1,23 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { DataTable } from "@/components/shared/data-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { cn, truncateString } from "@/lib/utils";
 import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import { DataTable } from "@/components/shared/data-table";
+import Link from "next/link";
 import Image from "next/image";
 
 // Define columns for the data table
-const columns: ColumnDef<ReferredUser>[] = [
+const columns: ColumnDef<Commission>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => {
       return (
         <div className="flex items-center justify-center space-x-1">
           <p className={cn("text-sm font-medium text-bgtext-100")}>
-            Referral ID
+            Commission ID
           </p>
           <Button
             variant="ghost"
@@ -34,55 +35,22 @@ const columns: ColumnDef<ReferredUser>[] = [
       );
     },
     cell: ({ row }) => {
-      const id = row.getValue("id") as string;
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {truncateString(id, 12)}
+            {truncateString(row.original.id, 12)}
           </span>
         </div>
       );
     },
   },
   {
-    accessorKey: "user",
-    header: ({ column }) => {
-      return (
-        <div className="flex items-center justify-center space-x-1">
-          <p className={cn("text-sm font-medium text-bgtext-100")}>Name</p>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
-            ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
-            )}
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const name = row.original.user.name;
-      return (
-        <div className="flex">
-          <span className={`py-1 text-sm text-bgtext-500`}>
-            {truncateString(name, 20)}
-          </span>
-        </div>
-      );
-    },
-  },
-  {
-    accessorKey: "createdAt",
+    accessorKey: "description",
     header: ({ column }) => {
       return (
         <div className="flex items-center justify-center space-x-1">
           <p className={cn("text-sm font-medium text-bgtext-100")}>
-            Date and Time Joined
+            Description
           </p>
           <Button
             variant="ghost"
@@ -103,18 +71,18 @@ const columns: ColumnDef<ReferredUser>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.createdAt).format("DD/MM/YYYY | HH:mm:ss UTC")}
+            {truncateString(row.original.description, 30)}
           </span>
         </div>
       );
     },
   },
   {
-    accessorKey: "earnings",
+    accessorKey: "updatedAt",
     header: ({ column }) => {
       return (
         <div className="flex items-center justify-center space-x-1">
-          <p className={cn("text-sm font-medium text-bgtext-100")}>Earnings</p>
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Date</p>
           <Button
             variant="ghost"
             size="icon"
@@ -132,7 +100,38 @@ const columns: ColumnDef<ReferredUser>[] = [
     },
     cell: ({ row }) => {
       return (
-        <div className="flex flex-row space-x-2 w-full h-full items-center">
+        <div className="flex">
+          <span className={`py-1 text-sm text-bgtext-500`}>
+            {dayjs(row.original.updatedAt).format("DD/MM/YYYY | HH:mm:ss UTC")}
+          </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "amount",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Amount</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="flex gap-2 justify-center">
           <Image
             src="/assets/images/coin.png"
             alt="coin"
@@ -146,22 +145,91 @@ const columns: ColumnDef<ReferredUser>[] = [
               currency: "USD",
               minimumFractionDigits: 0,
               maximumFractionDigits: 0,
-            }).format(row.original.earnings)}
+            }).format(row.original.amount)}
           </span>
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Status</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="flex flex-row space-x-2 w-full h-full items-center justify-center">
+          {row.original.status === true ? (
+            <span className="text-green-500">Claimed</span>
+          ) : (
+            <span className="text-red-500">Not Claimed</span>
+          )}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "txHash",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center justify-center space-x-1">
+          <p className={cn("text-sm font-medium text-bgtext-100")}>Tx Hash</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="bg-transparent rounded-xl hover:bg-transparent cursor-pointer"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            {column.getIsSorted() === "asc" ? (
+              <SortAscending className="size-5 text-bgtext-500" />
+            ) : (
+              <SortDescending className="size-5 text-bgtext-500" />
+            )}
+          </Button>
+        </div>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="flex">
+          <Link
+            href={row.original.txHash || "#"}
+            className={`py-1 text-sm text-linsea-start`}
+          >
+            {truncateString(row.original.txHash || "", 20)}
+          </Link>
         </div>
       );
     },
   },
 ];
 
-interface ReferralsTableProps {
-  referredUsers: ReferredUser[];
+interface CommissionHistoryTableProps {
+  histories: Commission[];
 }
 
-export function ReferralsTable({ referredUsers }: ReferralsTableProps) {
+export function CommissionHistoryTable({
+  histories,
+}: CommissionHistoryTableProps) {
   return (
     <div className="rounded-md overflow-hidden w-full">
-      <DataTable columns={columns} data={referredUsers} />
+      <DataTable columns={columns} data={histories} />
     </div>
   );
 }
