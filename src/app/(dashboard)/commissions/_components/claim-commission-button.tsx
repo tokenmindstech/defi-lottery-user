@@ -35,6 +35,7 @@ import { Separator } from "@radix-ui/react-separator";
 import { useSession } from "next-auth/react";
 import { isAddress } from "viem";
 import { Input } from "@/components/ui/input";
+import toast from "react-hot-toast";
 
 interface ClaimCommissionButtonProps {
   totalClaimable: number;
@@ -114,25 +115,25 @@ const ClaimCommissionButton = ({
 
   const onSubmit = async (data: FormType) => {
     console.log("Form submitted with data:", data);
-    // try {
-    //   const response = await mutation.mutateAsync(data);
-    //   if (isErrorResponse(response)) {
-    //     toast.error(
-    //       Array.isArray(response.message)
-    //         ? response.message[0]
-    //         : response.message
-    //     );
-    //     return;
-    //   }
+    try {
+      const response = await mutation.mutateAsync(data);
+      if (isErrorResponse(response)) {
+        toast.error(
+          Array.isArray(response.message)
+            ? response.message[0]
+            : response.message
+        );
+        return;
+      }
 
-    //   toast.success("Commission claimed successfully!");
-    //   setIsOpen(false);
-    //   // Optionally, you can trigger a refetch of the tickets or update the UI accordingly
-    //   form.reset();
-    // } catch (error) {
-    //   console.error("Error claiming commission:", error);
-    //   toast.error("Failed to claim commission. Please try again.");
-    // }
+      toast.success("Commission claimed successfully!");
+      setIsOpen(false);
+      // Optionally, you can trigger a refetch of the tickets or update the UI accordingly
+      form.reset();
+    } catch (error) {
+      console.error("Error claiming commission:", error);
+      toast.error("Failed to claim commission. Please try again.");
+    }
   };
 
   useEffect(() => {
