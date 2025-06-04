@@ -42,7 +42,7 @@ const MobileSidebarLayout = () => {
                 className="flex flex-row items-center justify-start space-x-2"
               >
                 <Image
-                  src="/assets/icons/536.svg"
+                  src="/assets/images/536-White.png"
                   alt="logo"
                   width={50}
                   height={50}

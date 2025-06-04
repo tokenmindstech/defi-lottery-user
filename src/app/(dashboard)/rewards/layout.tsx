@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     creator: "@tokenminds_co",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/icons/536.svg`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
         alt: "DeFi Lottery Rewards",
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     siteName: "DeFi Lottery Solutions",
     images: [
       {
-        url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/icons/536.svg`,
+        url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
         alt: "DeFi Lottery Rewards",

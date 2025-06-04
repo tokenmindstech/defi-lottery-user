@@ -22,10 +22,10 @@ const DesktopSidebarLayout = () => {
         className="flex z-20 flex-row items-center justify-start p-5 space-x-2"
       >
         <Image
-          src="/assets/icons/536.svg"
+          src="/assets/images/536-White.png"
           alt="logo"
-          width={50}
-          height={50}
+          width={64}
+          height={64}
           className="rounded-full"
         />
         <p className="text-bgtext-100 font-bold text-xl">DeFi Lottery</p>

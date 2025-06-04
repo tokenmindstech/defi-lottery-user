@@ -173,7 +173,7 @@ const BindTelegramForm = () => {
       <CardHeader className="flex flex-col items-center justify-center space-y-2">
         <div className="relative h-25 w-25 bg-gradient-to-b from-linprimary-start to-linprimary-end rounded-xl">
           <Image
-            src="/assets/icons/536.svg"
+            src="/assets/images/536-White.png"
             alt="DeFi Lottery Solutions"
             fill
             className="object-cover object-center rounded-tl-xl rounded-tr-xl"
