@@ -208,12 +208,12 @@ const LoginForm = () => {
   return (
     <Card className="w-full z-20 max-w-sm md:max-w-md lg:max-w-lg bg-bgtext-950 border border-bgtext-800">
       <CardHeader className="flex flex-col items-center justify-center space-y-2">
-        <div className="relative h-25 w-25 bg-gradient-to-b from-linprimary-start to-linprimary-end rounded-xl">
+        <div className="relative size-32">
           <Image
             src="/assets/images/536-White.png"
             alt="DeFi Lottery Solutions"
             fill
-            className="object-cover object-center rounded-tl-xl rounded-tr-xl"
+            className="object-contain object-center rounded-tl-xl rounded-tr-xl"
             sizes="100%"
           />
         </div>
