@@ -39,18 +39,15 @@ const MobileSidebarLayout = () => {
               <Link
                 href={"/"}
                 onClick={handleOpenChange}
-                className="flex flex-row items-center justify-start space-x-2"
+                className="flex flex-row items-center justify-start p-5 pb-0 space-x-2"
               >
                 <Image
                   src="/assets/images/536-White.png"
                   alt="logo"
-                  width={50}
-                  height={50}
-                  className="rounded-full"
+                  width={100}
+                  height={43}
+                  className=""
                 />
-                <p className="text-bgtext-100 font-bold text-xl">
-                  DeFi Lottery
-                </p>
               </Link>
             </SheetTitle>
             <SheetDescription className="hidden text-bgtext-100 font-medium text-base" />

@@ -87,8 +87,8 @@ const SubscriptionForm = ({
           setIsOpen?.(false);
           return;
         }
-        await delay(2000);
         router.push("/");
+        return;
       }
 
       const result = await mutation.mutateAsync(data);
@@ -106,6 +106,7 @@ const SubscriptionForm = ({
     } catch (error) {
       console.error("Error deleting account:", error);
     } finally {
+      await delay(1000);
       form.reset();
     }
   };

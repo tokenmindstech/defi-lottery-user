@@ -68,7 +68,6 @@ const ProfileMenu = ({
 
   const checkBinding = useCallback(async () => {
     if (!isInitialized) {
-      console.info("Web3Auth not initialized");
       return null;
     }
 

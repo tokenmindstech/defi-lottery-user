@@ -22,7 +22,6 @@ const BindUnbindGoogle = ({
   const loginWithWeb3Auth = useCallback(async () => {
     try {
       if (!isInitialized) {
-        console.info("Web3Auth not initialized");
         return;
       }
 

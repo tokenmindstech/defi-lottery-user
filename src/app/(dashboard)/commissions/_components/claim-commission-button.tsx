@@ -114,7 +114,6 @@ const ClaimCommissionButton = ({
   };
 
   const onSubmit = async (data: FormType) => {
-    console.log("Form submitted with data:", data);
     try {
       const response = await mutation.mutateAsync(data);
       if (isErrorResponse(response)) {

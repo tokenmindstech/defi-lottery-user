@@ -45,17 +45,17 @@ const NotificationPage = () => {
     queryFn: async () => {
       return await Promise.all([
         fetchProxy({
-          url: `notifications/my?page=${page}&limit=${limit}`,
+          url: `notifications/my?page=${page}&limit=${limit}&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: `notifications/my?page=${page}&limit=${limit}&isRead=false`,
+          url: `notifications/my?page=${page}&limit=${limit}&isRead=false&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: `notifications/my?page=${page}&limit=${limit}&isRead=true`,
+          url: `notifications/my?page=${page}&limit=${limit}&isRead=true&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),

@@ -86,7 +86,7 @@ const SubscriptionForm = ({ userInfoResponse }: SubscriptionFormProps) => {
 
             {subscription &&
               subscription.nextSubscription === null &&
-              subscription.requestCancellation && (
+              !subscription.requestCancellation && (
                 <SubscriptionRenew currentPlan={subscriptionType} />
               )}
           </div>

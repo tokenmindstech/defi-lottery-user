@@ -63,8 +63,6 @@ const EarningsPage = () => {
       enabled: !!userSession?.user.id,
     });
 
-  console.log("Commission Stats:", commissionStats);
-  console.log("Commission History:", commissionHistory);
   return (
     <section className="flex flex-col w-full h-full space-y-6">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter">

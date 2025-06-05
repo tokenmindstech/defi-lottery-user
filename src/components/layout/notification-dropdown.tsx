@@ -33,17 +33,17 @@ const NotificationDropdown = () => {
     queryFn: async () => {
       return await Promise.all([
         fetchProxy({
-          url: "notifications/my?page=1&limit=10",
+          url: `notifications/my?page=1&limit=10&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: "notifications/my?page=1&limit=10&isRead=false",
+          url: `notifications/my?page=1&limit=10&isRead=false&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),
         fetchProxy({
-          url: "notifications/my?page=1&limit=10&isRead=true",
+          url: `notifications/my?page=1&limit=10&isRead=true&user=${userSession?.user.id}`,
           method: "GET",
           auth: true,
         }),

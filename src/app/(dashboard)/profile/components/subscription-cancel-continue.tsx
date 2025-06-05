@@ -62,9 +62,9 @@ const SubscriptionCancelContinue = ({
       }
 
       if (result.data.requestCancellation) {
-        toast.success("Your subscription has activated.");
-      } else {
         toast.success("Your subscription has been cancelled.");
+      } else {
+        toast.success("Your subscription has activated.");
       }
     } catch (error) {
       console.error("Error deleting account:", error);
@@ -81,12 +81,12 @@ const SubscriptionCancelContinue = ({
       disabled={isLoading}
       className={cn(
         "text-sm font-medium font-inter cursor-pointer",
-        requestCancellation ? "text-destructive" : "text-linsea-start"
+        !requestCancellation ? "text-destructive" : "text-linsea-start"
       )}
     >
       {isLoading
         ? "Processing..."
-        : requestCancellation
+        : !requestCancellation
         ? "Cancel Subscription"
         : "Continue Subscription"}
     </Button>

@@ -19,16 +19,15 @@ const DesktopSidebarLayout = () => {
       <div className="absolute min-w-[290px] max-w-[290px] h-[10vh] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
       <Link
         href={"/"}
-        className="flex z-20 flex-row items-center justify-start p-5 space-x-2"
+        className="flex z-20 flex-row items-center justify-start p-5 pb-0 space-x-2"
       >
         <Image
           src="/assets/images/536-White.png"
           alt="logo"
-          width={64}
-          height={64}
-          className="rounded-full"
+          width={100}
+          height={43}
+          className=""
         />
-        <p className="text-bgtext-100 font-bold text-xl">DeFi Lottery</p>
       </Link>
 
       <ul className="flex flex-col space-y-7 p-5 pt-0">
