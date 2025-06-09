@@ -1,10 +1,9 @@
 import React from "react";
 import { Input } from "@/components/ui/input";
-import { MagnifyingGlass, Plus } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MobileSidebarLayout from "./mobile-sidebar";
 import NotificationDropdown from "./notification-dropdown";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const HeaderLayout = () => {
@@ -23,24 +22,6 @@ const HeaderLayout = () => {
         </div>
 
         <div className="flex z-20 flex-row items-center space-x-3">
-          <div className="flex flex-row items-center justify-start space-x-2 px-4 p-2 bg-bgtext-900 rounded-full">
-            <p className="text-bgtext-600 text-sm hidden md:block">Balance:</p>
-            <p className="pl-1 text-bgtext-100 font-bold">
-              {new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                maximumFractionDigits: 0,
-                minimumFractionDigits: 0,
-              }).format(1200)}
-            </p>
-
-            <Button
-              size="icon"
-              className="flex items-center justify-center size-7 bg-gradient-to-l from-linprimary-start to-linprimary-end rounded-full border-2 border-bgtext-800 cursor-pointer"
-            >
-              <Plus className="text-bgtext-100 size-5 cursor-pointer" />
-            </Button>
-          </div>
           <NotificationDropdown />
           <Link href={"/profile"}>
             <Avatar className="w-10 h-10 bg-bgtext-800 rounded-full cursor-pointer">

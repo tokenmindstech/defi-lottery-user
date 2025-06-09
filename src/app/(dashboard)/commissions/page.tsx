@@ -124,12 +124,7 @@ const EarningsPage = () => {
               </div>
             </div>
 
-            <ClaimCommissionButton
-              totalClaimable={500}
-              page={1}
-              limit={1}
-              search={""}
-            />
+            <ClaimCommissionButton totalClaimable={0} />
           </div>
         )
       )}

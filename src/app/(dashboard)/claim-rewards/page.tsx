@@ -123,9 +123,6 @@ const ClaimRewardsPage = () => {
 
             <ClaimRewardButton
               totalClaimable={claimStats.data.totalClaimable}
-              page={page}
-              limit={limit}
-              search={search}
             />
           </div>
         )

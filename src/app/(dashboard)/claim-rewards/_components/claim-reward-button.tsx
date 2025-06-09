@@ -31,13 +31,9 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Separator } from "@radix-ui/react-separator";
-import { useSession } from "next-auth/react";
 
 interface ClaimRewardButtonProps {
   totalClaimable: number;
-  page: number;
-  limit: number;
-  search: string | null | undefined;
 }
 
 const formSchema = z.object({
@@ -52,15 +48,9 @@ const formSchema = z.object({
 });
 type FormType = z.infer<typeof formSchema>;
 
-const ClaimRewardButton = ({
-  totalClaimable,
-  page,
-  limit,
-  search,
-}: ClaimRewardButtonProps) => {
+const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { data: userSession } = useSession();
   const queryClient = useQueryClient();
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
@@ -90,12 +80,7 @@ const ClaimRewardButton = ({
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: [
-          ["claim-rewards-stats", userSession?.user.id],
-          ["claim-rewards-history", userSession?.user.id, page, limit, search],
-        ],
-      });
+      queryClient.invalidateQueries();
     },
   });
 

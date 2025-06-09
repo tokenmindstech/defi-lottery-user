@@ -365,4 +365,11 @@ declare global {
       commissions: Commission[];
     };
   }
+
+  interface APIGetTodaysPrizePoolResponseDTO extends APIBaseResponse {
+    data: {
+      id: string;
+      amount: number;
+    };
+  }
 }
