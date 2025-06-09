@@ -2,29 +2,17 @@
 
 import CircleShadowIcon from "@/components/icons/circle-shadow";
 import Image from "next/image";
-import React, { Fragment } from "react";
+import React from "react";
 import CountDownDraw from "./_components/count-down";
 import HistoryDraw from "./_components/history";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
-import WinningNumber from "./_components/winning-number";
-import LuckyDrawPoolSkeleton from "./_components/lucky-draw-pool";
-import LuckyDrawHistorySkeleton from "./_components/lucky-draw-history";
+import SkeletonLuckyDrawPool from "./_components/skeleton-lucky-draw-pool";
+import DailyWinningNumber from "./_components/daily-winning-number";
 
 const LuckyDrawPage = () => {
   const { data: userSession } = useSession();
-  const { data: rewardDraw, isLoading: isLoadingRewardDraw } =
-    useQuery<APIGetTodaysRewardDrawResponseDTO>({
-      queryKey: ["reward-draw", userSession?.user.id],
-      queryFn: async () =>
-        fetchProxy({
-          url: "reward-draw",
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!userSession,
-    });
   const { data: prizePool, isLoading: isLoadingPrizePool } =
     useQuery<APIGetTodaysPrizePoolResponseDTO>({
       queryKey: ["prize-pool", userSession?.user.id],
@@ -44,7 +32,7 @@ const LuckyDrawPage = () => {
       </h2>
 
       {isLoadingPrizePool ? (
-        <LuckyDrawPoolSkeleton />
+        <SkeletonLuckyDrawPool />
       ) : (
         prizePool !== undefined &&
         prizePool !== null && (
@@ -89,40 +77,8 @@ const LuckyDrawPage = () => {
         )
       )}
 
-      {isLoadingRewardDraw ? (
-        <LuckyDrawHistorySkeleton />
-      ) : (
-        rewardDraw !== undefined &&
-        rewardDraw !== null && (
-          <Fragment>
-            <div className="w-full grid grid-cols-1 place-items-center gap-5">
-              <div className="flex flex-col space-y-3 items-center justify-center w-full">
-                <p className="text-xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
-                  5/36 Winning Numbers
-                </p>
-
-                <div className="w-full flex justify-center">
-                  <div className="flex gap-2 justify-center">
-                    {rewardDraw.data === null
-                      ? "? ? ? ? ?"
-                          .split(" ")
-                          .map((number, index) => (
-                            <WinningNumber item={number} key={index} />
-                          ))
-                      : rewardDraw.data.drawNumbers
-                          ?.split(" ")
-                          .map((number, index) => (
-                            <WinningNumber item={number} key={index} />
-                          ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <HistoryDraw />
-          </Fragment>
-        )
-      )}
+      <DailyWinningNumber />
+      <HistoryDraw />
     </section>
   );
 };

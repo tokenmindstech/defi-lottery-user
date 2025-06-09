@@ -1,5 +1,5 @@
+import SocketProvider from "@/provider/socket";
 import type { Metadata } from "next";
-import { Fragment } from "react";
 
 export const metadata: Metadata = {
   title: "Lucky Draw | DeFi Lottery Solutions",
@@ -64,5 +64,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Fragment>{children}</Fragment>;
+  return <SocketProvider>{children}</SocketProvider>;
 }

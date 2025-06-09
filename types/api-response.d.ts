@@ -372,4 +372,13 @@ declare global {
       amount: number;
     };
   }
+
+  interface BaseWebsocketResponse {
+    message: string;
+    data: Record<string, unknown>;
+  }
+
+  interface ListenGetTodaysRewardDrawResponseDTO extends BaseWebsocketResponse {
+    data: TodaysDraw | null;
+  }
 }
