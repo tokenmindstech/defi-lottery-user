@@ -1,6 +1,13 @@
 "use client";
 
+import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const CountDownDraw = () => {
   // Use our custom hook with internally calculated target date
@@ -78,22 +85,16 @@ const CountDownDraw = () => {
 
 // Custom hook to handle countdown logic with internal target date calculation
 const useCountdown = () => {
-  // Calculate the next draw date in SGT (Singapore Time, UTC+8)
+  // Calculate the next draw date
   const calculateNextDrawDate = () => {
-    // Create Date object representing the current time
     const now = new Date();
-
-    // Create a date object for the next draw time (19:30 SGT)
     const nextDrawDate = new Date();
-    // Set to 19:30 SGT (which is 11:30 UTC)
-    nextDrawDate.setHours(19, 30, 0, 0);
+    nextDrawDate.setUTCHours(11, 30, 0, 0); // Set to 11:30 UTC (which is 19:30 SGT)
 
-    // If the draw time has already passed today, schedule for the next day
     if (nextDrawDate <= now) {
-      nextDrawDate.setDate(nextDrawDate.getDate() + 1);
+      nextDrawDate.setUTCDate(nextDrawDate.getUTCDate() + 1); // Move to tomorrow if today's 00:10 has passed
     }
-
-    return nextDrawDate.getTime();
+    return dayjs(nextDrawDate).tz("Asia/Singapore").toDate().getTime();
   };
 
   const [targetTime, setTargetTime] = useState(calculateNextDrawDate());

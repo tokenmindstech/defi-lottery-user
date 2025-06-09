@@ -2,8 +2,15 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { cn, truncateString } from "@/lib/utils";
 import { DataTable } from "@/components/shared/data-table";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 interface DrawPlan {
   title: string;
   date: string;
@@ -43,7 +50,9 @@ const columns: ColumnDef<DrawPlan>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.date).format("DD/MM/YYYY | HH:mm:ss UTC")}
+            {dayjs(row.original.date)
+              .tz("Asia/Singapore")
+              .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );
@@ -56,13 +65,13 @@ export function OngoingTable() {
     {
       title: (() => {
         const today = new Date();
-        // 0 is Sunday in JavaScript Date
-        return today.getDay() === 0 ? "Weekly Draw" : "Daily Draw";
+        const sgtToday = dayjs(today).tz("Asia/Singapore").toDate();
+        return sgtToday.getDay() === 0 ? "Weekly Draw" : "Daily Draw";
       })(),
       date: (() => {
         const tomorrow = new Date();
-        tomorrow.setUTCHours(22, 0, 0, 0);
-        return tomorrow.toString();
+        tomorrow.setUTCHours(11, 30, 0, 0); // Set to 11:30 AM UTC (which is 7:30 PM SGT)
+        return dayjs(tomorrow).tz("Asia/Singapore").toISOString();
       })(),
     },
   ];

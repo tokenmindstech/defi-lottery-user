@@ -9,6 +9,13 @@ import { cn, truncateString } from "@/lib/utils";
 import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 // Define columns for the data table
 const columns: ColumnDef<SupportTicketWithUser>[] = [
   {
@@ -135,7 +142,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY | HH:mm:ss UTC")}
+            {dayjs(date)
+              .tz("Asia/Singapore")
+              .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );
@@ -209,7 +218,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(date).format("DD/MM/YYYY | HH:mm:ss UTC")}
+            {dayjs(date)
+              .tz("Asia/Singapore")
+              .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );

@@ -9,6 +9,13 @@ import { DataTable } from "@/components/shared/data-table";
 import Link from "next/link";
 import Image from "next/image";
 
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 // Define columns for the data table
 const columns: ColumnDef<Commission>[] = [
   {
@@ -102,7 +109,9 @@ const columns: ColumnDef<Commission>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.updatedAt).format("DD/MM/YYYY | HH:mm:ss UTC")}
+            {dayjs(row.original.updatedAt)
+              .tz("Asia/Singapore")
+              .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );
