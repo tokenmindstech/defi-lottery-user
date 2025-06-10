@@ -174,7 +174,7 @@ const OpenTicketForm = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ["my-support-tickets", userSession?.user.id],
+        queryKey: ["query-support-tickets", userSession?.user.id],
       });
     },
   });

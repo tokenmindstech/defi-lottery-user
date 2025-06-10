@@ -77,6 +77,8 @@ const DialogUnbindGoogle = ({
         },
       ]);
 
+      console.log("Unbind result:", result);
+      console.log("Is error response:", isErrorResponse(result));
       if (isErrorResponse(result)) {
         toast.error(
           Array.isArray(result.message) ? result.message[0] : result.message,

@@ -115,7 +115,12 @@ const ClaimRewardsPage = () => {
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
-                    {claimStats.data.totalClaimable}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 0,
+                    }).format(claimStats.data.totalClaimable)}
                   </p>
                 </div>
               </div>

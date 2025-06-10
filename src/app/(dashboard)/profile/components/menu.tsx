@@ -112,9 +112,6 @@ const ProfileMenu = ({
           });
         }
 
-        toast.success("Binding account successful!", {
-          id: `binding-${userInfoResponse.id}`,
-        });
         window.history.replaceState(
           {},
           document.title,
@@ -131,6 +128,10 @@ const ProfileMenu = ({
           );
           return;
         }
+
+        toast.success("Binding account successful!", {
+          id: `binding-${userInfoResponse.id}`,
+        });
       } catch (error) {
         console.error("Error fetching user info:", error);
         return null;
