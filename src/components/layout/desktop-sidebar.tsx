@@ -16,7 +16,7 @@ const DesktopSidebarLayout = () => {
 
   return (
     <div className="hidden lg:flex flex-col space-y-5 min-w-[290px] max-w-[290px] h-screen bg-black border-r border-bgtext-800">
-      <div className="absolute min-w-[290px] max-w-[290px] h-[10vh] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
+      <div className="absolute min-w-[290px] max-w-[290px] h-[85px] space-x-2 items-center justify-start p-5 border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
       <Link
         href={"/"}
         className="flex z-20 flex-row items-center justify-start p-5 pb-0 space-x-2"
@@ -30,7 +30,7 @@ const DesktopSidebarLayout = () => {
         />
       </Link>
 
-      <ul className="flex flex-col space-y-7 p-5 pt-0">
+      <ul className="flex flex-col space-y-7 p-5 pt-5">
         {MENU_ITEMS.map((item, index) => (
           <Link href={item.href} key={index}>
             <li

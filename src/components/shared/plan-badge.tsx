@@ -9,7 +9,7 @@ const PlanBadge = ({ type }: PlanBadgeProps) => {
   return (
     <p
       className={cn(
-        "text-base text-bgtext-100 font-inter py-1 px-4 rounded-lg border-2 border-bgtext-800",
+        "w-fit text-base text-bgtext-100 font-inter py-1 px-4 rounded-lg border-2 border-bgtext-800",
         type === "PREMIUM"
           ? "bg-gradient-to-b from-lindeepgreen-start/40 to-black"
           : type === "BASIC"

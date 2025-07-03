@@ -176,7 +176,7 @@ const BindTelegramForm = () => {
             src="/assets/images/536-White.png"
             alt="DeFi Lottery Solutions"
             fill
-            className="object-cover object-center rounded-tl-xl rounded-tr-xl"
+            className="object-contain object-center rounded-tl-xl rounded-tr-xl"
             sizes="100%"
           />
         </div>

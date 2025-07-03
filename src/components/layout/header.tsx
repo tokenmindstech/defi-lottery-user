@@ -9,7 +9,7 @@ import Link from "next/link";
 const HeaderLayout = () => {
   return (
     <div className="flex sticky flex-row h-[10vh] w-full items-center justify-between">
-      <div className="absolute h-[10vh] w-full border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
+      <div className="absolute h-[85px] w-full border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
       <div className="flex w-full h-full p-5">
         <div className="flex z-20 flex-row items-center space-x-3 w-full">
           <MobileSidebarLayout />

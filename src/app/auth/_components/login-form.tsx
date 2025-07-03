@@ -10,9 +10,9 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import {
-  GoogleLogo,
-  Spinner,
-  TelegramLogo,
+  GoogleLogoIcon,
+  SpinnerIcon,
+  TelegramLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import {
@@ -33,6 +33,7 @@ import {
   REQUIRED_BIND_TELEGRAM,
 } from "@/constant/common";
 import { Web3AuthContext } from "@/provider/web3-auth";
+import Link from "next/link";
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASEURL!;
 
 const LoginForm = () => {
@@ -231,10 +232,13 @@ const LoginForm = () => {
           disabled={isLoading}
         >
           {isLoading ? (
-            <Spinner className="size-8 fill-bgtext-100 animate-spin" />
+            <SpinnerIcon className="size-8 fill-bgtext-100 animate-spin" />
           ) : (
             <Fragment>
-              <GoogleLogo weight="fill" className="size-6 fill-bgtext-100" />
+              <GoogleLogoIcon
+                weight="fill"
+                className="size-6 fill-bgtext-100"
+              />
               <p className="text-bgtext-100 font-inter font-medium text-base">
                 Login with Google
               </p>
@@ -247,16 +251,42 @@ const LoginForm = () => {
           disabled={isLoading}
         >
           {isLoading ? (
-            <Spinner className="size-8 fill-bgtext-100 animate-spin" />
+            <SpinnerIcon className="size-8 fill-bgtext-100 animate-spin" />
           ) : (
             <Fragment>
-              <TelegramLogo weight="fill" className="size-6 fill-bgtext-100" />
+              <TelegramLogoIcon
+                weight="fill"
+                className="size-6 fill-bgtext-100"
+              />
               <p className="text-bgtext-100 font-inter font-medium text-base">
                 Login with Telegram
               </p>
             </Fragment>
           )}
         </Button>
+
+        <p className="text-xs text-bgtext-100 font-inter text-center">
+          By creating an account, I agree to the536.com&apos;s{" "}
+          <Link
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            prefetch={false}
+            className="text-blue-500 hover:underline"
+          >
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            prefetch={false}
+            className="text-blue-500 hover:underline"
+          >
+            Privacy Policy
+          </Link>
+        </p>
       </CardContent>
     </Card>
   );
