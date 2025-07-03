@@ -28,6 +28,7 @@ import { signIn } from "next-auth/react";
 import toast from "react-hot-toast";
 import { delay } from "@/lib/utils";
 import {
+  AUTH_ERROR_TELEGRAM_ALREADY_BOUND,
   REQUIRED_2FA_SETUP,
   REQUIRED_AUTHENTICATION,
   REQUIRED_BIND_TELEGRAM,
@@ -170,6 +171,7 @@ const LoginForm = () => {
       try {
         setIsLoading(true);
         const action = searchParams.get("action");
+        const error = searchParams.get("error");
         const jwtToken = searchParams.get("token");
 
         // Reset JWT requested flag on logout
@@ -185,7 +187,7 @@ const LoginForm = () => {
           );
           return;
         }
-        if (action === "telegram_already_bound") {
+        if (error === AUTH_ERROR_TELEGRAM_ALREADY_BOUND) {
           toast.error(
             "Telegram account already linked to another account. Please login using that account directly."
           );
