@@ -3,12 +3,13 @@ import React from "react";
 import ClaimRewardIcon from "./claim-rewards";
 import DashboardIcon from "./dashboard";
 import LogOutIcon from "./log-out";
-import LuckyDrawIcon from "./lucky-draw";
+import LotteryDrawIcon from "./lottery-draw";
 import MyProfileIcon from "./my-profile";
 import SupportIcon from "./support";
 import ReferralIcon from "./referral";
 import ComissionIcon from "./commission";
 import RewardsIcon from "./rewards";
+import LuckyDrawIcon from "./lucky-draw";
 
 interface RenderIconProps {
   icon: string;
@@ -20,12 +21,13 @@ const RenderIcon = ({ icon, className }: RenderIconProps) => {
     "claim-rewards": ClaimRewardIcon,
     dashboard: DashboardIcon,
     "log-out": LogOutIcon,
-    "lucky-draw": LuckyDrawIcon,
+    "lottery-draw": LotteryDrawIcon,
     "my-profile": MyProfileIcon,
     rewards: RewardsIcon,
     support: SupportIcon,
     referral: ReferralIcon,
     commission: ComissionIcon,
+    "lucky-draw": LuckyDrawIcon,
   };
 
   const IconComponent = icons[icon];

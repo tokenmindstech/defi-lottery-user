@@ -52,12 +52,12 @@ export const MENU_ITEMS: MenuItems[] = [
     href: "/commissions",
   },
   {
-    icon: "lucky-draw",
-    title: "Lucky Draw",
-    href: "/lucky-draw",
+    icon: "lottery-draw",
+    title: "Lottery Draw",
+    href: "/lottery-draw",
   },
   {
-    icon: "rewards",
+    icon: "lucky-draw",
     title: "Rewards",
     href: "/rewards",
   },
