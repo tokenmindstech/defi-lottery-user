@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter, cn } from "../../lib/utils";
+import { capitalizeFirstLetter, cn } from "@/lib/utils";
 import React from "react";
 
 interface PlanBadgeProps {

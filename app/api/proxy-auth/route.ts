@@ -1,4 +1,4 @@
-import { authConfig } from "../../../config/auth";
+import { authConfig } from "@/config/auth";
 import { parseCustomHeaders } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";

@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import { useState } from "react";
 
 interface DataTableProps<TData, TValue> {

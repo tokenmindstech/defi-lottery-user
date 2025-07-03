@@ -1,7 +1,7 @@
 import { Input } from "../ui/input";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
-import { formUrlQuery, removeKeysFromQuery } from "../../lib/utils";
+import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounceCallback } from "usehooks-ts";
 import SelectLimit from "./select-limit";

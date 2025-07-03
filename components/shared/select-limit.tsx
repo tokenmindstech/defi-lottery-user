@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { PAGINATION_ITEMS } from "../../constant/common";
+import { PAGINATION_ITEMS } from "@/constant/common";
 import { useRouter, useSearchParams } from "next/navigation";
-import { formUrlQuery } from "../../lib/utils";
+import { formUrlQuery } from "@/lib/utils";
 
 const SelectLimit = () => {
   const searchParams = useSearchParams();

@@ -10,8 +10,8 @@ import {
   PaginationNext,
 } from "../ui/pagination";
 import { useRouter, useSearchParams } from "next/navigation";
-import { formUrlQuery } from "../../lib/utils";
-import { cn } from "../../lib/utils";
+import { formUrlQuery } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 interface PagePaginationProps {
   currentPage: number;

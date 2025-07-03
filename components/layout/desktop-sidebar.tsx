@@ -3,9 +3,9 @@
 import Image from "next/image";
 import React from "react";
 import { Separator } from "../ui/separator";
-import { MENU_ITEMS } from "../../constant/common";
+import { MENU_ITEMS } from "@/constant/common";
 import { usePathname } from "next/navigation";
-import { cn } from "../../lib/utils";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import RenderIcon from "../icons/render-icon";
 import { Button } from "../ui/button";

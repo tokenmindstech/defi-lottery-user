@@ -12,8 +12,8 @@ import {
 import { List } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import Image from "next/image";
-import { MENU_ITEMS } from "../../constant/common";
-import { cn } from "../../lib/utils";
+import { MENU_ITEMS } from "@/constant/common";
+import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import RenderIcon from "../icons/render-icon";
 import { Separator } from "../ui/separator";

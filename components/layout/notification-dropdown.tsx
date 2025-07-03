@@ -9,17 +9,17 @@ import {
 } from "../ui/dropdown-menu";
 import { Bell } from "@phosphor-icons/react/dist/ssr";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
-import { NOTIFICATION_MENU_ITEMS } from "../../constant/common";
+import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import NotificationAllTab from "../../app/(dashboard)/notifications/_components/tabs/all";
-import NotificationReadTab from "../../app/(dashboard)/notifications/_components/tabs/read";
-import NotificationUnreadTab from "../../app/(dashboard)/notifications/_components/tabs/unread";
 import { useSession } from "next-auth/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchProxy } from "../../lib/utils";
-import NotificationSkeleton from "../../app/(dashboard)/notifications/_components/skeleton";
+import { fetchProxy } from "@/lib/utils";
 import { Button } from "../ui/button";
+import NotificationSkeleton from "@/app/(dashboard)/notifications/_components/skeleton";
+import NotificationAllTab from "@/app/(dashboard)/notifications/_components/tabs/all";
+import NotificationUnreadTab from "@/app/(dashboard)/notifications/_components/tabs/unread";
+import NotificationReadTab from "@/app/(dashboard)/notifications/_components/tabs/read";
 
 const NotificationDropdown = () => {
   const [open, setOpen] = useState(false);

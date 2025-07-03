@@ -1,4 +1,4 @@
-import { authConfig } from "../../config/auth";
+import { authConfig } from "@/config/auth";
 import type { Metadata } from "next";
 import { getServerSession, Session } from "next-auth";
 import { redirect } from "next/navigation";
