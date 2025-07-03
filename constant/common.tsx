@@ -10,6 +10,15 @@ interface MenuItems {
   href: string;
 }
 
+interface SubMenu {
+  title: string;
+  href: string;
+}
+
+interface MenuItemWithSubMenu extends MenuItems {
+  subMenu?: SubMenu[];
+}
+
 interface ProfileMenuItems {
   value: ProfileMenuType;
   label: string;
@@ -35,7 +44,7 @@ export const AUTH_ERROR = "auth_error";
 export const AUTH_ERROR_TELEGRAM_ALREADY_BOUND = "telegram_already_bound";
 export const AUTH_LOGIN_2FA = "2fa";
 
-export const MENU_ITEMS: MenuItems[] = [
+export const MENU_ITEMS: MenuItemWithSubMenu[] = [
   {
     icon: "dashboard",
     title: "Dashboard",
@@ -58,8 +67,18 @@ export const MENU_ITEMS: MenuItems[] = [
   },
   {
     icon: "lucky-draw",
-    title: "Rewards",
-    href: "/rewards",
+    title: "Lucky Draw",
+    href: "/lucky",
+    subMenu: [
+      {
+        title: "Draw",
+        href: "/lucky-draw",
+      },
+      {
+        title: "Bonus Reward",
+        href: "/bonus-reward",
+      },
+    ],
   },
   {
     icon: "claim-rewards",

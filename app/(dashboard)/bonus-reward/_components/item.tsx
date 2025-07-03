@@ -37,7 +37,7 @@ const ItemPerks = () => {
         </h4>
       </CardContent>
       <CardFooter className="px-0">
-        <Link href="/rewards/1" className="w-full">
+        <Link href="/lucky-draw/1" className="w-full">
           <Button className="w-full bg-bgtext-800  border border-bgtext-700 hover:bg-bgtext-700 rounded-xl cursor-pointer">
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
               Claim Now
