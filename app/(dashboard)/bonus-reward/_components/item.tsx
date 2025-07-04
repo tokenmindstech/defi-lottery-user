@@ -9,19 +9,34 @@ import {
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import BlueShadow from "@/components/icons/blue-shadow";
+// import SeaShadow from "@/components/icons/sea-shadow";
 
-const ItemPerks = () => {
+interface ItemPersksProps {
+  perks: Perks;
+}
+
+const ItemPerks = ({ perks }: ItemPersksProps) => {
   return (
-    <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl px-4 py-4">
-      <CardHeader className="px-0 py-0">
-        <div className="flex w-full h-[200px] relative rounded-xl bg-linblue-start">
-          <Image
-            src="/assets/images/iphone.png"
-            alt="Perks"
-            fill
-            className="object-contain rounded-xl"
-            sizes="100%"
-          />
+    <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl gap-3 px-4 py-4">
+      <CardHeader className="relative px-0 py-0">
+        <div className="absolute top-0 left-0 z-20 flex w-fit px-2 py-1 bg-linprimary-start rounded-br-2xl">
+          <p className="text-bgtext-100 font-inter font-medium text-sm text-left">
+            {perks.category[0]}
+          </p>
+        </div>
+        <div className="flex w-full h-[250px] items-center justify-center relative rounded-xl">
+          <div className="flex w-full h-[180px] absolute rounded-xl z-40">
+            <Image
+              src={perks.imageUrl}
+              alt={perks.name}
+              fill
+              className="object-contain rounded-xl"
+              sizes="100%"
+            />
+          </div>
+          <BlueShadow className="absolute inset-0 z-10 rounded-xl" />
+          {/* <SeaShadow className="absolute inset-0 z-10 rounded-xl" /> */}
         </div>
         <CardDescription className="hidden"></CardDescription>
       </CardHeader>
@@ -30,7 +45,7 @@ const ItemPerks = () => {
           VIP Event Access
         </p>
         <h4 className="text-bgtext-100 font-inter font-medium text-base text-left">
-          Rewards Program
+          {perks.name}
         </h4>
       </CardContent>
       <CardFooter className="px-0">

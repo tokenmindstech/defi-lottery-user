@@ -10,7 +10,35 @@ const PerksPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-10">
         {Array.from({ length: 8 }, (_, index) => (
-          <ItemPerks key={index} />
+          <ItemPerks
+            key={index}
+            perks={{
+              id: "1",
+              imageUrl: "/assets/images/iphone.png",
+              name: "iPhone 14 Pro Max",
+              description: "Win an iPhone 14 Pro Max",
+              category: ["Electronics"],
+              numberOfWinners: 1,
+              createdAt: new Date().toISOString(),
+              validAt: new Date(
+                Date.now() + 7 * 24 * 60 * 60 * 1000
+              ).toISOString(),
+              perkWinners: [
+                {
+                  id: "1",
+                  name: "John Doe",
+                },
+                {
+                  id: "2",
+                  name: "Jane Smith",
+                },
+                {
+                  id: "3",
+                  name: "Alice Johnson",
+                },
+              ],
+            }}
+          />
         ))}
       </div>
     </section>

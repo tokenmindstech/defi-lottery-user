@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import React, { Fragment } from "react";
 
-const CircleShadowIcon = ({ className }: CustomIconProps) => {
+const BlueShadow = ({ className }: CustomIconProps) => {
   return (
     <Fragment>
       <div className="flex w-full h-full relative justify-end items-end overflow-hidden">
@@ -241,27 +241,6 @@ const CircleShadowIcon = ({ className }: CustomIconProps) => {
             />
           </filter>
           <filter
-            id="filter3_f_221_2641"
-            x="-72.0376"
-            y="73.71"
-            width="804.727"
-            height="253.382"
-            filterUnits="userSpaceOnUse"
-            colorInterpolationFilters="sRGB"
-          >
-            <feFlood floodOpacity={0} result="BackgroundImageFix" />
-            <feBlend
-              mode="normal"
-              in="SourceGraphic"
-              in2="BackgroundImageFix"
-              result="shape"
-            />
-            <feGaussianBlur
-              stdDeviation={50}
-              result="effect1_foregroundBlur_221_2641"
-            />
-          </filter>
-          <filter
             id="filter4_f_221_2641"
             x="101.877"
             y="133.71"
@@ -309,4 +288,4 @@ const CircleShadowIcon = ({ className }: CustomIconProps) => {
   );
 };
 
-export default CircleShadowIcon;
+export default BlueShadow;

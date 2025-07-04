@@ -1,6 +1,6 @@
 "use client";
 
-import CircleShadowIcon from "@/components/icons/circle-shadow";
+import BlueShadow from "@/components/icons/blue-shadow";
 import Image from "next/image";
 import React from "react";
 import CountDownDraw from "./_components/count-down";
@@ -64,7 +64,7 @@ const LuckyDrawPage = () => {
                   />
                 </div>
               </div>
-              <CircleShadowIcon className="absolute z-10 left-0 top-0" />
+              <BlueShadow className="absolute z-10 left-0 top-0" />
             </div>
 
             <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">

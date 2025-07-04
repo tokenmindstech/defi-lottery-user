@@ -1,4 +1,4 @@
-import CircleShadowIcon from "../icons/circle-shadow";
+import BlueShadow from "../icons/blue-shadow";
 
 interface PerformanceCardProps {
   icon: React.ReactNode;
@@ -31,7 +31,7 @@ const PerformanceCard = ({
       <p className="z-10 text-3xl font-bold text-bgtext-100">{value}</p>
 
       {variant === "checkerboard" && (
-        <CircleShadowIcon className="absolute z-5 left-0 top-0" />
+        <BlueShadow className="absolute z-5 left-0 top-0" />
       )}
     </div>
   );

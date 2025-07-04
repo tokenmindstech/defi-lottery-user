@@ -1,7 +1,7 @@
 import React from "react";
 import WinnerBanner from "./_components/winner-banner";
 import Image from "next/image";
-import CircleShadowIcon from "@/components/icons/circle-shadow";
+import BlueShadow from "@/components/icons/blue-shadow";
 import CountDownBonusDraw from "./_components/count-down-bonus";
 import BonusRewardHistory from "./_components/bonus-reward-history";
 
@@ -18,7 +18,7 @@ const PerksPage = () => {
           imageUrl: "/assets/images/iphone.png",
           name: "iPhone 14 Pro Max",
           description: "Win an iPhone 14 Pro Max",
-          category: ["electronics", "mobile"],
+          category: ["Electronics"],
           numberOfWinners: 1,
           createdAt: new Date().toISOString(),
           validAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -62,7 +62,7 @@ const PerksPage = () => {
               />
             </div>
           </div>
-          <CircleShadowIcon className="absolute z-10 left-0 top-0" />
+          <BlueShadow className="absolute z-10 left-0 top-0" />
         </div>
 
         <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
