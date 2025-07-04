@@ -161,6 +161,23 @@ declare global {
     updatedAt: string;
   }
 
+  interface PerkWinner {
+    id: string;
+    name: string;
+  }
+
+  interface Perks {
+    id: string;
+    imageUrl: string;
+    name: string;
+    description: string;
+    category: string[];
+    numberOfWinners: number;
+    createdAt: string;
+    validAt: string;
+    perkWinners: PerkWinner[];
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -370,6 +387,12 @@ declare global {
     data: {
       id: string;
       amount: number;
+    };
+  }
+
+  interface APIQueryPerksResponseDTO extends APIBaseResponse {
+    data: {
+      perks: Perks[];
     };
   }
 

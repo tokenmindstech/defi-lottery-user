@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy, truncateString } from "@/lib/utils";
 import ReferralSkeleton from "./_components/referral-skeleton";
-import { TelegramLogo } from "@phosphor-icons/react/dist/ssr";
+import { TelegramLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import { Fragment } from "react";
 import Link from "next/link";
 import AgentDashboardStatistic from "./_components/statistic";
@@ -103,7 +103,7 @@ const ReferralPage = () => {
                   )}&text=%F0%9F%9A%80%20Join%20the%20DeFi%20Lottery%20fun%20with%20my%20referral%20link%21%20%F0%9F%8E%89%20Sign%20up%2C%20play%2C%20and%20earn%20rewards%20together%21%20%F0%9F%92%B0`}
                 >
                   <Button className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300">
-                    <TelegramLogo className="h-4 w-4" />
+                    <TelegramLogoIcon className="h-4 w-4" />
                     <span>Share on Telegram</span>
                   </Button>
                 </Link>

@@ -192,3 +192,15 @@ export const capitalizeFirstLetter = (str: string): string => {
   if (str.length === 0) return str;
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 };
+
+export const censorString = (input: string): string => {
+  if (input.length <= 2) {
+    return input.replace(/./g, "*");
+  }
+
+  const firstChar = input.charAt(0);
+  const lastChar = input.charAt(input.length - 1);
+  const middlePart = input.slice(1, -1).replace(/./g, "*");
+
+  return `${firstChar}${middlePart}${lastChar}`;
+};
