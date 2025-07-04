@@ -29,7 +29,8 @@ const DesktopSidebarLayout = () => {
   useEffect(() => {
     if (mounted) {
       const shouldExpandAccordion =
-        pathname === "/lucky-draw" || pathname === "/bonus-reward";
+        pathname.startsWith("/lucky-draw") ||
+        pathname.startsWith("/bonus-reward");
       setAccordionValue(shouldExpandAccordion ? ["item-1"] : []);
     }
   }, [mounted, pathname]);
