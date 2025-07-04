@@ -4,12 +4,12 @@ import React, { Fragment } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
-import HistoryDrawSkeleton from "./history-draw-skeleton";
 import PagePagination from "@/components/shared/page-pagination";
-import { DrawTicketTable } from "./draw-ticket-list";
 import { useSearchParams } from "next/navigation";
+import BonusRewardSkeleton from "./bonus-reward-skeleton";
+import { BonusRewardTable } from "./bonus-reward-list";
 
-const HistoryDraw = () => {
+const BonusRewardHistory = () => {
   const searchParams = useSearchParams();
   const { data: userSession } = useSession();
 
@@ -40,17 +40,46 @@ const HistoryDraw = () => {
     <div className="flex flex-col w-full h-full space-y-10">
       <div className="flex flex-col w-full h-full space-y-5">
         <h2 className="text-xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
-          History Draws
+          Bonus Reward Winners
         </h2>
 
         <div className="flex flex-col w-full h-full space-y-5">
           {isLoading ? (
-            <HistoryDrawSkeleton />
+            <BonusRewardSkeleton />
           ) : (
             historyDraw !== undefined &&
             historyDraw !== null && (
               <Fragment>
-                <DrawTicketTable draws={historyDraw.data.drawTickets} />
+                <BonusRewardTable
+                  perks={[
+                    {
+                      id: "1",
+                      imageUrl: "/assets/images/iphone.png",
+                      name: "iPhone 14 Pro Max",
+                      description: "Win an iPhone 14 Pro Max",
+                      category: ["electronics", "mobile"],
+                      numberOfWinners: 1,
+                      createdAt: new Date().toISOString(),
+                      validAt: new Date(
+                        Date.now() + 7 * 24 * 60 * 60 * 1000
+                      ).toISOString(),
+                      perkWinners: [
+                        {
+                          id: "1",
+                          name: "John Doe",
+                        },
+                        {
+                          id: "2",
+                          name: "Jane Smith",
+                        },
+                        {
+                          id: "3",
+                          name: "Alice Johnson",
+                        },
+                      ],
+                    },
+                  ]}
+                />
 
                 <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
                   <p className="text-bgtext-500 text-sm">
@@ -73,4 +102,4 @@ const HistoryDraw = () => {
   );
 };
 
-export default HistoryDraw;
+export default BonusRewardHistory;
