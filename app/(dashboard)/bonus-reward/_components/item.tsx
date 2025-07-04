@@ -5,7 +5,6 @@ import {
   CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -15,17 +14,15 @@ const ItemPerks = () => {
   return (
     <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl px-4 py-4">
       <CardHeader className="px-0 py-0">
-        <CardTitle className="w-full text-bgtext-100 font-inter text-xl font-semibold px-0">
-          <div className="flex w-full h-[300px] relative rounded-xl">
-            <Image
-              src="/assets/images/rewards.jpg"
-              alt="Perks"
-              fill
-              className="object-cover rounded-xl"
-              sizes="100%"
-            />
-          </div>
-        </CardTitle>
+        <div className="flex w-full h-[200px] relative rounded-xl bg-linblue-start">
+          <Image
+            src="/assets/images/iphone.png"
+            alt="Perks"
+            fill
+            className="object-contain rounded-xl"
+            sizes="100%"
+          />
+        </div>
         <CardDescription className="hidden"></CardDescription>
       </CardHeader>
       <CardContent className="px-0">
@@ -40,7 +37,7 @@ const ItemPerks = () => {
         <Link href="/lucky-draw/1" className="w-full">
           <Button className="w-full bg-bgtext-800  border border-bgtext-700 hover:bg-bgtext-700 rounded-xl cursor-pointer">
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
-              Claim Now
+              More Details
             </p>
           </Button>
         </Link>
