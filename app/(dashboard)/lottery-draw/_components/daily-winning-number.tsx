@@ -13,6 +13,40 @@ import RotatingText from "@/components/ui/rotating-text";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+// const lastMessage: ListenGetTodaysRewardDrawResponseDTO = {
+//   message: "getTodayRewardDraw",
+//   data: [
+//     {
+//       id: "12345",
+//       drawType: "DAILY",
+//       drawNumbers: "1 2 3 4 5",
+//       ticketType: "PREMIUM",
+//       createdAt: new Date().toISOString(),
+//     },
+//     {
+//       id: "54321",
+//       drawType: "DAILY",
+//       drawNumbers: "10 11 12 13 14",
+//       ticketType: "BASIC",
+//       createdAt: new Date().toISOString(),
+//     },
+//     {
+//       id: "67890",
+//       drawType: "WEEKLY",
+//       drawNumbers: "6 7 8 9 10",
+//       ticketType: "PREMIUM",
+//       createdAt: new Date().toISOString(),
+//     },
+//     {
+//       id: "09876",
+//       drawType: "WEEKLY",
+//       drawNumbers: "15 16 17 18 19",
+//       ticketType: "BASIC",
+//       createdAt: new Date().toISOString(),
+//     },
+//   ],
+// };
+
 interface RenderTodaysWinningNumbersProps {
   items: TodaysDraw[];
 }
@@ -37,6 +71,8 @@ const DailyWinningNumber = () => {
       setSended(true);
     }
   }, [connected, sended, sendMessage]);
+
+  // console.log("noow", dayjs().tz("Asia/Singapore").get("day"));
 
   return (
     <Fragment>
@@ -76,7 +112,7 @@ const DailyWinningNumber = () => {
                       .map((number, index) => (
                         <WinningNumber items={["?", "?"]} key={index} />
                       ))
-                  ) : dayjs().tz("Asia/Singapore").get("day") === 7 ? (
+                  ) : dayjs().tz("Asia/Singapore").get("day") !== 0 ? (
                     <RenderTodaysWinningNumbers
                       items={lastMessage.data.filter(
                         (item) => item.drawType === "DAILY"
