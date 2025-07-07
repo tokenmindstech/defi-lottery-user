@@ -73,6 +73,7 @@ declare global {
     id: string;
     email: string | null;
     name: string;
+    imageUrl?: string;
     roles: RoleType[];
     verifiers: Verifier[];
     subscription: Subscription | null;

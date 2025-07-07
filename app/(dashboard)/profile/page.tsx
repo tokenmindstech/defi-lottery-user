@@ -6,6 +6,7 @@ import ProfileMenu from "./_components/menu";
 import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy, formUrlQuery } from "@/lib/utils";
+import { useCachedProfileImage } from "@/lib/use-cached-profile-image";
 import { useSession } from "next-auth/react";
 import ProfileSkeleton from "./_components/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -34,6 +35,12 @@ const ProfilePage = () => {
       }),
     enabled: !!userSession,
   });
+  
+  // Use cached profile image
+  const { cachedImage: cachedProfileImage } = useCachedProfileImage(
+    userData?.data?.imageUrl,
+    userSession?.user.id
+  );
 
   const handleChangeMenu = (menu: ProfileMenuType) => {
     setActiveTab(menu);
@@ -63,12 +70,26 @@ const ProfilePage = () => {
             <div className="flex flex-col items-start justify-start w-full h-full p-5 space-y-5 lg:flex-row lg:space-y-0 lg:items-center lg:justify-between">
               <div className="flex flex-row items-center justify-center space-x-5">
                 <Avatar className="w-20 h-20 cursor-pointer bg-bgtext-800 rounded-xl">
-                  <AvatarImage
-                    src="/assets/images/user.jpeg"
-                    alt="User Avatar"
-                    className="object-cover"
-                  />
-                  <AvatarFallback>DF</AvatarFallback>
+                  {cachedProfileImage ? (
+                    <AvatarImage
+                      src={cachedProfileImage}
+                      alt="User Avatar"
+                      className="object-cover"
+                    />
+                  ) : userData.data.imageUrl ? (
+                    <AvatarImage
+                      src={userData.data.imageUrl}
+                      alt="User Avatar"
+                      className="object-cover"
+                      onError={(e) => {
+                        // Hide the image if it fails to load, fallback will show
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                  ) : null}
+                  <AvatarFallback className="bg-bgtext-800 text-white text-xl">
+                    {userData.data.name.charAt(0).toUpperCase()}
+                  </AvatarFallback>
                 </Avatar>
 
                 <div className="flex flex-col space-y-2">
