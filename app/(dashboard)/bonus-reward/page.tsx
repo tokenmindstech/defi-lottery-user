@@ -25,7 +25,7 @@ const BonusPage = () => {
       : 10;
 
   const { data: bonuses, isLoading } = useQuery<APIQueryBonusResponseDTO>({
-    queryKey: ["bonus", userSession?.user.id, page, limit],
+    queryKey: ["bonus", page, limit],
     queryFn: async () =>
       fetchProxy({
         url: `bonus?page=${page}&limit=${limit}`,

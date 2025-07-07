@@ -396,6 +396,10 @@ declare global {
     };
   }
 
+  interface APIGetBonusDetailsResponseDTO extends APIBaseResponse {
+    data: Bonus;
+  }
+
   interface BaseWebsocketResponse {
     message: string;
     data: Record<string, unknown>;

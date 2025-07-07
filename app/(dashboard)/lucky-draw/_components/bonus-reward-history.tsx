@@ -26,7 +26,7 @@ const BonusRewardHistory = () => {
 
   const { data: historyDraw, isLoading } =
     useQuery<APIGetHistoryDrawResponseDTO>({
-      queryKey: ["draw-ticket", userSession?.user.id, page, limit],
+      queryKey: ["draw-ticket", page, limit],
       queryFn: async () =>
         fetchProxy({
           url: `draw-ticket?page=${page}&limit=${limit}`,
