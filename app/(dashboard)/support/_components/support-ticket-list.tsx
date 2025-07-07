@@ -4,9 +4,12 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
-import { Eye } from "@phosphor-icons/react/dist/ssr";
 import { cn, truncateString } from "@/lib/utils";
-import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import {
+  SortAscendingIcon,
+  SortDescendingIcon,
+  EyeIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 
 import timezone from "dayjs/plugin/timezone";
@@ -31,9 +34,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -63,9 +66,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -97,9 +100,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -129,9 +132,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -163,9 +166,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -205,9 +208,9 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -238,7 +241,7 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
               size="icon"
               className="bg-bgtext-900 rounded-full cursor-pointer hover:bg-bgtext-900 text-bgtext-700 hover:text-bgtext-100 ease-out transition-all duration-300"
             >
-              <Eye className="size-6 " />
+              <EyeIcon className="size-6 " />
             </Button>
           </Link>
         </div>

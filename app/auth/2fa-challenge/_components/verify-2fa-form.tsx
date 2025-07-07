@@ -21,7 +21,7 @@ import { Separator } from "@/components/ui/separator";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMutation } from "@tanstack/react-query";
 import { delay, fetchProxy } from "@/lib/utils";
-import { Spinner } from "@phosphor-icons/react/dist/ssr";
+import { SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
 import { signIn, signOut } from "next-auth/react";
 import { AUTH_LOGIN_2FA } from "@/constant/common";
@@ -181,7 +181,7 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
             >
               {form.formState.isSubmitting ? (
                 <div className="flex flex-row items-center justify-center space-x-2">
-                  <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                  <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                   <p className="text-bgtext-100 font-inter font-medium text-base">
                     Logging in...
                   </p>

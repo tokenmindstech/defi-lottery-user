@@ -1,5 +1,9 @@
 import React from "react";
-import { CreditCard, Medal, Ticket } from "@phosphor-icons/react/dist/ssr";
+import {
+  CreditCardIcon,
+  MedalIcon,
+  TicketIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -49,7 +53,7 @@ const DashboardLottery = ({
               <p className="text-bgtext-600 font-inter text-xs">Rewards Earn</p>
 
               <div className="flex p-1.5 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end">
-                <CreditCard className="size-5 text-bgtext-100" />
+                <CreditCardIcon className="size-5 text-bgtext-100" />
               </div>
             </div>
 
@@ -71,7 +75,7 @@ const DashboardLottery = ({
               </p>
 
               <div className="flex p-1.5 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end">
-                <Ticket className="size-5 text-bgtext-100" />
+                <TicketIcon className="size-5 text-bgtext-100" />
               </div>
             </div>
 
@@ -86,7 +90,7 @@ const DashboardLottery = ({
               <p className="text-bgtext-600 font-inter text-xs">Wins</p>
 
               <div className="flex p-1.5 rounded-lg bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end">
-                <Medal className="size-5 text-bgtext-100" />
+                <MedalIcon className="size-5 text-bgtext-100" />
               </div>
             </div>
 

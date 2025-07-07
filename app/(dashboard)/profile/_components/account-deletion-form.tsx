@@ -20,7 +20,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Spinner, Trash } from "@phosphor-icons/react/dist/ssr";
+import { SpinnerIcon, TrashIcon } from "@phosphor-icons/react/dist/ssr";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -112,7 +112,7 @@ const AccountDeletionForm = () => {
       <DialogTrigger asChild>
         <Button variant="destructive" className="cursor-pointer">
           Delete My Account
-          <Trash className="size-5 text-bgtext-100" />
+          <TrashIcon className="size-5 text-bgtext-100" />
         </Button>
       </DialogTrigger>
 
@@ -170,7 +170,7 @@ const AccountDeletionForm = () => {
               >
                 {form.formState.isSubmitting ? (
                   <div className="flex flex-row items-center justify-center space-x-2">
-                    <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                    <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                     <p className="text-bgtext-100 font-inter font-medium text-sm">
                       Deleting your account...
                     </p>

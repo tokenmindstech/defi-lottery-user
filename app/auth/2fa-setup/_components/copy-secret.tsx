@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Copy } from "@phosphor-icons/react/dist/ssr";
+import { CopyIcon } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
 
 interface CopySecretProps {
@@ -25,7 +25,7 @@ const CopySecret = ({ secret }: CopySecretProps) => {
         className="cursor-pointer hover:bg-bgtext-100"
         onClick={handleCopy}
       >
-        <Copy className="size-6 text-bgtext-500" />
+        <CopyIcon className="size-6 text-bgtext-500" />
       </Button>
     </div>
   );
