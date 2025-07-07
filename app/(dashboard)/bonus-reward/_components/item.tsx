@@ -10,6 +10,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import BlueShadow from "@/components/icons/blue-shadow";
+import RotatingText from "@/components/ui/rotating-text";
 // import SeaShadow from "@/components/icons/sea-shadow";
 
 interface ItemPersksProps {
@@ -21,9 +22,21 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
     <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl gap-3 px-4 py-4">
       <CardHeader className="relative px-0 py-0">
         <div className="absolute top-0 left-0 z-20 flex w-fit px-2 py-1 bg-linprimary-start rounded-br-2xl">
-          <p className="text-bgtext-100 font-inter font-medium text-sm text-left">
+          {/* <p className="text-bgtext-100 font-inter font-medium text-sm text-left">
             {perks.category[0]}
-          </p>
+          </p> */}
+          <RotatingText
+            texts={perks.category}
+            mainClassName="text-bgtext-100 text-sm"
+            staggerFrom={"last"}
+            initial={{ y: "100%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "-120%" }}
+            staggerDuration={0.025}
+            splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+            transition={{ type: "spring", damping: 30, stiffness: 400 }}
+            rotationInterval={4000}
+          />
         </div>
         <div className="flex w-full h-[250px] items-center justify-center relative rounded-xl">
           <div className="flex w-full h-[180px] absolute rounded-xl z-40">

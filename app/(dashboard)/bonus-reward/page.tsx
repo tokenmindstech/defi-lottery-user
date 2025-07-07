@@ -17,7 +17,7 @@ const PerksPage = () => {
               imageUrl: "/assets/images/iphone.png",
               name: "iPhone 14 Pro Max",
               description: "Win an iPhone 14 Pro Max",
-              category: ["Electronics"],
+              category: ["Electronics", "Smartphones", "Apple"],
               numberOfWinners: 1,
               createdAt: new Date().toISOString(),
               validAt: new Date(
