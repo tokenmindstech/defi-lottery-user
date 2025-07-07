@@ -7,28 +7,36 @@ import Image from "next/image";
 import BlueShadow from "@/components/icons/blue-shadow";
 import RotatingText from "@/components/ui/rotating-text";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import BonusDetailSkeleton from "./_components/bonus-detail-skeleton";
+import ErrorInfo from "@/components/shared/error-info";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const BonusDetailPage = () => {
   const { bonusId } = useParams();
   const { data: userSession } = useSession();
 
-  const { data: bonusData, isLoading } =
-    useQuery<APIGetBonusDetailsResponseDTO>({
-      queryKey: ["bonus", bonusId],
-      queryFn: async () =>
-        fetchProxy({
-          url: `bonus/${bonusId}`,
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!bonusId && !!userSession?.user.id,
-    });
-
-  console.log("Bonus Data: ", bonusData);
+  const {
+    data: bonusData,
+    isLoading,
+    error,
+  } = useQuery<APIGetBonusDetailsResponseDTO>({
+    queryKey: ["bonus", bonusId],
+    queryFn: async () =>
+      fetchProxy({
+        url: `bonus/${bonusId}`,
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!bonusId && !!userSession?.user.id,
+  });
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -37,12 +45,22 @@ const BonusDetailPage = () => {
 
       {isLoading ? (
         <BonusDetailSkeleton />
+      ) : error ? (
+        <ErrorInfo errorMessage="Failed to load bonus details. Please try again later." />
       ) : (
         bonusData !== undefined &&
-        bonusData !== null && (
+        bonusData !== null &&
+        (bonusData.statusCode > 299 ? (
+          <ErrorInfo
+            errorMessage={
+              bonusData.message ||
+              "An error occurred while fetching bonus details."
+            }
+          />
+        ) : (
           <div className="flex flex-col w-full h-full space-y-5">
             <BreadcrumbPages
-              currentPageName={"Ticket to Chongqing"}
+              currentPageName={bonusData.data.name}
               currentPageUrl={`/bonus-reward/${bonusId}`}
               previousPages={[
                 {
@@ -56,7 +74,7 @@ const BonusDetailPage = () => {
               <div className="relative px-0 py-0">
                 <div className="absolute top-0 left-0 z-20 flex w-fit px-2 py-1 rounded-tl-lg bg-linprimary-start rounded-br-2xl">
                   <RotatingText
-                    texts={["Travel", "Adventure", "Experience"]}
+                    texts={bonusData.data.category}
                     mainClassName="text-bgtext-100 text-base font-semibold "
                     staggerFrom={"last"}
                     initial={{ y: "100%" }}
@@ -71,8 +89,8 @@ const BonusDetailPage = () => {
                 <div className="flex w-full h-[500px] items-center justify-center relative rounded-lg  bg-bgtext-950">
                   <div className="flex w-full h-[500px] absolute rounded-lg z-40">
                     <Image
-                      src={"/assets/images/travel.png"}
-                      alt={"Travel Image"}
+                      src={bonusData.data.imageUrl}
+                      alt={bonusData.data.name}
                       fill
                       className="object-contain rounded-lg"
                       sizes="100%"
@@ -88,7 +106,7 @@ const BonusDetailPage = () => {
               <div className="w-full h-fit flex flex-col space-y-5 p-5 rounded-lg bg-bgtext-950">
                 <div className="flex flex-col space-y-2">
                   <p className="text-bgtext-100 font-inter text-2xl font-bold">
-                    Travel to Chongqing{" "}
+                    {bonusData.data.name}{" "}
                     <span className="text-bgtext-100 text-xs w-fit px-2 py-1 bg-linprimary-start rounded-lg">
                       2 Winners ✨
                     </span>
@@ -98,29 +116,26 @@ const BonusDetailPage = () => {
                       Draw Period:
                     </p>
                     <p className="text-bgtext-500 font-inter text-xs">
-                      {dayjs("2025-07-13T17:00:00.000Z").format("DD/MM/YYYY")}
+                      {dayjs(bonusData.data.createdAt)
+                        .tz("Asia/Singapore")
+                        .format("DD/MM/YYYY")}
                     </p>
                     <p className="text-bgtext-500 font-inter text-xs">-</p>
                     <p className="text-bgtext-500 font-inter text-xs">
-                      {dayjs("2025-07-20T17:00:00.000Z").format("DD/MM/YYYY")}
+                      {dayjs(bonusData.data.validAt)
+                        .tz("Asia/Singapore")
+                        .format("DD/MM/YYYY")}
                     </p>
                   </div>
                 </div>
 
                 <p className="text-bgtext-500 font-inter text-base">
-                  Experience cutting-edge technology with the iPhone 16 Pro Max!
-                  This sleek, high-performance smartphone features a stunning
-                  6.9-inch Super Retina XDR display, the powerful A18 Pro chip
-                  for seamless multitasking, and an advanced triple-camera
-                  system for professional-quality photos and videos. With
-                  enhanced battery life, 5G connectivity, and the latest iOS,
-                  it’s the ultimate device for staying connected and creative on
-                  the go.
+                  {bonusData.data.description}
                 </p>
               </div>
             </div>
           </div>
-        )
+        ))
       )}
     </section>
   );
