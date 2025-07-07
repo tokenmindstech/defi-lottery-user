@@ -4,10 +4,10 @@ import React from "react";
 import RotatingText from "@/components/ui/rotating-text";
 
 interface WinnerBannerProps {
-  perks: Perks;
+  bonus: Bonus;
 }
 
-const WinnerBanner = ({ perks }: WinnerBannerProps) => {
+const WinnerBanner = ({ bonus }: WinnerBannerProps) => {
   return (
     <div className="relative flex flex-row items-center justify-between space-x-5 w-full h-full p-4 bg-gradient-to-b from-linprimary-start to-linprimary-end/50 text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 rounded-2xl ease-out transition-all duration-300 overflow-visible">
       <div className="flex flex-row space-x-2 items-center relative">
@@ -15,7 +15,7 @@ const WinnerBanner = ({ perks }: WinnerBannerProps) => {
           Congratulations to{" "}
         </p>
         <RotatingText
-          texts={perks.perkWinners.map((winner) => censorString(winner.name))}
+          texts={bonus.bonusWinners.map((winner) => censorString(winner.name))}
           mainClassName="text-bgtext-100 font-bold"
           staggerFrom={"last"}
           initial={{ y: "100%" }}
@@ -35,8 +35,8 @@ const WinnerBanner = ({ perks }: WinnerBannerProps) => {
 
         <div className="relative w-[60px]">
           <Image
-            src={perks.imageUrl}
-            alt={perks.name}
+            src={bonus.imageUrl}
+            alt={bonus.name}
             width={60}
             height={60}
             className="object-cover rounded-lg absolute -top-13 right-0 z-10 shadow-lg"

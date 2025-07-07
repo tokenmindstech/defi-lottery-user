@@ -51,7 +51,7 @@ const BonusRewardHistory = () => {
             historyDraw !== null && (
               <Fragment>
                 <BonusRewardTable
-                  perks={[
+                  bonuses={[
                     {
                       id: "1",
                       imageUrl: "/assets/images/iphone.png",
@@ -63,7 +63,7 @@ const BonusRewardHistory = () => {
                       validAt: new Date(
                         Date.now() + 7 * 24 * 60 * 60 * 1000
                       ).toISOString(),
-                      perkWinners: [
+                      bonusWinners: [
                         {
                           id: "1",
                           name: "John Doe",

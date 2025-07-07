@@ -13,7 +13,7 @@ const PerksPage = () => {
       </h2>
 
       <WinnerBanner
-        perks={{
+        bonus={{
           id: "1",
           imageUrl: "/assets/images/iphone.png",
           name: "iPhone 14 Pro Max",
@@ -22,7 +22,7 @@ const PerksPage = () => {
           numberOfWinners: 1,
           createdAt: new Date().toISOString(),
           validAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-          perkWinners: [
+          bonusWinners: [
             {
               id: "1",
               name: "John Doe",

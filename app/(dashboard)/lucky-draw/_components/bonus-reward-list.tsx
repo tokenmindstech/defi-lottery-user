@@ -18,7 +18,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 // Define columns for the data table
-const columns: ColumnDef<Perks>[] = [
+const columns: ColumnDef<Bonus>[] = [
   {
     id: "no",
     header: () => (
@@ -44,11 +44,11 @@ const columns: ColumnDef<Perks>[] = [
     cell: ({ row }) => {
       return (
         <p className="text-sm font-inter font-light whitespace-nowrap pr-3">
-          {row.original.perkWinners.map((winner, index) => (
+          {row.original.bonusWinners.map((winner, index) => (
             <span key={winner.id} className="font-medium">
               {censorString(winner.name)}
-              {index < row.original.perkWinners.length - 1
-                ? index === row.original.perkWinners.length - 2
+              {index < row.original.bonusWinners.length - 1
+                ? index === row.original.bonusWinners.length - 2
                   ? " and "
                   : ", "
                 : ""}
@@ -123,13 +123,13 @@ const columns: ColumnDef<Perks>[] = [
 ];
 
 interface BonusRewardTableProps {
-  perks: Perks[];
+  bonuses: Bonus[];
 }
 
-export function BonusRewardTable({ perks }: BonusRewardTableProps) {
+export function BonusRewardTable({ bonuses }: BonusRewardTableProps) {
   return (
     <div className="rounded-md overflow-hidden w-full">
-      <DataTable columns={columns} data={perks} />
+      <DataTable columns={columns} data={bonuses} />
     </div>
   );
 }
