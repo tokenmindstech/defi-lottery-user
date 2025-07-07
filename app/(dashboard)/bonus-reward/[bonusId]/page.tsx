@@ -14,6 +14,7 @@ import { fetchProxy } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import BonusDetailSkeleton from "./_components/bonus-detail-skeleton";
 import ErrorInfo from "@/components/shared/error-info";
+import ClaimBonus from "./_components/claim-bonus";
 
 // Configure dayjs to use plugins
 dayjs.extend(utc);
@@ -103,35 +104,39 @@ const BonusDetailPage = () => {
                 </div>
               </div>
 
-              <div className="w-full h-fit flex flex-col space-y-5 p-5 rounded-lg bg-bgtext-950">
-                <div className="flex flex-col space-y-2">
-                  <p className="text-bgtext-100 font-inter text-2xl font-bold">
-                    {bonusData.data.name}{" "}
-                    <span className="text-bgtext-100 text-xs w-fit px-2 py-1 bg-linprimary-start rounded-lg">
-                      2 Winners ✨
-                    </span>
-                  </p>
-                  <div className="flex flex-row space-x-2">
-                    <p className="text-bgtext-100 font-inter text-xs font-semibold">
-                      Draw Period:
+              <div className="flex flex-col w-full h-full space-y-5">
+                <div className="w-full h-fit flex flex-col space-y-5 p-5 rounded-lg bg-bgtext-950">
+                  <div className="flex flex-col space-y-2">
+                    <p className="text-bgtext-100 font-inter text-2xl font-bold">
+                      {bonusData.data.name}{" "}
+                      <span className="text-bgtext-100 text-xs w-fit px-2 py-1 bg-linprimary-start rounded-lg">
+                        2 Winners ✨
+                      </span>
                     </p>
-                    <p className="text-bgtext-500 font-inter text-xs">
-                      {dayjs(bonusData.data.createdAt)
-                        .tz("Asia/Singapore")
-                        .format("DD/MM/YYYY")}
-                    </p>
-                    <p className="text-bgtext-500 font-inter text-xs">-</p>
-                    <p className="text-bgtext-500 font-inter text-xs">
-                      {dayjs(bonusData.data.validAt)
-                        .tz("Asia/Singapore")
-                        .format("DD/MM/YYYY")}
-                    </p>
+                    <div className="flex flex-row space-x-2">
+                      <p className="text-bgtext-100 font-inter text-xs font-semibold">
+                        Draw Period:
+                      </p>
+                      <p className="text-bgtext-500 font-inter text-xs">
+                        {dayjs(bonusData.data.createdAt)
+                          .tz("Asia/Singapore")
+                          .format("DD/MM/YYYY")}
+                      </p>
+                      <p className="text-bgtext-500 font-inter text-xs">-</p>
+                      <p className="text-bgtext-500 font-inter text-xs">
+                        {dayjs(bonusData.data.validAt)
+                          .tz("Asia/Singapore")
+                          .format("DD/MM/YYYY")}
+                      </p>
+                    </div>
                   </div>
+
+                  <p className="text-bgtext-500 font-inter text-base">
+                    {bonusData.data.description}
+                  </p>
                 </div>
 
-                <p className="text-bgtext-500 font-inter text-base">
-                  {bonusData.data.description}
-                </p>
+                <ClaimBonus bonus={bonusData.data} />
               </div>
             </div>
           </div>
