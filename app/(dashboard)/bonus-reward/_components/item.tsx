@@ -60,7 +60,7 @@ const ItemBonus = ({ bonus }: ItemBonusProps) => {
         </h4>
       </CardContent>
       <CardFooter className="px-0">
-        <Link href="/bonus-reward/1" className="w-full">
+        <Link href={`/bonus-reward/${bonus.id}`} className="w-full">
           <Button className="w-full bg-bgtext-800  border border-bgtext-700 hover:bg-bgtext-700 rounded-xl cursor-pointer">
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
               More Details
