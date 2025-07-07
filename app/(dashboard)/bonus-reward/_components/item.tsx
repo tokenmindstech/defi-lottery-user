@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import BlueShadow from "@/components/icons/blue-shadow";
 import RotatingText from "@/components/ui/rotating-text";
+import { truncateString } from "@/lib/utils";
 // import SeaShadow from "@/components/icons/sea-shadow";
 
 interface ItemPersksProps {
@@ -22,9 +23,6 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
     <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl gap-3 px-4 py-4">
       <CardHeader className="relative px-0 py-0">
         <div className="absolute top-0 left-0 z-20 flex w-fit px-2 py-1 bg-linprimary-start rounded-br-2xl">
-          {/* <p className="text-bgtext-100 font-inter font-medium text-sm text-left">
-            {perks.category[0]}
-          </p> */}
           <RotatingText
             texts={perks.category}
             mainClassName="text-bgtext-100 text-sm"
@@ -58,7 +56,7 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
           VIP Event Access
         </p>
         <h4 className="text-bgtext-100 font-inter font-medium text-base text-left">
-          {perks.name}
+          {truncateString(perks.name, 25)}
         </h4>
       </CardContent>
       <CardFooter className="px-0">
