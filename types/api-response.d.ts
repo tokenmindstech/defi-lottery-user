@@ -161,12 +161,12 @@ declare global {
     updatedAt: string;
   }
 
-  interface PerkWinner {
+  interface BonusWinner {
     id: string;
     name: string;
   }
 
-  interface Perks {
+  interface Bonus {
     id: string;
     imageUrl: string;
     name: string;
@@ -175,7 +175,7 @@ declare global {
     numberOfWinners: number;
     createdAt: string;
     validAt: string;
-    perkWinners: PerkWinner[];
+    bonusWinners: BonusWinner[];
   }
 
   interface APIBaseResponse {
@@ -390,9 +390,9 @@ declare global {
     };
   }
 
-  interface APIQueryPerksResponseDTO extends APIBaseResponse {
+  interface APIQueryBonusResponseDTO extends APIBaseResponse {
     data: {
-      perks: Perks[];
+      bonuses: Bonus[];
     };
   }
 

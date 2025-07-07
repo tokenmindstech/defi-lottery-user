@@ -1,15 +1,15 @@
 "use client";
 
 import React, { Fragment } from "react";
-import ItemPerks from "./_components/item";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { fetchProxy } from "@/lib/utils";
 import BonusRewardSkeleton from "./_components/bonus-reward-skeleton";
 import PagePagination from "@/components/shared/page-pagination";
+import ItemBonus from "./_components/item";
 
-const PerksPage = () => {
+const BonusPage = () => {
   const { data: userSession } = useSession();
   const searchParams = useSearchParams();
 
@@ -24,16 +24,18 @@ const PerksPage = () => {
       ? parseInt(searchParams.get("limit") as string)
       : 10;
 
-  const { data: perks, isLoading } = useQuery<APIQueryPerksResponseDTO>({
-    queryKey: ["perks", userSession?.user.id, page, limit],
+  const { data: bonuses, isLoading } = useQuery<APIQueryBonusResponseDTO>({
+    queryKey: ["bonus", userSession?.user.id, page, limit],
     queryFn: async () =>
       fetchProxy({
-        url: `perk?page=${page}&limit=${limit}`,
+        url: `bonus?page=${page}&limit=${limit}`,
         method: "GET",
         auth: true,
       }),
     enabled: !!userSession,
   });
+
+  console.log(bonuses);
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
@@ -44,27 +46,27 @@ const PerksPage = () => {
         {isLoading ? (
           <BonusRewardSkeleton />
         ) : (
-          perks !== undefined &&
-          perks !== null && (
+          bonuses !== undefined &&
+          bonuses !== null && (
             <Fragment>
-              {perks.data.perks.length === 0 && (
+              {bonuses.data.bonuses.length === 0 && (
                 <div className="w-full h-full items-center justify-center py-5 text-center text-sm font-medium text-bgtext-100">
                   No data available
                 </div>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-10">
-                {perks.data.perks.map((perk, idx) => (
-                  <ItemPerks key={idx} perks={perk} />
+                {bonuses.data.bonuses.map((bonus, idx) => (
+                  <ItemBonus key={idx} bonus={bonus} />
                 ))}
               </div>
               <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
                 <p className="text-bgtext-500 text-sm">
-                  Showing {perks?.metadata?.totalCount || 0} results of{" "}
-                  {perks?.metadata?.totalCount || 0}
+                  Showing {bonuses?.metadata?.totalCount || 0} results of{" "}
+                  {bonuses?.metadata?.totalCount || 0}
                 </p>
                 <PagePagination
                   currentPage={page}
-                  totalPages={perks?.metadata?.totalPage || 1}
+                  totalPages={bonuses?.metadata?.totalPage || 1}
                 />
               </div>
             </Fragment>
@@ -75,4 +77,4 @@ const PerksPage = () => {
   );
 };
 
-export default PerksPage;
+export default BonusPage;
