@@ -1,10 +1,19 @@
 import { cn } from "@/lib/utils";
 import React, { Fragment } from "react";
 
-const BlueShadow = ({ className }: CustomIconProps) => {
+interface BlueShadowProps extends CustomIconProps {
+  showCircle?: boolean;
+}
+
+const BlueShadow = ({ className, showCircle = true }: BlueShadowProps) => {
   return (
     <Fragment>
-      <div className="flex w-full h-full relative justify-end items-end overflow-hidden">
+      <div
+        className={cn(
+          "w-full h-full relative justify-end items-end overflow-hidden",
+          showCircle ? "flex" : "hidden"
+        )}
+      >
         <svg
           width="100%"
           height="100%"

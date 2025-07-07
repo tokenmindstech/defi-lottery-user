@@ -4,15 +4,14 @@ import React from "react";
 import { useSession } from "next-auth/react";
 import { fetchProxy, getTimestamp } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
 import NotificationDetailsSkeleton from "../_components/skeleton-details";
 import BreadcrumbPages from "@/components/layout/breadcrumb-pages";
 
 const NotificationPage = () => {
   const { data: userSession } = useSession();
-  const pathname = usePathname();
-  const notificationId = pathname.split("/").pop();
+  const { notificationId } = useParams();
 
   const { data: notification, isLoading } =
     useQuery<APIGetNotificationDetailsResponseDTO>({
