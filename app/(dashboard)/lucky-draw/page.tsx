@@ -37,8 +37,6 @@ const LuckyDrawPage = () => {
     enabled: !!userSession?.user.id,
   });
 
-  console.log("Weekly Bonus Data:", weeklyBonus);
-
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">

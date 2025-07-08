@@ -178,6 +178,13 @@ declare global {
     bonusWinners: BonusWinner[];
   }
 
+  interface HistoryBonusWinner {
+    bonus: Bonus;
+    user: BonusWinner;
+    claimedAt: string;
+    claimed: boolean;
+  }
+
   interface APIBaseResponse {
     message: string;
     metadata?: {
@@ -402,6 +409,12 @@ declare global {
 
   interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
     data: Bonus | null;
+  }
+
+  interface APIQueryHistoryBonusWinnersResponseDTO extends APIBaseResponse {
+    data: {
+      bonusWinners: HistoryBonusWinner[];
+    };
   }
 
   interface BaseWebsocketResponse {

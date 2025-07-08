@@ -30,7 +30,7 @@ const WinnerBanner = ({ bonus }: WinnerBannerProps) => {
 
       <div className="flex flex-row items-center relative">
         <p className="hidden lg:block text-sm font-inter font-medium whitespace-nowrap">
-          Won this week&apos;s bonus reward:{" "}
+          Won last week&apos;s bonus reward:{" "}
         </p>
 
         <div className="relative w-[60px]">
