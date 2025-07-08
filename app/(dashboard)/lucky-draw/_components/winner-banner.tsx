@@ -43,7 +43,7 @@ const WinnerBanner = () => {
               </p>
               <RotatingText
                 texts={bonusWinners.data.bonusWinners.map((winner) =>
-                  censorString(winner.bonus.name)
+                  censorString(winner.user.name, 15)
                 )}
                 mainClassName="text-bgtext-100 font-bold"
                 staggerFrom={"last"}

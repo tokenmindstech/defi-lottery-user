@@ -33,7 +33,7 @@ const columns: ColumnDef<HistoryBonusWinner>[] = [
     ),
   },
   {
-    accessorKey: "perkWinners",
+    id: "fullName",
     header: () => {
       return (
         <div className="flex items-center justify-center space-x-1">
@@ -44,7 +44,7 @@ const columns: ColumnDef<HistoryBonusWinner>[] = [
     cell: ({ row }) => {
       return (
         <p className="text-sm font-inter font-medium whitespace-nowrap pr-3">
-          {censorString(row.original.user.name)}
+          {censorString(row.original.user.name, 15)}
         </p>
       );
     },
@@ -74,9 +74,11 @@ const columns: ColumnDef<HistoryBonusWinner>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.claimedAt)
-              .tz("Asia/Singapore")
-              .format("DD/MM/YYYY | HH:mm:ss SGT")}
+            {row.original.claimedAt === null
+              ? "Unclaimed"
+              : dayjs(row.original.claimedAt)
+                  .tz("Asia/Singapore")
+                  .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );

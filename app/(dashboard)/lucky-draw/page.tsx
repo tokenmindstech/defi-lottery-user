@@ -79,8 +79,8 @@ const LuckyDrawPage = () => {
 
                       <div className="relative w-1/2 h-full">
                         <Image
-                          src="/assets/images/iphone.png"
-                          alt="lottery"
+                          src={weeklyBonus.data.imageUrl}
+                          alt={weeklyBonus.data.name}
                           className="object-contain"
                           priority
                           fill
