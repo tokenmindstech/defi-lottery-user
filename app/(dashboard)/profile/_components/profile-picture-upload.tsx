@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -116,7 +115,7 @@ const ProfilePictureUpload = ({
     const img = new window.Image();
     img.onload = () => {
       if (img.width < 300 || img.height < 300) {
-        toast.error("Image must be at least 300x300 pixels");
+        toast.error("Image must be at least 300×300 pixels");
         return;
       }
       setSelectedFile(file);
@@ -206,108 +205,125 @@ const ProfilePictureUpload = ({
           Edit Profile Photo
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md bg-bgtext-950 border-bgtext-800" aria-describedby="profile-picture-description">
-        <DialogHeader>
-          <DialogTitle className="text-white">Edit Profile Photo</DialogTitle>
+      <DialogContent className="max-w-sm md:max-w-md h-fit overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
+        <DialogHeader className="text-center">
+          <DialogTitle className="text-bgtext-100 font-inter font-semibold text-xl">Edit Profile Photo</DialogTitle>
         </DialogHeader>
         
-        <div className="flex flex-col items-center space-y-4">
-          <div className="relative">
+        <div className="flex gap-6 px-6 py-4">
+          {/* Profile Image Display - Left Side */}
+          <div className="flex-shrink-0">
             {previewUrl ? (
               <div className="relative">
-                <Image
-                  src={previewUrl}
-                  alt="Profile preview"
-                  width={120}
-                  height={120}
-                  className="rounded-full object-cover"
-                />
+                <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                  <Image
+                    src={previewUrl}
+                    alt="Profile preview"
+                    width={120}
+                    height={120}
+                    className="w-full h-full rounded-3xl object-cover"
+                  />
+                </div>
                 <button
                   onClick={handleRemoveImage}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
                   aria-label="Remove selected image"
                 >
-                  <Trash size={12} />
+                  <Trash size={16} />
                 </button>
               </div>
             ) : userInfoResponse.imageUrl ? (
               <div className="relative">
-                {cachedProfileImage ? (
-                  <Image
-                    src={cachedProfileImage}
-                    alt="Current profile"
-                    width={120}
-                    height={120}
-                    className="rounded-full object-cover"
-                  />
-                ) : (
-                  <>
+                <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                  {cachedProfileImage ? (
                     <Image
-                      src={userInfoResponse.imageUrl}
+                      src={cachedProfileImage}
                       alt="Current profile"
                       width={120}
                       height={120}
-                      className="rounded-full object-cover"
-                      onError={(e) => {
-                        // Fallback to initials if image fails to load
-                        e.currentTarget.style.display = 'none';
-                      }}
+                      className="w-full h-full rounded-3xl object-cover"
                     />
-                    <div className="w-[120px] h-[120px] bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0">
-                      <span className="text-2xl text-white">
-                        {userInfoResponse.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                  </>
-                )}
+                  ) : (
+                    <>
+                      <Image
+                        src={userInfoResponse.imageUrl}
+                        alt="Current profile"
+                        width={120}
+                        height={120}
+                        className="w-full h-full rounded-3xl object-cover"
+                        onError={(e) => {
+                          // Fallback to initials if image fails to load
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                      <div className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center absolute inset-0">
+                        <span className="text-2xl text-white font-medium">
+                          {userInfoResponse.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             ) : (
-              <div className="w-[120px] h-[120px] bg-bgtext-800 rounded-full flex items-center justify-center">
-                <span className="text-2xl text-white">
-                  {userInfoResponse.name.charAt(0).toUpperCase()}
-                </span>
+              <div className="w-32 h-32 rounded-3xl bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                <div className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center">
+                  <span className="text-2xl text-white font-medium">
+                    {userInfoResponse.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
               </div>
             )}
           </div>
           
-          <div id="profile-picture-description" className="text-center text-sm text-bgtext-400">
-            <p>JPG, PNG, or GIF format with 5MB maximum</p>
-            <p>file size and minimum resolution of 300 x 300 pixels.</p>
-          </div>
-          
-          <div className="flex gap-2">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="hidden"
-              id="profile-picture-input"
-            />
-            <label
-              htmlFor="profile-picture-input"
-              className="cursor-pointer bg-bgtext-800 hover:bg-bgtext-700 text-white px-4 py-2 rounded-md text-sm"
-            >
-              Choose Image
-            </label>
+          {/* Right Side Content */}
+          <div className="flex flex-col justify-center space-y-4 flex-1">
+            {/* File Requirements Text */}
+            <div id="profile-picture-description">
+              <p className="text-bgtext-400 text-sm">
+                JPG, PNG, or GIF format with 5MB maximum file size
+              </p>
+              <p className="text-bgtext-400 text-sm">
+                and minimum resolution of 300 × 300 pixels
+              </p>
+            </div>
+            
+            {/* File Upload Button */}
+            <div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="hidden"
+                id="profile-picture-input"
+              />
+              <label
+                htmlFor="profile-picture-input"
+                className="inline-block cursor-pointer bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100 px-4 py-3 rounded-xl text-sm font-medium transition-colors"
+              >
+                Choose image
+              </label>
+            </div>
           </div>
         </div>
 
-        <DialogFooter>
+        {/* Save Button */}
+        <div className="px-6 pb-6">
           <Button
             onClick={handleSaveChanges}
             disabled={isLoading || !selectedFile}
-            className="bg-primary-600 hover:bg-primary-700 text-white"
+            className="w-full bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 py-3 font-medium"
           >
             {isLoading ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 <Spinner className="animate-spin" size={16} />
-                Saving...
+                <span>Saving...</span>
               </div>
             ) : (
               "Save changes"
             )}
           </Button>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );
