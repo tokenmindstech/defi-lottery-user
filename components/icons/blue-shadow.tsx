@@ -10,7 +10,7 @@ const BlueShadow = ({ className, showCircle = true }: BlueShadowProps) => {
     <Fragment>
       <div
         className={cn(
-          "w-full h-full relative justify-end items-end overflow-hidden",
+          "w-full h-full relative justify-end items-end overflow-hidden rounded-3xl",
           showCircle ? "flex" : "hidden"
         )}
       >
@@ -21,7 +21,7 @@ const BlueShadow = ({ className, showCircle = true }: BlueShadowProps) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={cn(
-            "flex-grow-0 flex-shrink-0 ml-[100px] md:ml-[350px] lg:ml-[500px] w-[500px] h-full right-0 bottom-0",
+            "absolute translate-x-[45%] md:translate-x-[100%] flex-grow-0 flex-shrink-0 w-[500px] h-full bottom-0",
             className
           )}
           preserveAspectRatio="none"
