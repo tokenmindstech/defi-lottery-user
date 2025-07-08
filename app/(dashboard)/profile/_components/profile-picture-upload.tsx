@@ -222,12 +222,12 @@ const ProfilePictureUpload = ({
           type="button"
           className="text-sm border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
         >
-          Edit Profile Photo
+          Edit Profile Picture
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-sm md:max-w-md h-fit overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
         <DialogHeader className="text-center">
-          <DialogTitle className="text-bgtext-100 font-inter font-semibold text-xl">Edit Profile Photo</DialogTitle>
+          <DialogTitle className="text-bgtext-100 font-inter font-semibold text-xl">Edit Profile Picture</DialogTitle>
         </DialogHeader>
         
         <div className="flex gap-6 px-6 py-4">

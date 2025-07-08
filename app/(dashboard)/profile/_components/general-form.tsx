@@ -213,54 +213,57 @@ const GeneralForm = ({
         <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
           Profile
         </h2>
-        <ProfilePictureUpload 
-          userInfoResponse={userInfoResponse}
-          setIsEditing={setIsEditing}
-        />
       </div>
       
-      {/* Display current profile picture */}
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          {cachedProfileImage ? (
-            <Image
-              src={cachedProfileImage}
-              alt="Profile"
-              width={80}
-              height={80}
-              className="rounded-full object-cover"
-            />
-          ) : userInfoResponse.imageUrl ? (
-            <>
+      {/* Display current profile picture with edit button */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            {cachedProfileImage ? (
               <Image
-                src={userInfoResponse.imageUrl}
+                src={cachedProfileImage}
                 alt="Profile"
                 width={80}
                 height={80}
                 className="rounded-full object-cover"
-                onError={(e) => {
-                  // Hide image on error, fallback will show
-                  e.currentTarget.style.display = 'none';
-                }}
               />
-              <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0">
+            ) : userInfoResponse.imageUrl ? (
+              <>
+                <Image
+                  src={userInfoResponse.imageUrl}
+                  alt="Profile"
+                  width={80}
+                  height={80}
+                  className="rounded-full object-cover"
+                  onError={(e) => {
+                    // Hide image on error, fallback will show
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0">
+                  <span className="text-xl text-white">
+                    {userInfoResponse.name.charAt(0).toUpperCase()}
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center">
                 <span className="text-xl text-white">
                   {userInfoResponse.name.charAt(0).toUpperCase()}
                 </span>
               </div>
-            </>
-          ) : (
-            <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center">
-              <span className="text-xl text-white">
-                {userInfoResponse.name.charAt(0).toUpperCase()}
-              </span>
-            </div>
-          )}
+            )}
+          </div>
+          <div>
+            <p className="text-sm text-bgtext-400">Profile Picture</p>
+          </div>
         </div>
-        <div>
-          <h3 className="text-lg font-medium text-white">{userInfoResponse.name}</h3>
-          <p className="text-sm text-bgtext-400">Profile Picture</p>
-        </div>
+        {isEditing && (
+          <ProfilePictureUpload 
+            userInfoResponse={userInfoResponse}
+            setIsEditing={setIsEditing}
+          />
+        )}
       </div>
 
       <Form {...form}>
