@@ -225,12 +225,24 @@ const ProfilePictureUpload = ({
           Edit Profile Picture
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-sm md:max-w-md h-fit overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
-        <DialogHeader className="text-center">
+        
+        <DialogContent className="max-w-sm md:max-w-md overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
+          {/* Modal-specific gradient at top */}
+          <div 
+            className="absolute top-0 left-0 right-0 h-48 pointer-events-none rounded-t-3xl"
+            style={{
+              background: `radial-gradient(ellipse 400px 200px at center top, 
+                rgba(139, 69, 219, 0.8) 0%, 
+                rgba(139, 69, 219, 0.6) 30%, 
+                rgba(139, 69, 219, 0.3) 60%, 
+                transparent 100%)`
+            }}
+          />
+        <DialogHeader className="text-center relative z-10">
           <DialogTitle className="text-bgtext-100 font-inter font-semibold text-xl">Edit Profile Picture</DialogTitle>
         </DialogHeader>
         
-        <div className="flex gap-6 px-6 py-4">
+        <div className="flex gap-6 px-6 py-4 relative z-10">
           {/* Profile Image Display - Left Side */}
           <div className="flex-shrink-0">
             {previewUrl ? (
@@ -321,18 +333,25 @@ const ProfilePictureUpload = ({
                 htmlFor="profile-picture-input"
                 className="inline-block cursor-pointer bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100 px-4 py-3 rounded-xl text-sm font-medium transition-colors"
               >
-                Choose image
+                Choose Picture
               </label>
             </div>
           </div>
         </div>
 
+        {/* Gradient line separator */}
+        <div className="px-6 relative z-10">
+          <div className="relative h-px">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-500/60 to-transparent"></div>
+          </div>
+        </div>
+
         {/* Save Button */}
-        <div className="px-6 pb-6">
+        <div className="px-6 pb-6 pt-4 relative z-10 flex justify-center">
           <Button
             onClick={handleSaveChanges}
             disabled={isLoading || !selectedFile}
-            className="w-full bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 py-3 font-medium"
+            className="px-8 py-3 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium min-w-[160px]"
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
@@ -340,7 +359,7 @@ const ProfilePictureUpload = ({
                 <span>Saving...</span>
               </div>
             ) : (
-              "Save changes"
+              "Save Change"
             )}
           </Button>
         </div>
