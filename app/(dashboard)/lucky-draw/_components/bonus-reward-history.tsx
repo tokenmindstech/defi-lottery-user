@@ -8,6 +8,7 @@ import PagePagination from "@/components/shared/page-pagination";
 import { useSearchParams } from "next/navigation";
 import BonusRewardSkeleton from "./bonus-reward-skeleton";
 import { BonusRewardTable } from "./bonus-reward-list";
+import ResultDisplay from "@/components/shared/result-display";
 
 const BonusRewardHistory = () => {
   const searchParams = useSearchParams();
@@ -24,17 +25,20 @@ const BonusRewardHistory = () => {
       ? parseInt(searchParams.get("limit") as string)
       : 10;
 
-  const { data: bonusWinners, isLoading } =
-    useQuery<APIQueryHistoryBonusWinnersResponseDTO>({
-      queryKey: ["bonus-winners", page, limit],
-      queryFn: async () =>
-        fetchProxy({
-          url: `bonus/winners?page=${page}&limit=${limit}`,
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!userSession,
-    });
+  const {
+    data: bonusWinners,
+    isLoading,
+    error,
+  } = useQuery<APIQueryHistoryBonusWinnersResponseDTO>({
+    queryKey: ["bonus-winners", page, limit],
+    queryFn: async () =>
+      fetchProxy({
+        url: `bonus/winners?page=${page}&limit=${limit}`,
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!userSession,
+  });
 
   return (
     <div className="flex flex-col w-full h-full space-y-10">
@@ -44,11 +48,15 @@ const BonusRewardHistory = () => {
         </h2>
 
         <div className="flex flex-col w-full h-full space-y-5">
-          {isLoading ? (
-            <BonusRewardSkeleton />
-          ) : (
-            bonusWinners !== undefined &&
-            bonusWinners !== null && (
+          <ResultDisplay
+            isLoading={isLoading}
+            error={error}
+            data={bonusWinners}
+            loadingComponent={<BonusRewardSkeleton />}
+            dataErrorMessage="An error occurred while fetching bonus winners."
+            loadingErrorMessage="Failed to load bonus winners. Please try again later."
+          >
+            {(bonusWinners) => (
               <Fragment>
                 <BonusRewardTable winners={bonusWinners.data.bonusWinners} />
 
@@ -65,8 +73,8 @@ const BonusRewardHistory = () => {
                   />
                 </div>
               </Fragment>
-            )
-          )}
+            )}
+          </ResultDisplay>
         </div>
       </div>
     </div>

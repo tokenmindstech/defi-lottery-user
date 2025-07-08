@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import ErrorInfo from "@/components/shared/error-info";
+import ResultDisplay from "@/components/shared/result-display";
 
 // Configure dayjs to use plugins
 dayjs.extend(utc);
@@ -24,8 +25,8 @@ const LuckyDrawPage = () => {
 
   const {
     data: weeklyBonus,
-    isLoading,
-    error,
+    isLoading: isLoadingWeeklyBonus,
+    error: errorWeeklyBonus,
   } = useQuery<APIGetWeeklyBonusResponseDTO>({
     queryKey: ["weekly-bonus"],
     queryFn: async () =>
@@ -36,104 +37,72 @@ const LuckyDrawPage = () => {
       }),
     enabled: !!userSession?.user.id,
   });
-
   return (
     <section className="flex flex-col w-full h-full space-y-10">
       <h2 className="text-3xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
         Lucky Draw
       </h2>
 
-      {isLoading ? (
-        <SkeletonLuckyDraw />
-      ) : error ? (
-        <ErrorInfo errorMessage="Failed to load weekly bonus. Please try again later." />
-      ) : (
-        weeklyBonus !== undefined &&
-        weeklyBonus !== null &&
-        (weeklyBonus.statusCode > 299 ? (
-          <ErrorInfo
-            errorMessage={
-              weeklyBonus.message ||
-              "An error occurred while fetching weekly bonus."
-            }
-          />
-        ) : (
-          <Fragment>
-            <WinnerBanner
-              bonus={{
-                id: "1",
-                imageUrl: "/assets/images/iphone.png",
-                name: "iPhone 14 Pro Max",
-                description: "Win an iPhone 14 Pro Max",
-                category: ["Electronics"],
-                numberOfWinners: 1,
-                createdAt: new Date().toISOString(),
-                validAt: new Date(
-                  Date.now() + 7 * 24 * 60 * 60 * 1000
-                ).toISOString(),
-                bonusWinners: [
-                  {
-                    id: "1",
-                    name: "John Doe",
-                  },
-                  {
-                    id: "2",
-                    name: "Jane Smith",
-                  },
-                  {
-                    id: "3",
-                    name: "Alice Johnson",
-                  },
-                ],
-              }}
-            />
+      <WinnerBanner />
 
-            {weeklyBonus.data === null ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <ErrorInfo
-                  errorMessage="Oops! No weekly bonus available at the moment."
-                  showIcon={false}
-                  textClassName="text-bgtext-100 font-inter text-base text-center"
-                />
-              </div>
-            ) : (
-              <div className="w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div className="flex w-full relative h-40 xl:col-span-2 bg-bgtext-900 border border-bgtext-800 rounded-xl">
-                  <div className="absolute z-20 flex flex-row items-center justify-between w-full h-full">
-                    <div className="flex flex-col w-1/2 items-start justify-center p-5">
-                      <p className="text-base text-bgtext-100 font-inter">
-                        Bonus Reward
-                      </p>
-                      <h3 className="text-2xl font-bold text-bgtext-100 font-inter">
-                        Win {weeklyBonus.data.name}
-                      </h3>
-                    </div>
+      <div className="flex flex-col w-full h-full space-y-5">
+        <ResultDisplay
+          isLoading={isLoadingWeeklyBonus}
+          error={errorWeeklyBonus}
+          data={weeklyBonus}
+          loadingComponent={<SkeletonLuckyDraw />}
+          dataErrorMessage="An error occurred while fetching weekly bonus."
+          loadingErrorMessage="Failed to load weekly bonus. Please try again later."
+        >
+          {(weeklyBonus) => (
+            <Fragment>
+              {weeklyBonus.data === null ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <ErrorInfo
+                    errorMessage="Oops! No weekly bonus available at the moment."
+                    showIcon={false}
+                    textClassName="text-bgtext-100 font-inter text-base text-center"
+                  />
+                </div>
+              ) : (
+                <div className="w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-5">
+                  <div className="flex w-full relative h-40 xl:col-span-2 bg-bgtext-900 border border-bgtext-800 rounded-xl">
+                    <div className="absolute z-20 flex flex-row items-center justify-between w-full h-full">
+                      <div className="flex flex-col w-1/2 items-start justify-center p-5">
+                        <p className="text-base text-bgtext-100 font-inter">
+                          Bonus Reward
+                        </p>
+                        <h3 className="text-2xl font-bold text-bgtext-100 font-inter">
+                          Win {weeklyBonus.data.name}
+                        </h3>
+                      </div>
 
-                    <div className="relative w-1/2 h-full">
-                      <Image
-                        src="/assets/images/iphone.png"
-                        alt="lottery"
-                        className="object-contain"
-                        priority
-                        fill
-                        sizes="100%"
-                      />
+                      <div className="relative w-1/2 h-full">
+                        <Image
+                          src="/assets/images/iphone.png"
+                          alt="lottery"
+                          className="object-contain"
+                          priority
+                          fill
+                          sizes="100%"
+                        />
+                      </div>
                     </div>
+                    <BlueShadow className="absolute z-10 left-0 top-0" />
                   </div>
-                  <BlueShadow className="absolute z-10 left-0 top-0" />
-                </div>
 
-                <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
-                  <p className="text-base text-bgtext-100 font-inter">
-                    Next Draw In
-                  </p>
-                  <CountDownBonusDraw />
+                  <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
+                    <p className="text-base text-bgtext-100 font-inter">
+                      Next Draw In
+                    </p>
+                    <CountDownBonusDraw />
+                  </div>
                 </div>
-              </div>
-            )}
-          </Fragment>
-        ))
-      )}
+              )}
+            </Fragment>
+          )}
+        </ResultDisplay>
+      </div>
 
       <BonusRewardHistory />
     </section>
