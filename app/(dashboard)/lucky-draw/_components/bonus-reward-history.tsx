@@ -51,34 +51,36 @@ const BonusRewardHistory = () => {
             historyDraw !== null && (
               <Fragment>
                 <BonusRewardTable
-                  bonuses={[
-                    {
-                      id: "1",
-                      imageUrl: "/assets/images/iphone.png",
-                      name: "iPhone 14 Pro Max",
-                      description: "Win an iPhone 14 Pro Max",
-                      category: ["electronics", "mobile"],
-                      numberOfWinners: 1,
-                      createdAt: new Date().toISOString(),
-                      validAt: new Date(
-                        Date.now() + 7 * 24 * 60 * 60 * 1000
-                      ).toISOString(),
-                      bonusWinners: [
-                        {
-                          id: "1",
-                          name: "John Doe",
-                        },
-                        {
-                          id: "2",
-                          name: "Jane Smith",
-                        },
-                        {
-                          id: "3",
-                          name: "Alice Johnson",
-                        },
-                      ],
-                    },
-                  ]}
+                  bonuses={
+                    [
+                      // {
+                      //   id: "1",
+                      //   imageUrl: "/assets/images/iphone.png",
+                      //   name: "iPhone 14 Pro Max",
+                      //   description: "Win an iPhone 14 Pro Max",
+                      //   category: ["electronics", "mobile"],
+                      //   numberOfWinners: 1,
+                      //   createdAt: new Date().toISOString(),
+                      //   validAt: new Date(
+                      //     Date.now() + 7 * 24 * 60 * 60 * 1000
+                      //   ).toISOString(),
+                      //   bonusWinners: [
+                      //     {
+                      //       id: "1",
+                      //       name: "John Doe",
+                      //     },
+                      //     {
+                      //       id: "2",
+                      //       name: "Jane Smith",
+                      //     },
+                      //     {
+                      //       id: "3",
+                      //       name: "Alice Johnson",
+                      //     },
+                      //   ],
+                      // },
+                    ]
+                  }
                 />
 
                 <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">

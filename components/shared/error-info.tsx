@@ -6,12 +6,14 @@ interface ErrorInfoProps {
   errorMessage: string;
   className?: string;
   textClassName?: string;
+  showIcon?: boolean;
 }
 
 const ErrorInfo = ({
   errorMessage,
   className,
   textClassName,
+  showIcon = true,
 }: ErrorInfoProps) => {
   return (
     <div
@@ -21,7 +23,7 @@ const ErrorInfo = ({
       )}
     >
       <div className="w-fit h-full bg-bgtext-950 rounded-xl flex flex-col space-y-4 items-center justify-center p-5">
-        <BugIcon className="size-20 text-destructive/80" />
+        {showIcon && <BugIcon className="size-20 text-destructive/80" />}
         <p
           className={cn(
             "text-destructive/80 font-inter text-base",

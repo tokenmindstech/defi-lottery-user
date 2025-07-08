@@ -400,6 +400,10 @@ declare global {
     data: Bonus;
   }
 
+  interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
+    data: Bonus | null;
+  }
+
   interface BaseWebsocketResponse {
     message: string;
     data: Record<string, unknown>;
