@@ -63,25 +63,45 @@ const ProfilePictureUpload = ({
         cacheProfileImage(variables.imageUrl, userSession.user.id, previewUrl);
       }
       
-      // Update the cache directly with the imageUrl we sent
-      queryClient.setQueryData(
-        ["profile", userSession?.user.id],
-        (oldData: APIGetUserProfileResponseDTO | undefined) => {
-          if (oldData) {
-            return {
-              ...oldData,
-              data: {
-                ...oldData.data,
-                imageUrl: variables.imageUrl,
-              },
-            };
-          }
-          return oldData;
+      // Update ALL profile-related query caches
+      const updateProfileData = (oldData: APIGetUserProfileResponseDTO | undefined) => {
+        if (oldData) {
+          return {
+            ...oldData,
+            data: {
+              ...oldData.data,
+              imageUrl: variables.imageUrl,
+            },
+          };
         }
-      );
+        return oldData;
+      };
+
+      // Update specific user profile cache
+      queryClient.setQueryData(["profile", userSession?.user.id], updateProfileData);
       
-      // Don't invalidate immediately as it might overwrite our cache update
-      // Instead, mark the data as fresh since we just updated it
+      // Update generic profile cache if it exists
+      queryClient.setQueryData(["profile"], updateProfileData);
+      
+      // Force invalidate all profile queries to trigger re-renders
+      queryClient.invalidateQueries({
+        queryKey: ["profile"],
+        refetchType: "none", // Don't refetch, just mark as stale
+      });
+      
+      // Force re-render by updating the query timestamp
+      setTimeout(() => {
+        queryClient.refetchQueries({
+          queryKey: ["profile", userSession?.user.id],
+        });
+      }, 100);
+      
+      // Additional debug: Check if cache is being set properly
+      console.log("🔄 Upload success - checking cache state:", {
+        newImageUrl: variables.imageUrl,
+        userId: userSession?.user.id,
+        previewCached: !!previewUrl
+      });
     },
     onError: (error) => {
       console.error("Profile update failed:", error);
