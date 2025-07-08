@@ -29,6 +29,13 @@ import { cn, fetchProxy, truncateString } from "@/lib/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+// Configure dayjs to use plugins
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const formSchema = z.object({
   subject: z.string().min(1, {
@@ -44,14 +51,26 @@ const formSchema = z.object({
 });
 
 interface ClaimBonusProps {
-  bonus: Bonus;
+  bonus: BonusDetail;
 }
 
 const ClaimBonus = ({ bonus }: ClaimBonusProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const queryClient = useQueryClient();
   const { data: userSession } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const isUserWinner = bonus.bonusWinners.some(
+    (winner) => winner.user.id === userSession?.user.id
+  );
+  const userWinner = isUserWinner
+    ? bonus.bonusWinners.find(
+        (winner) => winner.user.id === userSession?.user.id
+      )
+    : null;
+  const isOngoingRaffle = dayjs()
+    .tz("Asia/Singapore")
+    .isBefore(dayjs(bonus.validAt).tz("Asia/Singapore"));
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -123,11 +142,20 @@ const ClaimBonus = ({ bonus }: ClaimBonusProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
+        <Button
+          className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300"
+          disabled={!isUserWinner}
+        >
           <div className="flex flex-row space-x-3 items-center justify-start">
             <GiftIcon className="size-5 text-bgtext-100" />
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">
-              Claim Bonus
+              {isUserWinner && userWinner
+                ? userWinner.claimed === false
+                  ? "Claim Bonus 🎉"
+                  : "Bonus Claimed ✅"
+                : isOngoingRaffle
+                ? "Ongoing Raffle 👀"
+                : "Unfortunately, you are not a winner this time 😢"}
             </p>
           </div>
         </Button>

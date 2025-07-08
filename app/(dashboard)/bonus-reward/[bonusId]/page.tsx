@@ -60,8 +60,8 @@ const BonusDetailPage = () => {
                 currentPageUrl={`/bonus-reward/${bonusId}`}
                 previousPages={[
                   {
-                    pageName: "Support",
-                    pageUrl: "/support",
+                    pageName: "Bonus Reward",
+                    pageUrl: "/bonus-reward",
                   },
                 ]}
               />

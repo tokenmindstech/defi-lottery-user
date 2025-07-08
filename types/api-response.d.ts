@@ -162,27 +162,27 @@ declare global {
   }
 
   interface BonusWinner {
-    id: string;
-    name: string;
+    user: {
+      id: string;
+      name: string;
+    };
+    claimed: boolean;
+    claimedAt: string | null;
   }
 
   interface Bonus {
     id: string;
     imageUrl: string;
     name: string;
-    description: string;
     category: string[];
+  }
+
+  interface BonusDetail extends Bonus {
+    description: string;
     numberOfWinners: number;
     createdAt: string;
     validAt: string;
     bonusWinners: BonusWinner[];
-  }
-
-  interface HistoryBonusWinner {
-    bonus: Bonus;
-    user: BonusWinner;
-    claimedAt: string;
-    claimed: boolean;
   }
 
   interface APIBaseResponse {
@@ -404,18 +404,18 @@ declare global {
   }
 
   interface APIGetBonusDetailsResponseDTO extends APIBaseResponse {
-    data: Bonus;
+    data: BonusDetail;
   }
 
-  interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
-    data: Bonus | null;
-  }
+  // interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
+  //   data: Bonus | null;
+  // }
 
-  interface APIQueryHistoryBonusWinnersResponseDTO extends APIBaseResponse {
-    data: {
-      bonusWinners: HistoryBonusWinner[];
-    };
-  }
+  // interface APIQueryHistoryBonusWinnersResponseDTO extends APIBaseResponse {
+  //   data: {
+  //     bonusWinners: HistoryBonusWinner[];
+  //   };
+  // }
 
   interface BaseWebsocketResponse {
     message: string;
