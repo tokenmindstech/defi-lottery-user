@@ -46,26 +46,60 @@ export const cacheProfileImage = (imageUrl: string, userId: string, base64Image:
   }
 };
 
-// Clear cache for a user (useful for logout)
+// Clear cache for a user (useful for logout or after upload)
 export const clearProfileImageCache = (userId: string): void => {
   try {
+    // Get the cached URL before removing it
+    const cachedUrl = localStorage.getItem(`profile_image_url_${userId}`);
+    
+    // Remove from localStorage
     localStorage.removeItem(`profile_image_${userId}`);
     localStorage.removeItem(`profile_image_url_${userId}`);
     
-    // Clear from memory cache as well
-    const cachedUrl = localStorage.getItem(`profile_image_url_${userId}`);
+    // Clear from memory cache
     if (cachedUrl) {
       imageCache.delete(cachedUrl);
+    }
+    
+    // Clear all entries for this user from memory cache
+    for (const [key] of imageCache.entries()) {
+      if (key.includes(userId)) {
+        imageCache.delete(key);
+      }
     }
   } catch (error) {
     console.warn('Unable to clear profile image cache:', error);
   }
 };
 
+// Force refresh cache - useful after upload
+export const forceRefreshProfileImageCache = (userId: string): void => {
+  clearProfileImageCache(userId);
+  
+  // Trigger a custom event to notify components to refresh
+  window.dispatchEvent(new CustomEvent('profileImageCacheCleared', { 
+    detail: { userId } 
+  }));
+};
+
 // Hook to get cached profile image with reactive updates
 export const useCachedProfileImage = (imageUrl: string | undefined, userId: string | undefined) => {
   const [cachedImage, setCachedImage] = useState<string | null>(null);
   const [shouldTryS3, setShouldTryS3] = useState<boolean>(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  useEffect(() => {
+    const handleCacheCleared = (event: CustomEvent) => {
+      if (event.detail.userId === userId) {
+        setRefreshTrigger(prev => prev + 1);
+      }
+    };
+    
+    window.addEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    return () => {
+      window.removeEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    };
+  }, [userId]);
   
   useEffect(() => {
     if (userId) {
@@ -98,7 +132,7 @@ export const useCachedProfileImage = (imageUrl: string | undefined, userId: stri
       setCachedImage(null);
       setShouldTryS3(false);
     }
-  }, [imageUrl, userId]);
+  }, [imageUrl, userId, refreshTrigger]);
   
   return { cachedImage, shouldTryS3 };
 };

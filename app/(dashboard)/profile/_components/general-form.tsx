@@ -57,17 +57,54 @@ const GeneralForm = ({
   setIsEditing,
   userInfoResponse,
 }: GeneralFormProps) => {
-  // Track the user info as state to force re-renders
-  const [userInfo, setUserInfo] = useState(userInfoResponse);
-
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
   
-  // Use cached profile image
+  // Get the latest profile data from React Query cache
+  const latestProfileData = queryClient.getQueryData<APIGetUserProfileResponseDTO>(["profile", userSession?.user.id]);
+  const currentUserInfo = latestProfileData?.data || userInfoResponse;
+  
+  // Track the user info as state to force re-renders - use current data
+  const [userInfo, setUserInfo] = useState(currentUserInfo);
+  
+  // Update userInfo when the latest profile data changes
+  useEffect(() => {
+    setUserInfo(currentUserInfo);
+  }, [currentUserInfo]);
+
+  // Force re-render when profile image cache is cleared
+  useEffect(() => {
+    const handleCacheCleared = (event: CustomEvent) => {
+      if (event.detail.userId === userSession?.user.id) {
+        console.log("🔄 GeneralForm: Cache cleared event received, forcing refresh");
+        // Force a re-render by updating the query cache
+        queryClient.invalidateQueries({
+          queryKey: ["profile", userSession?.user.id],
+        });
+      }
+    };
+    
+    window.addEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    return () => {
+      window.removeEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    };
+  }, [userSession?.user.id, queryClient]);
+  
+  // Use cached profile image with the current image URL
   const { cachedImage: cachedProfileImage } = useCachedProfileImage(
-    userInfoResponse.imageUrl,
+    currentUserInfo.imageUrl,
     userSession?.user.id
   );
+
+  // Debug logging
+  useEffect(() => {
+    console.log("🔍 GeneralForm Debug:", {
+      cachedProfileImage: !!cachedProfileImage,
+      currentUserInfoImageUrl: currentUserInfo.imageUrl,
+      userId: userSession?.user.id,
+      latestProfileData: !!latestProfileData
+    });
+  }, [cachedProfileImage, currentUserInfo.imageUrl, userSession?.user.id, latestProfileData]);
 
   // Initialize default notification preference
   const getDefaultNotificationPreference = useCallback(() => {
@@ -227,32 +264,33 @@ const GeneralForm = ({
                 height={80}
                 className="rounded-full object-cover"
               />
-            ) : userInfoResponse.imageUrl ? (
-              <>
-                <Image
-                  src={userInfoResponse.imageUrl}
-                  alt="Profile"
-                  width={80}
-                  height={80}
-                  className="rounded-full object-cover"
-                  onError={(e) => {
-                    // Hide image on error, fallback will show
-                    e.currentTarget.style.display = 'none';
-                  }}
-                />
-                <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0">
-                  <span className="text-xl text-white">
-                    {userInfoResponse.name.charAt(0).toUpperCase()}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <div className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center">
-                <span className="text-xl text-white">
-                  {userInfoResponse.name.charAt(0).toUpperCase()}
-                </span>
-              </div>
-            )}
+            ) : currentUserInfo.imageUrl ? (
+              <Image
+                src={currentUserInfo.imageUrl}
+                alt="Profile"
+                width={80}
+                height={80}
+                className="rounded-full object-cover"
+                onError={(e) => {
+                  // Hide image on error and show fallback
+                  e.currentTarget.style.display = 'none';
+                  const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fallbackDiv) {
+                    fallbackDiv.style.display = 'flex';
+                  }
+                }}
+              />
+            ) : null}
+            
+            {/* Fallback initial - only show when no image or on error */}
+            <div 
+              className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0"
+              style={{ display: (!cachedProfileImage && !currentUserInfo.imageUrl) ? 'flex' : 'none' }}
+            >
+              <span className="text-xl text-white">
+                {currentUserInfo.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
           </div>
           <div>
             <p className="text-sm text-bgtext-400">Profile Picture</p>
@@ -260,7 +298,7 @@ const GeneralForm = ({
         </div>
         {isEditing && (
           <ProfilePictureUpload 
-            userInfoResponse={userInfoResponse}
+            userInfoResponse={currentUserInfo}
             setIsEditing={setIsEditing}
           />
         )}

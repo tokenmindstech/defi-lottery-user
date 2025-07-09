@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { fetchProxy, toBase64 } from "@/lib/utils";
-import { cacheProfileImage, useCachedProfileImage } from "@/lib/use-cached-profile-image";
+import { useCachedProfileImage, forceRefreshProfileImageCache } from "@/lib/use-cached-profile-image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
@@ -16,6 +16,47 @@ import toast from "react-hot-toast";
 import { Spinner } from "@phosphor-icons/react/dist/ssr";
 import { Trash } from "lucide-react";
 import Image from "next/image";
+import Cropper from "react-easy-crop";
+
+// Cropping utility functions
+const createImage = (url: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const image = new window.Image();
+    image.addEventListener('load', () => resolve(image));
+    image.addEventListener('error', (error) => reject(error));
+    image.setAttribute('crossOrigin', 'anonymous');
+    image.src = url;
+  });
+
+const getCroppedImg = async (
+  imageSrc: string, 
+  pixelCrop: { width: number; height: number; x: number; y: number }
+): Promise<string> => {
+  const image = await createImage(imageSrc);
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+
+  if (!ctx) {
+    throw new Error('Could not get canvas context');
+  }
+
+  canvas.width = pixelCrop.width;
+  canvas.height = pixelCrop.height;
+
+  ctx.drawImage(
+    image,
+    pixelCrop.x,
+    pixelCrop.y,
+    pixelCrop.width,
+    pixelCrop.height,
+    0,
+    0,
+    pixelCrop.width,
+    pixelCrop.height
+  );
+
+  return canvas.toDataURL('image/jpeg', 0.9);
+};
 
 interface ProfilePictureUploadProps {
   userInfoResponse: UserInfoResponse;
@@ -30,6 +71,17 @@ const ProfilePictureUpload = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>("");
+  
+  // Cropping state
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<{
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+  } | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
 
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
@@ -39,6 +91,16 @@ const ProfilePictureUpload = ({
     userInfoResponse.imageUrl, 
     userSession?.user.id
   );
+
+  // Debug: Log modal state
+  useEffect(() => {
+    console.log("🖼️ ProfilePictureUpload Modal Debug:", {
+      isOpen,
+      cachedProfileImage: !!cachedProfileImage,
+      userImageUrl: userInfoResponse.imageUrl,
+      userId: userSession?.user.id,
+    });
+  }, [isOpen, cachedProfileImage, userInfoResponse.imageUrl, userSession?.user.id]);
 
   const mutation = useMutation<
     APIBaseResponse | APIBaseErrorResponse,
@@ -58,9 +120,9 @@ const ProfilePictureUpload = ({
         auth: true,
       }),
     onSuccess: (data, variables) => {
-      // Cache the preview image for immediate use
-      if (previewUrl && userSession?.user.id) {
-        cacheProfileImage(variables.imageUrl, userSession.user.id, previewUrl);
+      // Clear and force refresh the cache to ensure all components update
+      if (userSession?.user.id) {
+        forceRefreshProfileImageCache(userSession.user.id);
       }
       
       // Update ALL profile-related query caches
@@ -83,24 +145,28 @@ const ProfilePictureUpload = ({
       // Update generic profile cache if it exists
       queryClient.setQueryData(["profile"], updateProfileData);
       
-      // Force invalidate all profile queries to trigger re-renders
+      // Force invalidate all profile queries to trigger re-renders and fresh fetches
       queryClient.invalidateQueries({
         queryKey: ["profile"],
-        refetchType: "none", // Don't refetch, just mark as stale
+        refetchType: "all", // Force refetch to get new image from S3
       });
       
-      // Force re-render by updating the query timestamp
+      // Force immediate re-render by updating the query timestamp
       setTimeout(() => {
         queryClient.refetchQueries({
           queryKey: ["profile", userSession?.user.id],
         });
+        // Also refetch any generic profile queries
+        queryClient.refetchQueries({
+          queryKey: ["profile"],
+        });
       }, 100);
       
-      // Additional debug: Check if cache is being set properly
-      console.log("🔄 Upload success - checking cache state:", {
+      // Additional debug: Check new image URL
+      console.log("🔄 Upload success - new image uploaded:", {
         newImageUrl: variables.imageUrl,
         userId: userSession?.user.id,
-        previewCached: !!previewUrl
+        cacheCleared: true
       });
     },
     onError: (error) => {
@@ -113,6 +179,29 @@ const ProfilePictureUpload = ({
   ): response is APIBaseErrorResponse => {
     return "statusCode" in response && response.statusCode >= 400;
   };
+
+  // Cropping callback functions
+  const onCropComplete = useCallback(
+    (
+      croppedArea: { width: number; height: number; x: number; y: number }, 
+      croppedAreaPixels: { width: number; height: number; x: number; y: number }
+    ) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    }, 
+    []
+  );
+
+  const handleCropImage = useCallback(async () => {
+    if (!previewUrl || !croppedAreaPixels) return previewUrl;
+    
+    try {
+      const croppedImage = await getCroppedImg(previewUrl, croppedAreaPixels);
+      return croppedImage;
+    } catch (error) {
+      console.error('Error cropping image:', error);
+      return previewUrl;
+    }
+  }, [previewUrl, croppedAreaPixels]);
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) return;
@@ -139,34 +228,13 @@ const ProfilePictureUpload = ({
         return;
       }
       setSelectedFile(file);
+      setShowCropper(true); // Enable cropper when image is loaded
     };
     
     const base64 = await toBase64(file);
     setPreviewUrl(base64 as string);
     img.src = base64 as string;
   };
-
-  const handleUploadImage = useCallback(async (): Promise<string> => {
-    if (!selectedFile) throw new Error("No file selected");
-
-    const formData = new FormData();
-    formData.append("file", selectedFile);
-
-    const uploadResult = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/upload?folderName=profiles`,
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
-
-    if (!uploadResult.ok) {
-      throw new Error("Failed to upload image");
-    }
-
-    const result = await uploadResult.json();
-    return result.url;
-  }, [selectedFile]);
 
   const handleSaveChanges = useCallback(async () => {
     if (!selectedFile) {
@@ -177,8 +245,35 @@ const ProfilePictureUpload = ({
     try {
       setIsLoading(true);
       
-      // Upload the image
-      const imageUrl = await handleUploadImage();
+      // Get the image to upload (cropped if cropper was used, otherwise original)
+      let imageToUpload = previewUrl;
+      if (showCropper && croppedAreaPixels) {
+        imageToUpload = await handleCropImage();
+      }
+      
+      // Convert base64 to blob for upload
+      const response = await fetch(imageToUpload);
+      const blob = await response.blob();
+      const fileToUpload = new File([blob], selectedFile.name, { type: selectedFile.type });
+      
+      // Create FormData for upload
+      const formData = new FormData();
+      formData.append("file", fileToUpload);
+
+      const uploadResult = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_URL}/api/upload?folderName=profiles`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!uploadResult.ok) {
+        throw new Error("Failed to upload image");
+      }
+
+      const uploadResponse = await uploadResult.json();
+      const imageUrl = uploadResponse.url;
 
       // Update profile with new image URL
       const result = await mutation.mutateAsync({ imageUrl });
@@ -200,6 +295,10 @@ const ProfilePictureUpload = ({
       setIsOpen(false);
       setSelectedFile(null);
       setPreviewUrl("");
+      setShowCropper(false);
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setCroppedAreaPixels(null);
       setIsEditing(false);
     } catch (error) {
       console.error("Profile picture update failed:", error);
@@ -207,11 +306,15 @@ const ProfilePictureUpload = ({
     } finally {
       setIsLoading(false);
     }
-  }, [selectedFile, mutation, userSession?.user.id, setIsEditing, handleUploadImage]);
+  }, [selectedFile, mutation, userSession?.user.id, setIsEditing, previewUrl, showCropper, croppedAreaPixels, handleCropImage]);
 
   const handleRemoveImage = () => {
     setSelectedFile(null);
     setPreviewUrl("");
+    setShowCropper(false);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedAreaPixels(null);
   };
 
   return (
@@ -276,25 +379,32 @@ const ProfilePictureUpload = ({
                       className="w-full h-full rounded-3xl object-cover"
                     />
                   ) : (
-                    <>
-                      <Image
-                        src={userInfoResponse.imageUrl}
-                        alt="Current profile"
-                        width={120}
-                        height={120}
-                        className="w-full h-full rounded-3xl object-cover"
-                        onError={(e) => {
-                          // Fallback to initials if image fails to load
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                      <div className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center absolute inset-0">
-                        <span className="text-2xl text-white font-medium">
-                          {userInfoResponse.name.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                    </>
+                    <Image
+                      src={userInfoResponse.imageUrl}
+                      alt="Current profile"
+                      width={120}
+                      height={120}
+                      className="w-full h-full rounded-3xl object-cover"
+                      onError={(e) => {
+                        // Hide image on error and show fallback
+                        e.currentTarget.style.display = 'none';
+                        const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                        if (fallbackDiv) {
+                          fallbackDiv.style.display = 'flex';
+                        }
+                      }}
+                    />
                   )}
+                  
+                  {/* Fallback initial - only show when image fails to load */}
+                  <div 
+                    className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center absolute inset-0"
+                    style={{ display: cachedProfileImage ? 'none' : 'none' }}
+                  >
+                    <span className="text-2xl text-white font-medium">
+                      {userInfoResponse.name.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -338,6 +448,85 @@ const ProfilePictureUpload = ({
             </div>
           </div>
         </div>
+
+        {/* Image Cropping Interface */}
+        {showCropper && previewUrl && (
+          <div className="px-6 py-4 relative z-10">
+            <div className="space-y-4">
+              {/* Cropping Header */}
+              <div className="text-center">
+                <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Photo</h3>
+                <p className="text-bgtext-400 text-sm">Drag to reposition • Use zoom to resize</p>
+              </div>
+              
+              {/* Cropper Container */}
+              <div className="relative w-full h-64 bg-black rounded-lg overflow-hidden">
+                <Cropper
+                  image={previewUrl}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={onCropComplete}
+                  showGrid={false}
+                  cropShape="round"
+                  style={{
+                    containerStyle: {
+                      backgroundColor: '#000',
+                    },
+                    cropAreaStyle: {
+                      border: '2px solid rgba(139, 69, 219, 0.8)',
+                      boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
+                    },
+                  }}
+                />
+              </div>
+              
+              {/* Zoom Control */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className="text-bgtext-300 text-sm min-w-[40px]">Zoom:</span>
+                  <input
+                    type="range"
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    value={zoom}
+                    onChange={(e) => setZoom(Number(e.target.value))}
+                    className="flex-1 h-2 bg-bgtext-700 rounded-lg appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, rgb(139, 69, 219) 0%, rgb(139, 69, 219) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) 100%)`,
+                    }}
+                  />
+                  <span className="text-bgtext-300 text-sm min-w-[35px]">{zoom.toFixed(1)}x</span>
+                </div>
+              </div>
+              
+              {/* Cropping Action Buttons */}
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setShowCropper(false)}
+                  variant="outline"
+                  className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
+                >
+                  Skip Crop
+                </Button>
+                <Button
+                  onClick={() => {
+                    // Reset crop to center when user wants to recrop
+                    setCrop({ x: 0, y: 0 });
+                    setZoom(1);
+                  }}
+                  variant="outline"
+                  className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
+                >
+                  Reset
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Gradient line separator */}
         <div className="px-6 relative z-10">
