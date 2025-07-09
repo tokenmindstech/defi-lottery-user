@@ -333,7 +333,7 @@ const ProfilePictureUpload = ({
         </Button>
       </DialogTrigger>
         
-        <DialogContent className="max-w-sm md:max-w-md overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
+        <DialogContent className="max-w-sm md:max-w-md max-h-[90vh] md:max-h-[85vh] overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
           {/* Modal-specific gradient at top */}
           <div 
             className="absolute top-0 left-0 right-0 h-48 pointer-events-none rounded-t-3xl"
@@ -460,8 +460,8 @@ const ProfilePictureUpload = ({
 
         {/* Image Cropping Interface */}
         {showCropper && previewUrl && (
-          <div className="px-6 py-4 relative z-10">
-            <div className="space-y-4">
+          <div className="px-6 py-2 relative z-10">
+            <div className="space-y-3">
               {/* Cropping Header */}
               <div className="text-center">
                 <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Picture</h3>
@@ -469,7 +469,7 @@ const ProfilePictureUpload = ({
               </div>
               
               {/* Cropper Container */}
-              <div className="relative w-full h-64 bg-black rounded-lg overflow-hidden">
+              <div className="relative w-full h-48 bg-black rounded-lg overflow-hidden">
                 <Cropper
                   image={previewUrl}
                   crop={crop}
@@ -493,7 +493,7 @@ const ProfilePictureUpload = ({
               </div>
               
               {/* Zoom Control */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <span className="text-bgtext-300 text-sm min-w-[40px]">Zoom:</span>
                   <input
@@ -513,19 +513,21 @@ const ProfilePictureUpload = ({
               </div>
               
               {/* Cropping Action Buttons */}
-              <div className="flex gap-3">
+              <div className="flex gap-2">
                 <Button
                   onClick={() => {
                     setShowCropper(false);
                     setIsCropping(false);
                   }}
                   variant="outline"
+                  size="sm"
                   className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
                 >
                   Skip Crop
                 </Button>
                 <Button
                   onClick={handleCropConfirm}
+                  size="sm"
                   className="flex-1 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-transparent hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium"
                 > 
                   Crop
@@ -537,6 +539,7 @@ const ProfilePictureUpload = ({
                     setZoom(1);
                   }}
                   variant="outline"
+                  size="sm"
                   className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
                 >
                   Reset
@@ -554,7 +557,7 @@ const ProfilePictureUpload = ({
         </div>
 
         {/* Save Button */}
-        <div className="px-6 pb-6 pt-4 relative z-10 flex justify-center">
+        <div className="px-6 pb-4 pt-2 relative z-10 flex justify-center">
           <Button
             onClick={handleSaveChanges}
             disabled={isLoading || !selectedFile || isCropping}
