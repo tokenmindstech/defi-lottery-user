@@ -76,7 +76,6 @@ const GeneralForm = ({
   useEffect(() => {
     const handleCacheCleared = (event: CustomEvent) => {
       if (event.detail.userId === userSession?.user.id) {
-        console.log("🔄 GeneralForm: Cache cleared event received, forcing refresh");
         // Force a re-render by updating the query cache
         queryClient.invalidateQueries({
           queryKey: ["profile", userSession?.user.id],
@@ -96,15 +95,7 @@ const GeneralForm = ({
     userSession?.user.id
   );
 
-  // Debug logging
-  useEffect(() => {
-    console.log("🔍 GeneralForm Debug:", {
-      cachedProfileImage: !!cachedProfileImage,
-      currentUserInfoImageUrl: currentUserInfo.imageUrl,
-      userId: userSession?.user.id,
-      latestProfileData: !!latestProfileData
-    });
-  }, [cachedProfileImage, currentUserInfo.imageUrl, userSession?.user.id, latestProfileData]);
+
 
   // Initialize default notification preference
   const getDefaultNotificationPreference = useCallback(() => {
@@ -204,8 +195,8 @@ const GeneralForm = ({
         id: `update-profile-success-${userSession?.user.id}`,
       });
       setIsEditing(false);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch {
+      // Error handled by toast notification system
     }
   };
 

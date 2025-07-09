@@ -169,7 +169,6 @@ export const authConfig: NextAuthOptions = {
             }
           );
           const response = (await request.json()) as APILoginResponseDTO;
-          console.log("Response from auth endpoint:", response);
 
           if (!request.ok) {
             throw new CustomError(`${AUTH_ERROR}${response.message}`);

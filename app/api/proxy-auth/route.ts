@@ -13,16 +13,12 @@ export async function GET(request: NextRequest) {
   ).split("&customHeaders=")[1];
   const customHeaders = parseCustomHeaders(customHeadersStr);
 
-  console.log(`Backend URL configured: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}`);
-
   const session = await getServerSession(authConfig);
   if (!session || !session.user.accessToken) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
   const accessToken = session.user.accessToken;
   try {
-    console.log(`Making request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {
@@ -65,7 +61,6 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    console.log(`Making POST request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
     
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
@@ -110,7 +105,6 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
-    console.log(`Making PUT request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
     
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
@@ -155,7 +149,6 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
-    console.log(`Making PATCH request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
     
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
@@ -200,7 +193,6 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const body = await request.json();
-    console.log(`Making DELETE request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
     
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,

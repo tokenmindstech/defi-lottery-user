@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -93,16 +93,6 @@ const ProfilePictureUpload = ({
     userSession?.user.id
   );
 
-  // Debug: Log modal state
-  useEffect(() => {
-    console.log("🖼️ ProfilePictureUpload Modal Debug:", {
-      isOpen,
-      cachedProfileImage: !!cachedProfileImage,
-      userImageUrl: userInfoResponse.imageUrl,
-      userId: userSession?.user.id,
-    });
-  }, [isOpen, cachedProfileImage, userInfoResponse.imageUrl, userSession?.user.id]);
-
   const mutation = useMutation<
     APIBaseResponse | APIBaseErrorResponse,
     Error,
@@ -163,15 +153,18 @@ const ProfilePictureUpload = ({
         });
       }, 100);
       
-      // Additional debug: Check new image URL
-      console.log("🔄 Upload success - new image uploaded:", {
-        newImageUrl: variables.imageUrl,
-        userId: userSession?.user.id,
-        cacheCleared: true
-      });
+      setTimeout(() => {
+        queryClient.refetchQueries({
+          queryKey: ["profile", userSession?.user.id],
+        });
+        // Also refetch any generic profile queries
+        queryClient.refetchQueries({
+          queryKey: ["profile"],
+        });
+      }, 100);
     },
-    onError: (error) => {
-      console.error("Profile update failed:", error);
+    onError: () => {
+      // Error handling for mutation
     },
   });
 
@@ -201,8 +194,7 @@ const ProfilePictureUpload = ({
       setPreviewUrl(croppedImage);
       setShowCropper(false);
       setIsCropping(false);
-    } catch (error) {
-      console.error('Error applying crop:', error);
+    } catch {
       setIsCropping(false);
     }
   }, [previewUrl, croppedAreaPixels]);
@@ -303,8 +295,7 @@ const ProfilePictureUpload = ({
       setZoom(1);
       setCroppedAreaPixels(null);
       setIsEditing(false);
-    } catch (error) {
-      console.error("Profile picture update failed:", error);
+    } catch {
       toast.error("Failed to update profile picture");
     } finally {
       setIsLoading(false);

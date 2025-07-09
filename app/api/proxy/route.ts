@@ -12,8 +12,6 @@ export async function GET(request: NextRequest) {
   const customHeaders = parseCustomHeaders(customHeadersStr);
 
   try {
-    console.log(`Making request to: ${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`);
-    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {

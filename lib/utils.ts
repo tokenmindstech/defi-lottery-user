@@ -90,19 +90,14 @@ export const fetchProxy = async ({
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error(error);
-    console.error(`Error in ${method} ${url}:`, error);
     return error;
   }
 };
 
 export const handleProxyResponse = async (response: Response, targetURL: string) => {
-  console.log(`Response status: ${response.status} ${response.statusText}`);
-
   // Check if response is ok
   if (!response.ok) {
     const errorText = await response.text();
-    console.error(`Backend returned error for ${targetURL}: ${response.status} ${response.statusText}`);
     console.error(`Error body:`, errorText);
     
     return {
