@@ -33,16 +33,6 @@ const HeaderLayout = () => {
     userSession?.user.id
   );
 
-  // Debug: Log what the header is receiving
-  React.useEffect(() => {
-    console.log("🔍 Header Debug:", {
-      userImageUrl: userData?.data?.imageUrl,
-      cachedProfileImage: cachedProfileImage ? "Available" : "None",
-      userId: userSession?.user.id,
-      timestamp: new Date().toISOString()
-    });
-  }, [userData?.data?.imageUrl, cachedProfileImage, userSession?.user.id]);
-
   return (
     <div className="flex sticky flex-row h-[10vh] w-full items-center justify-between">
       <div className="absolute h-[85px] w-full border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />

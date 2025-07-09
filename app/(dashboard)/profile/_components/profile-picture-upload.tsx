@@ -332,246 +332,252 @@ const ProfilePictureUpload = ({
           Edit Profile Picture
         </Button>
       </DialogTrigger>
-        
-        <DialogContent className="max-w-sm md:max-w-md max-h-[90vh] md:max-h-[85vh] overflow-y-auto bg-black border border-bgtext-800 rounded-3xl" aria-describedby="profile-picture-description">
-          {/* Modal-specific gradient at top */}
-          <div 
-            className="absolute top-0 left-0 right-0 h-48 pointer-events-none rounded-t-3xl"
-            style={{
-              background: `radial-gradient(ellipse 400px 200px at center top, 
-                rgba(139, 69, 219, 0.8) 0%, 
-                rgba(139, 69, 219, 0.6) 30%, 
-                rgba(139, 69, 219, 0.3) 60%, 
-                transparent 100%)`
-            }}
-          />
-        <DialogHeader className="text-center relative z-10">
+      
+      <DialogContent className={`max-w-sm md:max-w-md bg-black border border-bgtext-800 rounded-3xl overflow-hidden flex flex-col ${showCropper ? 'max-h-[90vh]' : ''}`} aria-describedby="profile-picture-description">
+        {/* Simple modal gradient - clean and natural */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-48 pointer-events-none rounded-t-3xl z-0"
+          style={{
+            background: `radial-gradient(ellipse 400px 200px at center top, 
+              rgba(139, 69, 219, 0.8) 0%, 
+              rgba(139, 69, 219, 0.6) 30%, 
+              rgba(139, 69, 219, 0.3) 60%, 
+              transparent 100%)`
+          }}
+        />
+      
+        {/* Fixed Header */}
+        <DialogHeader className="text-center relative z-30 px-6 pb-4 flex-shrink-0">
           <DialogTitle className="text-bgtext-100 font-inter font-semibold text-xl">Edit Profile Picture</DialogTitle>
         </DialogHeader>
         
-        <div className="flex gap-6 px-6 py-4 relative z-10">
-          {/* Profile Image Display - Left Side */}
-          <div className="flex-shrink-0">
-            {previewUrl ? (
-              <div className="relative">
-                <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
-                  <Image
-                    src={previewUrl}
-                    alt="Profile preview"
-                    width={120}
-                    height={120}
-                    className="w-full h-full rounded-3xl object-cover"
+        {/* Content Area - Clean and Simple */}
+        <div className={`${showCropper ? 'flex-1 overflow-y-auto minimal-scrollbar' : ''} px-6 relative`}>
+          <div className="space-y-6 pb-4 pt-8 relative z-10">
+            {/* Profile Image Display Section */}
+            <div className="flex gap-6">
+              {/* Profile Image Display - Left Side */}
+              <div className="flex-shrink-0">
+                {previewUrl ? (
+                  <div className="relative">
+                    <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                      <Image
+                        src={previewUrl}
+                        alt="Profile preview"
+                        width={120}
+                        height={120}
+                        className="w-full h-full rounded-3xl object-cover"
+                      />
+                    </div>
+                    <button
+                      onClick={handleRemoveImage}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
+                      aria-label="Remove selected image"
+                    >
+                      <Trash size={16} />
+                    </button>
+                  </div>
+                ) : userInfoResponse.imageUrl ? (
+                  <div className="relative">
+                    <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                      {cachedProfileImage ? (
+                        <Image
+                          src={cachedProfileImage}
+                          alt="Current profile"
+                          width={120}
+                          height={120}
+                          className="w-full h-full rounded-3xl object-cover"
+                        />
+                      ) : (
+                        <Image
+                          src={userInfoResponse.imageUrl}
+                          alt="Current profile"
+                          width={120}
+                          height={120}
+                          className="w-full h-full rounded-3xl object-cover"
+                          onError={(e) => {
+                            // Hide image on error and show fallback
+                            e.currentTarget.style.display = 'none';
+                            const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                            if (fallbackDiv) {
+                              fallbackDiv.style.display = 'flex';
+                            }
+                          }}
+                        />
+                      )}
+                      
+                      {/* Fallback initial - only show when image fails to load */}
+                      <div 
+                        className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center absolute inset-0"
+                        style={{ display: cachedProfileImage ? 'none' : 'none' }}
+                      >
+                        <span className="text-2xl text-white font-medium">
+                          {userInfoResponse.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-32 h-32 rounded-3xl bg-gradient-to-b from-blue-400 to-blue-600 p-1">
+                    <div className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center">
+                      <span className="text-2xl text-white font-medium">
+                        {userInfoResponse.name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Right Side Content */}
+              <div className="flex flex-col justify-center space-y-4 flex-1">
+                {/* File Requirements Text */}
+                <div id="profile-picture-description">
+                  <p className="text-bgtext-400 text-sm">
+                    JPG, PNG, or GIF format with 5MB maximum file size
+                  </p>
+                  <p className="text-bgtext-400 text-sm">
+                    and minimum resolution of 300 × 300 pixels
+                  </p>
+                </div>
+                
+                {/* File Upload Button */}
+                <div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    id="profile-picture-input"
+                    disabled={isCropping}
+                  />
+                  <label
+                    htmlFor="profile-picture-input"
+                    className={`inline-block cursor-pointer px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                      isCropping 
+                        ? 'bg-bgtext-900 text-bgtext-500 cursor-not-allowed' 
+                        : 'bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100'
+                    }`}
+                  >
+                    Choose Picture
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Image Cropping Interface - Inside scrollable content */}
+            {showCropper && previewUrl && (
+              <div className="space-y-4">
+                {/* Cropping Header */}
+                <div className="text-center">
+                  <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Picture</h3>
+                  <p className="text-bgtext-400 text-sm">Drag to reposition • Use zoom to resize</p>
+                </div>
+                
+                {/* Cropper Container */}
+                <div className="relative w-full h-48 bg-black rounded-lg overflow-hidden">
+                  <Cropper
+                    image={previewUrl}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={onCropComplete}
+                    showGrid={false}
+                    cropShape="round"
+                    style={{
+                      containerStyle: {
+                        backgroundColor: '#000',
+                      },
+                      cropAreaStyle: {
+                        border: '2px solid rgba(139, 69, 219, 0.8)',
+                        boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
+                      },
+                    }}
                   />
                 </div>
-                <button
-                  onClick={handleRemoveImage}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-colors"
-                  aria-label="Remove selected image"
-                >
-                  <Trash size={16} />
-                </button>
-              </div>
-            ) : userInfoResponse.imageUrl ? (
-              <div className="relative">
-                <div className="w-32 h-32 rounded-3xl overflow-hidden bg-gradient-to-b from-blue-400 to-blue-600 p-1">
-                  {cachedProfileImage ? (
-                    <Image
-                      src={cachedProfileImage}
-                      alt="Current profile"
-                      width={120}
-                      height={120}
-                      className="w-full h-full rounded-3xl object-cover"
-                    />
-                  ) : (
-                    <Image
-                      src={userInfoResponse.imageUrl}
-                      alt="Current profile"
-                      width={120}
-                      height={120}
-                      className="w-full h-full rounded-3xl object-cover"
-                      onError={(e) => {
-                        // Hide image on error and show fallback
-                        e.currentTarget.style.display = 'none';
-                        const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
-                        if (fallbackDiv) {
-                          fallbackDiv.style.display = 'flex';
-                        }
+                
+                {/* Zoom Control */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-bgtext-300 text-sm min-w-[40px]">Zoom:</span>
+                    <input
+                      type="range"
+                      min={1}
+                      max={3}
+                      step={0.1}
+                      value={zoom}
+                      onChange={(e) => setZoom(Number(e.target.value))}
+                      className="flex-1 h-2 bg-bgtext-700 rounded-lg appearance-none cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, rgb(139, 69, 219) 0%, rgb(139, 69, 219) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) 100%)`,
                       }}
                     />
-                  )}
-                  
-                  {/* Fallback initial - only show when image fails to load */}
-                  <div 
-                    className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center absolute inset-0"
-                    style={{ display: cachedProfileImage ? 'none' : 'none' }}
-                  >
-                    <span className="text-2xl text-white font-medium">
-                      {userInfoResponse.name.charAt(0).toUpperCase()}
-                    </span>
+                    <span className="text-bgtext-300 text-sm min-w-[35px]">{zoom.toFixed(1)}x</span>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <div className="w-32 h-32 rounded-3xl bg-gradient-to-b from-blue-400 to-blue-600 p-1">
-                <div className="w-full h-full bg-bgtext-800 rounded-3xl flex items-center justify-center">
-                  <span className="text-2xl text-white font-medium">
-                    {userInfoResponse.name.charAt(0).toUpperCase()}
-                  </span>
+                
+                {/* Cropping Action Buttons */}
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() => {
+                      setShowCropper(false);
+                      setIsCropping(false);
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
+                  >
+                    Skip Crop
+                  </Button>
+                  <Button
+                    onClick={handleCropConfirm}
+                    size="sm"
+                    className="flex-1 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-transparent hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium"
+                  > 
+                    Crop
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      // Reset crop to center when user wants to recrop
+                      setCrop({ x: 0, y: 0 });
+                      setZoom(1);
+                    }}
+                    variant="outline"
+                    size="sm"
+                    className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
+                  >
+                    Reset
+                  </Button>
                 </div>
               </div>
             )}
           </div>
           
-          {/* Right Side Content */}
-          <div className="flex flex-col justify-center space-y-4 flex-1">
-            {/* File Requirements Text */}
-            <div id="profile-picture-description">
-              <p className="text-bgtext-400 text-sm">
-                JPG, PNG, or GIF format with 5MB maximum file size
-              </p>
-              <p className="text-bgtext-400 text-sm">
-                and minimum resolution of 300 × 300 pixels
-              </p>
-            </div>
-            
-            {/* File Upload Button */}
-            <div>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="hidden"
-                id="profile-picture-input"
-                disabled={isCropping}
-              />
-              <label
-                htmlFor="profile-picture-input"
-                className={`inline-block cursor-pointer px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                  isCropping 
-                    ? 'bg-bgtext-900 text-bgtext-500 cursor-not-allowed' 
-                    : 'bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100'
-                }`}
-              >
-                Choose Picture
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Image Cropping Interface */}
-        {showCropper && previewUrl && (
-          <div className="px-6 py-2 relative z-10">
-            <div className="space-y-3">
-              {/* Cropping Header */}
-              <div className="text-center">
-                <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Picture</h3>
-                <p className="text-bgtext-400 text-sm">Drag to reposition • Use zoom to resize</p>
-              </div>
-              
-              {/* Cropper Container */}
-              <div className="relative w-full h-48 bg-black rounded-lg overflow-hidden">
-                <Cropper
-                  image={previewUrl}
-                  crop={crop}
-                  zoom={zoom}
-                  aspect={1}
-                  onCropChange={setCrop}
-                  onZoomChange={setZoom}
-                  onCropComplete={onCropComplete}
-                  showGrid={false}
-                  cropShape="round"
-                  style={{
-                    containerStyle: {
-                      backgroundColor: '#000',
-                    },
-                    cropAreaStyle: {
-                      border: '2px solid rgba(139, 69, 219, 0.8)',
-                      boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.5)',
-                    },
-                  }}
-                />
-              </div>
-              
-              {/* Zoom Control */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-3">
-                  <span className="text-bgtext-300 text-sm min-w-[40px]">Zoom:</span>
-                  <input
-                    type="range"
-                    min={1}
-                    max={3}
-                    step={0.1}
-                    value={zoom}
-                    onChange={(e) => setZoom(Number(e.target.value))}
-                    className="flex-1 h-2 bg-bgtext-700 rounded-lg appearance-none cursor-pointer"
-                    style={{
-                      background: `linear-gradient(to right, rgb(139, 69, 219) 0%, rgb(139, 69, 219) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) ${((zoom - 1) / 2) * 100}%, rgb(55, 65, 81) 100%)`,
-                    }}
-                  />
-                  <span className="text-bgtext-300 text-sm min-w-[35px]">{zoom.toFixed(1)}x</span>
-                </div>
-              </div>
-              
-              {/* Cropping Action Buttons */}
-              <div className="flex gap-2">
-                <Button
-                  onClick={() => {
-                    setShowCropper(false);
-                    setIsCropping(false);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
-                >
-                  Skip Crop
-                </Button>
-                <Button
-                  onClick={handleCropConfirm}
-                  size="sm"
-                  className="flex-1 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-transparent hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium"
-                > 
-                  Crop
-                </Button>
-                <Button
-                  onClick={() => {
-                    // Reset crop to center when user wants to recrop
-                    setCrop({ x: 0, y: 0 });
-                    setZoom(1);
-                  }}
-                  variant="outline"
-                  size="sm"
-                  className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
-                >
-                  Reset
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Gradient line separator */}
-        <div className="px-6 relative z-10">
-          <div className="relative h-px">
+          {/* Radial Gradient Line Divider */}
+          <div className="relative h-px mx-6 z-10">
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-gray-500/60 to-transparent"></div>
           </div>
         </div>
 
-        {/* Save Button */}
-        <div className="px-6 pb-4 pt-2 relative z-10 flex justify-center">
-          <Button
-            onClick={handleSaveChanges}
-            disabled={isLoading || !selectedFile || isCropping}
-            className="px-8 py-3 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium min-w-[160px] disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isLoading ? (
-              <div className="flex items-center justify-center gap-2">
-                <Spinner className="animate-spin" size={16} />
-                <span>Saving...</span>
-              </div>
-            ) : (
-              "Save Change"
-            )}
-          </Button>
+        {/* Fixed Footer - Save Button */}
+        <div className="px-6 pb-4 pt-4 flex-shrink-0 relative z-30">
+          <div className="flex justify-center">
+            <Button
+              onClick={handleSaveChanges}
+              disabled={isLoading || !selectedFile || isCropping}
+              className="px-8 py-3 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium min-w-[160px] disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Spinner className="animate-spin" size={16} />
+                  <span>Saving...</span>
+                </div>
+              ) : (
+                "Save Change"
+              )}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

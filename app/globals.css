@@ -275,3 +275,32 @@
     cursor: pointer;
   }
 }
+
+/* Minimal Scrollbar with Gray Theme */
+.minimal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+}
+
+.minimal-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.minimal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+  transform: scaleX(1.2);
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb:active {
+  background: rgba(156, 163, 175, 0.8);
+}
