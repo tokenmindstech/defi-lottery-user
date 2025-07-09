@@ -82,6 +82,7 @@ const ProfilePictureUpload = ({
     y: number;
   } | null>(null);
   const [showCropper, setShowCropper] = useState(false);
+  const [isCropping, setIsCropping] = useState(false); // Track if user is actively cropping
 
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
@@ -191,15 +192,18 @@ const ProfilePictureUpload = ({
     []
   );
 
-  const handleCropImage = useCallback(async () => {
-    if (!previewUrl || !croppedAreaPixels) return previewUrl;
+  // Handle crop confirmation - update preview with cropped image
+  const handleCropConfirm = useCallback(async () => {
+    if (!previewUrl || !croppedAreaPixels) return;
     
     try {
       const croppedImage = await getCroppedImg(previewUrl, croppedAreaPixels);
-      return croppedImage;
+      setPreviewUrl(croppedImage);
+      setShowCropper(false);
+      setIsCropping(false);
     } catch (error) {
-      console.error('Error cropping image:', error);
-      return previewUrl;
+      console.error('Error applying crop:', error);
+      setIsCropping(false);
     }
   }, [previewUrl, croppedAreaPixels]);
 
@@ -229,6 +233,7 @@ const ProfilePictureUpload = ({
       }
       setSelectedFile(file);
       setShowCropper(true); // Enable cropper when image is loaded
+      setIsCropping(true); // Set cropping state
     };
     
     const base64 = await toBase64(file);
@@ -245,11 +250,8 @@ const ProfilePictureUpload = ({
     try {
       setIsLoading(true);
       
-      // Get the image to upload (cropped if cropper was used, otherwise original)
-      let imageToUpload = previewUrl;
-      if (showCropper && croppedAreaPixels) {
-        imageToUpload = await handleCropImage();
-      }
+      // Get the image to upload - use the current previewUrl (which is updated after cropping)
+      const imageToUpload = previewUrl;
       
       // Convert base64 to blob for upload
       const response = await fetch(imageToUpload);
@@ -296,6 +298,7 @@ const ProfilePictureUpload = ({
       setSelectedFile(null);
       setPreviewUrl("");
       setShowCropper(false);
+      setIsCropping(false);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
       setCroppedAreaPixels(null);
@@ -306,12 +309,13 @@ const ProfilePictureUpload = ({
     } finally {
       setIsLoading(false);
     }
-  }, [selectedFile, mutation, userSession?.user.id, setIsEditing, previewUrl, showCropper, croppedAreaPixels, handleCropImage]);
+  }, [selectedFile, mutation, userSession?.user.id, setIsEditing, previewUrl]);
 
   const handleRemoveImage = () => {
     setSelectedFile(null);
     setPreviewUrl("");
     setShowCropper(false);
+    setIsCropping(false);
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setCroppedAreaPixels(null);
@@ -438,10 +442,15 @@ const ProfilePictureUpload = ({
                 onChange={handleFileChange}
                 className="hidden"
                 id="profile-picture-input"
+                disabled={isCropping}
               />
               <label
                 htmlFor="profile-picture-input"
-                className="inline-block cursor-pointer bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100 px-4 py-3 rounded-xl text-sm font-medium transition-colors"
+                className={`inline-block cursor-pointer px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  isCropping 
+                    ? 'bg-bgtext-900 text-bgtext-500 cursor-not-allowed' 
+                    : 'bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100'
+                }`}
               >
                 Choose Picture
               </label>
@@ -455,7 +464,7 @@ const ProfilePictureUpload = ({
             <div className="space-y-4">
               {/* Cropping Header */}
               <div className="text-center">
-                <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Photo</h3>
+                <h3 className="text-bgtext-100 font-medium mb-2">Adjust Your Picture</h3>
                 <p className="text-bgtext-400 text-sm">Drag to reposition • Use zoom to resize</p>
               </div>
               
@@ -506,11 +515,20 @@ const ProfilePictureUpload = ({
               {/* Cropping Action Buttons */}
               <div className="flex gap-3">
                 <Button
-                  onClick={() => setShowCropper(false)}
+                  onClick={() => {
+                    setShowCropper(false);
+                    setIsCropping(false);
+                  }}
                   variant="outline"
                   className="flex-1 border-bgtext-700 bg-bgtext-800 hover:bg-bgtext-700 text-bgtext-100"
                 >
                   Skip Crop
+                </Button>
+                <Button
+                  onClick={handleCropConfirm}
+                  className="flex-1 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-transparent hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium"
+                > 
+                  Crop
                 </Button>
                 <Button
                   onClick={() => {
@@ -539,8 +557,8 @@ const ProfilePictureUpload = ({
         <div className="px-6 pb-6 pt-4 relative z-10 flex justify-center">
           <Button
             onClick={handleSaveChanges}
-            disabled={isLoading || !selectedFile}
-            className="px-8 py-3 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium min-w-[160px]"
+            disabled={isLoading || !selectedFile || isCropping}
+            className="px-8 py-3 bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300 font-medium min-w-[160px] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center gap-2">
