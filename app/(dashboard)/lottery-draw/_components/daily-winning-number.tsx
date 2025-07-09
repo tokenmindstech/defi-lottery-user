@@ -32,14 +32,14 @@ const DailyWinningNumber = () => {
         <SkeletonLuckyDrawWInningNumber />
       ) : (
         <Fragment>
-          <div className="w-full grid grid-cols-1 place-items-center gap-5">
-            <div className="flex flex-col space-y-3 items-center justify-center w-full">
+          <div className="grid w-full grid-cols-1 gap-5 place-items-center">
+            <div className="flex flex-col items-center justify-center w-full space-y-3">
               <p className="text-xl font-medium text-bgtext-100 font-inter whitespace-nowrap">
                 5/36 Winning Numbers
               </p>
 
-              <div className="w-full flex justify-center">
-                <div className="flex gap-2 justify-center">
+              <div className="flex justify-center w-full">
+                <div className="flex justify-center gap-2">
                   {lastMessage.data === null
                     ? "? ? ? ? ?"
                         .split(" ")

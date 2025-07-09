@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
-const SubscriptionSkeleton = () => {
+const SkeletonSubscription = () => {
   return (
     <div className="flex flex-col w-full h-full space-y-10">
       <div className="grid w-full">
@@ -17,4 +17,4 @@ const SubscriptionSkeleton = () => {
   );
 };
 
-export default SubscriptionSkeleton;
+export default SkeletonSubscription;

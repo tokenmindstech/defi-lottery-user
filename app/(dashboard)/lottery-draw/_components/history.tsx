@@ -1,13 +1,13 @@
 "use client";
 
-import React, { Fragment } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
-import HistoryDrawSkeleton from "./history-draw-skeleton";
 import PagePagination from "@/components/shared/page-pagination";
 import { DrawTicketTable } from "./draw-ticket-list";
 import { useSearchParams } from "next/navigation";
+import SkeletonHistoryDraw from "./skeleton-history-draw";
+import ResultDisplay from "@/components/shared/result-display";
 
 const HistoryDraw = () => {
   const searchParams = useSearchParams();
@@ -24,17 +24,20 @@ const HistoryDraw = () => {
       ? parseInt(searchParams.get("limit") as string)
       : 10;
 
-  const { data: historyDraw, isLoading } =
-    useQuery<APIGetHistoryDrawResponseDTO>({
-      queryKey: ["draw-ticket", userSession?.user.id, page, limit],
-      queryFn: async () =>
-        fetchProxy({
-          url: `draw-ticket?page=${page}&limit=${limit}`,
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!userSession,
-    });
+  const {
+    data: historyDraw,
+    isLoading,
+    error,
+  } = useQuery<APIGetHistoryDrawResponseDTO>({
+    queryKey: ["draw-ticket", userSession?.user.id, page, limit],
+    queryFn: async () =>
+      fetchProxy({
+        url: `draw-ticket?page=${page}&limit=${limit}`,
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!userSession,
+  });
 
   return (
     <div className="flex flex-col w-full h-full space-y-10">
@@ -43,31 +46,33 @@ const HistoryDraw = () => {
           History Draws
         </h2>
 
-        <div className="flex flex-col w-full h-full space-y-5">
-          {isLoading ? (
-            <HistoryDrawSkeleton />
-          ) : (
-            historyDraw !== undefined &&
-            historyDraw !== null && (
-              <Fragment>
-                <DrawTicketTable draws={historyDraw.data.drawTickets} />
+        <ResultDisplay
+          isLoading={isLoading}
+          error={error}
+          data={historyDraw}
+          loadingComponent={<SkeletonHistoryDraw />}
+          dataErrorMessage="An error occurred while fetching the history draws."
+          loadingErrorMessage="Failed to load history draws. Please try again later."
+        >
+          {(historyDraw) => (
+            <div className="flex flex-col w-full h-full space-y-5">
+              <DrawTicketTable draws={historyDraw.data.drawTickets} />
 
-                <div className="flex flex-col space-y-5 md:flex-row md:space-y-0 w-full h-fit items-center justify-between mt-5">
-                  <p className="text-bgtext-500 text-sm">
-                    Showing{" "}
-                    {(historyDraw?.metadata?.limit ?? 0) *
-                      (historyDraw?.metadata?.page ?? 0) || 0}{" "}
-                    results of {historyDraw?.metadata?.totalCount || 0}
-                  </p>
-                  <PagePagination
-                    currentPage={page}
-                    totalPages={historyDraw?.metadata?.totalPage || 1}
-                  />
-                </div>
-              </Fragment>
-            )
+              <div className="flex flex-col items-center justify-between w-full mt-5 space-y-5 md:flex-row md:space-y-0 h-fit">
+                <p className="text-sm text-bgtext-500">
+                  Showing{" "}
+                  {(historyDraw?.metadata?.limit ?? 0) *
+                    (historyDraw?.metadata?.page ?? 0) || 0}{" "}
+                  results of {historyDraw?.metadata?.totalCount || 0}
+                </p>
+                <PagePagination
+                  currentPage={page}
+                  totalPages={historyDraw?.metadata?.totalPage || 1}
+                />
+              </div>
+            </div>
           )}
-        </div>
+        </ResultDisplay>
       </div>
     </div>
   );

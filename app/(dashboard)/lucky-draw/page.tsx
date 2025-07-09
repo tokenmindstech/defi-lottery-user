@@ -25,8 +25,8 @@ const LuckyDrawPage = () => {
 
   const {
     data: weeklyBonus,
-    isLoading: isLoadingWeeklyBonus,
-    error: errorWeeklyBonus,
+    isLoading,
+    error,
   } = useQuery<APIGetWeeklyBonusResponseDTO>({
     queryKey: ["weekly-bonus"],
     queryFn: async () =>
@@ -47,8 +47,8 @@ const LuckyDrawPage = () => {
 
       <div className="flex flex-col w-full h-full space-y-5">
         <ResultDisplay
-          isLoading={isLoadingWeeklyBonus}
-          error={errorWeeklyBonus}
+          isLoading={isLoading}
+          error={error}
           data={weeklyBonus}
           loadingComponent={<SkeletonLuckyDraw />}
           dataErrorMessage="An error occurred while fetching weekly bonus."
@@ -57,7 +57,7 @@ const LuckyDrawPage = () => {
           {(weeklyBonus) => (
             <Fragment>
               {weeklyBonus.data === null ? (
-                <div className="w-full h-full flex items-center justify-center">
+                <div className="flex items-center justify-center w-full h-full">
                   <ErrorInfo
                     errorMessage="Oops! No weekly bonus available at the moment."
                     showIcon={false}
@@ -65,10 +65,10 @@ const LuckyDrawPage = () => {
                   />
                 </div>
               ) : (
-                <div className="w-full h-full grid grid-cols-1 lg:grid-cols-3 gap-5">
-                  <div className="flex w-full relative h-40 xl:col-span-2 bg-bgtext-900 border border-bgtext-800 rounded-xl">
+                <div className="grid w-full h-full grid-cols-1 gap-5 lg:grid-cols-3">
+                  <div className="relative flex w-full h-40 border xl:col-span-2 bg-bgtext-900 border-bgtext-800 rounded-xl">
                     <div className="absolute z-20 flex flex-row items-center justify-between w-full h-full">
-                      <div className="flex flex-col w-1/2 items-start justify-center p-5">
+                      <div className="flex flex-col items-start justify-center w-1/2 p-5">
                         <p className="text-base text-bgtext-100 font-inter">
                           Bonus Reward
                         </p>
@@ -88,10 +88,10 @@ const LuckyDrawPage = () => {
                         />
                       </div>
                     </div>
-                    <BlueShadow className="absolute z-10 left-0 top-0" />
+                    <BlueShadow className="absolute top-0 left-0 z-10" />
                   </div>
 
-                  <div className="flex flex-col space-y-2 w-full h-full bg-bgtext-900 border border-bgtext-800 rounded-xl p-5">
+                  <div className="flex flex-col w-full h-full p-5 space-y-2 border bg-bgtext-900 border-bgtext-800 rounded-xl">
                     <p className="text-base text-bgtext-100 font-inter">
                       Next Draw In
                     </p>

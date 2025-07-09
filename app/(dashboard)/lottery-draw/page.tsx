@@ -13,20 +13,24 @@ import SeaShadow from "@/components/icons/sea-shadow";
 import DailyCountDown from "./_components/daily-count-down";
 import WeeklyCountDown from "./_components/weekly-count-down";
 import { CURRENCY_FRACTION } from "@/constant/common";
+import ResultDisplay from "@/components/shared/result-display";
 
 const LuckyDrawPage = () => {
   const { data: userSession } = useSession();
-  const { data: prizePool, isLoading: isLoadingPrizePool } =
-    useQuery<APIGetTodaysPrizePoolResponseDTO>({
-      queryKey: ["prize-pool", userSession?.user.id],
-      queryFn: async () =>
-        fetchProxy({
-          url: "prize-pool",
-          method: "GET",
-          auth: true,
-        }),
-      enabled: !!userSession,
-    });
+  const {
+    data: prizePool,
+    isLoading,
+    error,
+  } = useQuery<APIGetTodaysPrizePoolResponseDTO>({
+    queryKey: ["prize-pool", userSession?.user.id],
+    queryFn: async () =>
+      fetchProxy({
+        url: "prize-pool",
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!userSession,
+  });
 
   return (
     <section className="flex flex-col w-full h-full space-y-10">
@@ -34,11 +38,15 @@ const LuckyDrawPage = () => {
         Lottery Draw
       </h2>
 
-      {isLoadingPrizePool ? (
-        <SkeletonLuckyDrawPool />
-      ) : (
-        prizePool !== undefined &&
-        prizePool !== null && (
+      <ResultDisplay
+        isLoading={isLoading}
+        error={error}
+        data={prizePool}
+        loadingComponent={<SkeletonLuckyDrawPool />}
+        dataErrorMessage="An error occurred while fetching the prize pool."
+        loadingErrorMessage="Failed to load the prize pool. Please try again later."
+      >
+        {(prizePool) => (
           <div className="flex flex-col w-full h-full space-y-5">
             <div className="grid w-full h-full grid-cols-1 gap-5 xl:grid-cols-3">
               <div className="relative flex w-full h-40 border xl:col-span-2 bg-bgtext-900 border-bgtext-800 rounded-xl">
@@ -78,6 +86,7 @@ const LuckyDrawPage = () => {
                 <WeeklyCountDown />
               </div>
             </div>
+
             <div className="grid w-full h-full grid-cols-1 gap-5 lg:grid-cols-2">
               <div className="relative flex w-full border h-28 bg-bgtext-900 border-bgtext-800 rounded-xl">
                 <div className="absolute z-20 flex flex-row items-center justify-between w-full h-full">
@@ -111,9 +120,8 @@ const LuckyDrawPage = () => {
               </div>
             </div>
           </div>
-        )
-      )}
-
+        )}
+      </ResultDisplay>
       <DailyWinningNumber />
       <HistoryDraw />
     </section>

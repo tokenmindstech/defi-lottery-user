@@ -7,10 +7,11 @@ import { Fragment, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy, formUrlQuery } from "@/lib/utils";
 import { useSession } from "next-auth/react";
-import ProfileSkeleton from "./_components/skeleton";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PROFILE_MENU_ITEMS, ProfileMenuType } from "@/constant/common";
 import PlanBadge from "@/components/shared/plan-badge";
+import SkeletonProfile from "./_components/skeleton-profile";
+import ResultDisplay from "@/components/shared/result-display";
 
 const ProfilePage = () => {
   const searchParams = useSearchParams();
@@ -24,7 +25,11 @@ const ProfilePage = () => {
 
   const router = useRouter();
   const { data: userSession } = useSession();
-  const { data: userData, isLoading } = useQuery<APIGetUserProfileResponseDTO>({
+  const {
+    data: userData,
+    isLoading,
+    error,
+  } = useQuery<APIGetUserProfileResponseDTO>({
     queryKey: ["profile", userSession?.user.id],
     queryFn: async () =>
       fetchProxy({
@@ -54,11 +59,15 @@ const ProfilePage = () => {
         Profile
       </h2>
 
-      {isLoading ? (
-        <ProfileSkeleton />
-      ) : (
-        userData !== undefined &&
-        userData !== null && (
+      <ResultDisplay
+        isLoading={isLoading}
+        error={error}
+        data={userData}
+        loadingComponent={<SkeletonProfile />}
+        dataErrorMessage="An error occurred while fetching user profile."
+        loadingErrorMessage="Failed to load user profile. Please try again later."
+      >
+        {(userData) => (
           <Fragment>
             <div className="flex flex-col items-start justify-start w-full h-full p-5 space-y-5 lg:flex-row lg:space-y-0 lg:items-center lg:justify-between">
               <div className="flex flex-row items-center justify-center space-x-5">
@@ -102,8 +111,8 @@ const ProfilePage = () => {
               handleChangeMenu={handleChangeMenu}
             />
           </Fragment>
-        )
-      )}
+        )}
+      </ResultDisplay>
     </section>
   );
 };

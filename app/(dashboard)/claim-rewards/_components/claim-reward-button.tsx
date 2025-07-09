@@ -18,7 +18,6 @@ import {
   FormControl,
   FormItem,
   FormMessage,
-  FormDescription,
 } from "@/components/ui/form";
 import { fetchProxy } from "@/lib/utils";
 import { GiftIcon, SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
@@ -162,6 +161,44 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
               name="otp"
               render={({ field }) => (
                 <FormItem>
+                  <div className="space-y-2 text-sm text-bgtext-500 font-inter">
+                    <p className="font-medium text-destructive">
+                      <strong className="font-bold">Attention:</strong>
+                      <br />
+                      <span className="font-bold">A 5%</span> administration fee
+                      will be applied to your winning amount.
+                    </p>
+                    <div className="mt-2">
+                      <p className="font-bold text-bgtext-100">
+                        Total Claimable:{" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                        }).format(totalClaimable)}
+                      </p>
+                      <p className="font-bold text-bgtext-100">
+                        Administration Fee (5%):{" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                        }).format(totalClaimable * 0.05)}
+                      </p>
+                      <p className="font-bold text-bgtext-100">
+                        Net Claim Amount :{" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                        }).format(totalClaimable - totalClaimable * 0.05)}
+                      </p>
+                    </div>
+                  </div>
+
                   <FormControl>
                     <InputOTP
                       maxLength={6}
@@ -174,45 +211,13 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
                           <InputOTPSlot
                             index={index}
                             ref={index === 0 ? firstInputRef : null}
-                            className="size-10 md:size-12 lg:size-14 bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end border-0 first:border-l-0 data-[active=true]:border-2 border-bgtext-800 text-3xl md:text-4xl text-bgtext-100"
+                            className="mt-3 size-10 md:size-12 lg:size-14 bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end border-0 first:border-l-0 data-[active=true]:border-2 border-bgtext-800 text-3xl md:text-4xl text-bgtext-100"
                           />
                         </InputOTPGroup>
                       ))}
                     </InputOTP>
                   </FormControl>
-                  <FormDescription className="space-y-2 text-xs text-bgtext-500 font-inter">
-                    <div className="mt-2">
-                      <p className="font-medium text-bgtext-600">
-                        <strong className="text-bgtext-100">Note:</strong>
-                        <br />A 5% administration fee will be applied to your
-                        winning amount.
-                      </p>
-                      <div className="mt-2">
-                        <p>
-                          Total Claimable:{" "}
-                          <span className="font-medium text-bgtext-100">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                            }).format(totalClaimable)}
-                          </span>
-                        </p>
-                        <p>
-                          Administration Fee (5%):{" "}
-                          <span className="font-medium text-bgtext-100">
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                            }).format(totalClaimable * 0.05)}
-                          </span>
-                        </p>
-                      </div>
-                    </div>
-                  </FormDescription>
+
                   <FormMessage />
                 </FormItem>
               )}
