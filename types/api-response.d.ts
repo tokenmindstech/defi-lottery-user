@@ -13,6 +13,15 @@ declare global {
   type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
   type TierType = "TIER1" | "TIER2" | "TIER3";
   type NotificationType = "INFO" | "DRAW";
+  type PrizePoolType =
+    | "DAILY_BASIC"
+    | "DAILY_PREMIUM"
+    | "WEEKLY"
+    | "AGENT"
+    | "MARKETING"
+    | "COMPANY";
+  type DrawType = "DAILY" | "WEEKLY";
+  type TicketType = "BASIC" | "PREMIUM";
 
   interface Verifier {
     id: string;
@@ -91,9 +100,9 @@ declare global {
 
   interface TodaysDraw {
     id: string;
+    drawType: DrawType;
     drawNumbers: string;
-    prizePool: number;
-    drawType: string;
+    ticketType: TicketType;
     createdAt: string;
   }
 
@@ -193,6 +202,11 @@ declare global {
       id: string;
       name: string;
     };
+  }
+
+  interface PrizePoolAmount {
+    id: PrizePoolType;
+    amount: number;
   }
 
   interface WeeklyBonus {
@@ -412,10 +426,7 @@ declare global {
   }
 
   interface APIGetTodaysPrizePoolResponseDTO extends APIBaseResponse {
-    data: {
-      id: string;
-      amount: number;
-    };
+    data: PrizePoolAmount[];
   }
 
   interface APIQueryBonusResponseDTO extends APIBaseResponse {
@@ -444,6 +455,6 @@ declare global {
   }
 
   interface ListenGetTodaysRewardDrawResponseDTO extends BaseWebsocketResponse {
-    data: TodaysDraw | null;
+    data: TodaysDraw[];
   }
 }

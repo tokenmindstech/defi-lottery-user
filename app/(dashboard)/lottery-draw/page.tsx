@@ -14,6 +14,7 @@ import DailyCountDown from "./_components/daily-count-down";
 import WeeklyCountDown from "./_components/weekly-count-down";
 import { CURRENCY_FRACTION } from "@/constant/common";
 import ResultDisplay from "@/components/shared/result-display";
+import RotatingText from "@/components/ui/rotating-text";
 
 const LuckyDrawPage = () => {
   const { data: userSession } = useSession();
@@ -61,7 +62,10 @@ const LuckyDrawPage = () => {
                         currency: "USD",
                         minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
                         maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                      }).format(prizePool.data.amount || 0)}
+                      }).format(
+                        prizePool.data.filter((item) => item.id === "WEEKLY")[0]
+                          .amount || 0
+                      )}
                     </p>
                   </div>
 
@@ -91,21 +95,71 @@ const LuckyDrawPage = () => {
               <div className="relative flex w-full border h-28 bg-bgtext-900 border-bgtext-800 rounded-xl">
                 <div className="absolute z-20 flex flex-row items-center justify-between w-full h-full">
                   <div className="flex flex-col items-start justify-center w-1/2 p-5">
-                    <p className="text-base text-bgtext-100 font-inter">
-                      Daily
-                      <br />
-                      Jackpot Prize Pool
-                    </p>
+                    <div className="flex flex-col items-start justify-center w-full">
+                      <div className="flex flex-row items-center justify-start space-x-2">
+                        <p className="text-base text-bgtext-100 font-inter">
+                          Daily
+                        </p>
+                        <RotatingText
+                          texts={["BASIC", "PREMIUM"]}
+                          mainClassName="text-bgtext-100 text-lg font-inter font-bold -translate-x-1 translate-y-0.5"
+                          staggerFrom={"last"}
+                          initial={{ y: "100%" }}
+                          animate={{ y: 0 }}
+                          exit={{ y: "-120%" }}
+                          staggerDuration={0.025}
+                          splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                          transition={{
+                            type: "spring",
+                            damping: 30,
+                            stiffness: 400,
+                          }}
+                          rotationInterval={6000}
+                        />
+                      </div>
+                      <p className="text-base text-bgtext-100 font-inter">
+                        Jackpot Prize Pool
+                      </p>
+                    </div>
                   </div>
 
-                  <p className="pr-5 mt-2 text-4xl font-semibold text-bgtext-100 font-inter">
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                      minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                      maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                    }).format(prizePool.data.amount || 0)}
-                  </p>
+                  <RotatingText
+                    texts={[
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                        maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                      }).format(
+                        prizePool.data.filter(
+                          (item) => item.id === "DAILY_BASIC"
+                        )[0].amount || 0
+                      ),
+                      new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                        minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                        maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                      }).format(
+                        prizePool.data.filter(
+                          (item) => item.id === "DAILY_PREMIUM"
+                        )[0].amount || 0
+                      ),
+                    ]}
+                    mainClassName="pr-5 mt-2 text-4xl font-semibold text-bgtext-100 font-inter"
+                    staggerFrom={"last"}
+                    initial={{ y: "100%" }}
+                    animate={{ y: 0 }}
+                    exit={{ y: "-120%" }}
+                    staggerDuration={0.025}
+                    splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                    transition={{
+                      type: "spring",
+                      damping: 30,
+                      stiffness: 400,
+                    }}
+                    rotationInterval={6000}
+                  />
                 </div>
                 <SeaShadow className="absolute top-0 left-0 z-10 rounded-xl" />
               </div>
