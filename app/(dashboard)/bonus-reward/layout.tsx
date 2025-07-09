@@ -2,25 +2,25 @@ import type { Metadata } from "next";
 import { Fragment } from "react";
 
 export const metadata: Metadata = {
-  title: "Rewards | DeFi Lottery Solutions",
+  title: "Bonus Reward | DeFi Lottery Solutions",
   description:
-    "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
+    "Discover exclusive bonus rewards for DeFi Lottery users. Earn special token bonuses, promotional rewards, referral benefits, and loyalty points to enhance your crypto lottery experience.",
   keywords: [
-    "DeFi rewards",
-    "Crypto rewards",
-    "Lottery rewards",
-    "Token benefits",
-    "Referral program",
-    "Loyalty rewards",
-    "Staking benefits",
-    "Player advantages",
-    "DeFi lottery bonuses",
-    "VIP membership",
-    "Crypto cashback",
-    "Play-to-earn",
-    "Ticket discounts",
-    "Holder benefits",
-    "Exclusive rewards",
+    "DeFi bonus rewards",
+    "Crypto bonus",
+    "Lottery bonus",
+    "Token bonuses",
+    "Promotional rewards",
+    "Special bonuses",
+    "Bonus benefits",
+    "Player bonuses",
+    "DeFi lottery bonus",
+    "VIP bonuses",
+    "Crypto bonus rewards",
+    "Bonus program",
+    "Extra rewards",
+    "Bonus points",
+    "Exclusive bonuses",
   ],
   creator: "TokenMinds",
   authors: {
@@ -31,31 +31,31 @@ export const metadata: Metadata = {
   applicationName: "DeFi Lottery Solutions",
   twitter: {
     card: "summary_large_image",
-    title: "Rewards | DeFi Lottery Solutions",
+    title: "Bonus Reward | DeFi Lottery Solutions",
     description:
-      "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
+      "Discover exclusive bonus rewards for DeFi Lottery users. Earn special token bonuses, promotional rewards, referral benefits, and loyalty points to enhance your crypto lottery experience.",
     creator: "@tokenminds_co",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
-        alt: "DeFi Lottery Rewards",
+        alt: "DeFi Lottery Bonus Reward",
       },
     ],
   },
   openGraph: {
-    title: "Rewards | DeFi Lottery Solutions",
+    title: "Bonus Reward | DeFi Lottery Solutions",
     description:
-      "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/rewards`,
+      "Discover exclusive bonus rewards for DeFi Lottery users. Earn special token bonuses, promotional rewards, referral benefits, and loyalty points to enhance your crypto lottery experience.",
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/bonus-reward`,
     siteName: "DeFi Lottery Solutions",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
-        alt: "DeFi Lottery Rewards",
+        alt: "DeFi Lottery Bonus Reward",
       },
     ],
   },

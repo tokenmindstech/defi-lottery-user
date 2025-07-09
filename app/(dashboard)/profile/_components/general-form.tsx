@@ -15,9 +15,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
-  EnvelopeSimple,
-  Spinner,
-  TelegramLogo,
+  EnvelopeSimpleIcon,
+  SpinnerIcon,
+  TelegramLogoIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Switch } from "@/components/ui/switch";
 import { cn, fetchProxy } from "@/lib/utils";
@@ -402,7 +402,7 @@ const GeneralForm = ({
                     <FormItem className="flex flex-row items-center space-x-2">
                       <div className="flex flex-row items-center space-x-2">
                         <div className="bg-bgtext-100 rounded-full p-1">
-                          <TelegramLogo className="text-bgtext-900 size-4" />
+                          <TelegramLogoIcon className="text-bgtext-900 size-4" />
                         </div>
                         <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
                           Telegram
@@ -438,7 +438,7 @@ const GeneralForm = ({
                     <FormItem className="flex flex-row items-center space-x-2">
                       <div className="flex flex-row items-center space-x-2">
                         <div className="bg-bgtext-100 rounded-full p-1">
-                          <EnvelopeSimple className="text-bgtext-900 size-4" />
+                          <EnvelopeSimpleIcon className="text-bgtext-900 size-4" />
                         </div>
                         <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
                           Email
@@ -510,7 +510,7 @@ const GeneralForm = ({
               >
                 {form.formState.isSubmitting ? (
                   <div className="flex flex-row items-center justify-center space-x-2">
-                    <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                    <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                     <p className="text-bgtext-100 font-inter font-medium text-sm">
                       Saving...
                     </p>

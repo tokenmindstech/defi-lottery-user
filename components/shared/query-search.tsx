@@ -1,5 +1,5 @@
 import { Input } from "../ui/input";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
 import React from "react";
 import { formUrlQuery, removeKeysFromQuery } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -57,7 +57,7 @@ const QuerySearch = ({ page }: QuerySearchProps) => {
           defaultValue={searchParams.get("q") || ""}
           onChange={(e) => handleSearch(e.target.value)}
           className="w-full h-10 bg-bgtext-900 border-1 border-bgtext-800 rounded-full text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-          StartIcon={MagnifyingGlass}
+          StartIcon={MagnifyingGlassIcon}
         />
       </div>
       <SelectLimit />

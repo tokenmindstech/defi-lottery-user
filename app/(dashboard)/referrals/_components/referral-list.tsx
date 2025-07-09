@@ -5,11 +5,15 @@ import { DataTable } from "@/components/shared/data-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { cn, truncateString } from "@/lib/utils";
-import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import {
+  SortAscendingIcon,
+  SortDescendingIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 // Configure dayjs to use plugins
 dayjs.extend(utc);
@@ -32,9 +36,9 @@ const columns: ColumnDef<ReferredUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -64,9 +68,9 @@ const columns: ColumnDef<ReferredUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -98,9 +102,9 @@ const columns: ColumnDef<ReferredUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -131,9 +135,9 @@ const columns: ColumnDef<ReferredUser>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -153,8 +157,8 @@ const columns: ColumnDef<ReferredUser>[] = [
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
+              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
             }).format(row.original.earnings)}
           </span>
         </div>

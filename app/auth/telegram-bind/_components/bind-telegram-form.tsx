@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Spinner, TelegramLogo } from "@phosphor-icons/react/dist/ssr";
+import { SpinnerIcon, TelegramLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import {
   useEffect,
@@ -199,10 +199,13 @@ const BindTelegramForm = () => {
           disabled={isLoading}
         >
           {isLoading ? (
-            <Spinner className="size-8 fill-bgtext-100 animate-spin" />
+            <SpinnerIcon className="size-8 fill-bgtext-100 animate-spin" />
           ) : (
             <Fragment>
-              <TelegramLogo weight="fill" className="size-6 fill-bgtext-100" />
+              <TelegramLogoIcon
+                weight="fill"
+                className="size-6 fill-bgtext-100"
+              />
               <p className="text-bgtext-100 font-inter font-medium text-base">
                 Bind Telegram Account
               </p>

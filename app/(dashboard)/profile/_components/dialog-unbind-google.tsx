@@ -17,7 +17,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useCallback } from "react";
 import toast from "react-hot-toast";
-import { Spinner } from "@phosphor-icons/react/dist/ssr";
+import { SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface DialogUnbindGoogleProps {
   userInfoResponse: UserInfoResponse;
@@ -144,7 +144,7 @@ const DialogUnbindGoogle = ({
           >
             {isLoading ? (
               <div className="flex flex-row items-center justify-center space-x-2">
-                <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                 <p className="text-bgtext-100 font-inter font-medium text-sm">
                   Unbinding...
                 </p>

@@ -111,7 +111,7 @@ export function DataTable<TData, TValue>({
             <TableRow className="bg-bgtext-950">
               <TableCell
                 colSpan={columns.length}
-                className="py-5 border-none text-center text-sm font-medium text-bgtext-100 border border-bgtext-800"
+                className="py-5 border-none text-center text-base font-inter font-medium text-bgtext-100 border border-bgtext-800"
               >
                 No data available
               </TableCell>

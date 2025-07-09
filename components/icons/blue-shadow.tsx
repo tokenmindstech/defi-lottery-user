@@ -1,10 +1,19 @@
 import { cn } from "@/lib/utils";
 import React, { Fragment } from "react";
 
-const BlueShadow = ({ className }: CustomIconProps) => {
+interface BlueShadowProps extends CustomIconProps {
+  showCircle?: boolean;
+}
+
+const BlueShadow = ({ className, showCircle = true }: BlueShadowProps) => {
   return (
     <Fragment>
-      <div className="flex w-full h-full relative justify-end items-end overflow-hidden">
+      <div
+        className={cn(
+          "w-full h-full relative justify-end items-end overflow-hidden rounded-3xl",
+          showCircle ? "flex" : "hidden"
+        )}
+      >
         <svg
           width="100%"
           height="100%"
@@ -12,7 +21,7 @@ const BlueShadow = ({ className }: CustomIconProps) => {
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className={cn(
-            "flex-grow-0 flex-shrink-0 ml-[100px] md:ml-[350px] lg:ml-[500px] w-[500px] h-full right-0 bottom-0",
+            "absolute translate-x-[45%] md:translate-x-[100%] flex-grow-0 flex-shrink-0 w-[500px] h-full bottom-0",
             className
           )}
           preserveAspectRatio="none"

@@ -4,13 +4,17 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { cn, truncateString } from "@/lib/utils";
-import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import {
+  SortAscendingIcon,
+  SortDescendingIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { DataTable } from "@/components/shared/data-table";
 import Link from "next/link";
 import Image from "next/image";
 
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 // Configure dayjs to use plugins
 dayjs.extend(utc);
@@ -33,9 +37,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -66,9 +70,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -97,9 +101,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -130,9 +134,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -152,8 +156,8 @@ const columns: ColumnDef<Commission>[] = [
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
+              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
             }).format(row.original.amount)}
           </span>
         </div>
@@ -173,9 +177,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -206,9 +210,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>

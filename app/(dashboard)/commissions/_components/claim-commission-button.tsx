@@ -21,7 +21,7 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { fetchProxy } from "@/lib/utils";
-import { Gift, Spinner } from "@phosphor-icons/react/dist/ssr";
+import { GiftIcon, SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 // import toast from "react-hot-toast";
@@ -146,7 +146,7 @@ const ClaimCommissionButton = ({
           className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300"
         >
           <div className="flex flex-row space-x-3 items-center justify-start">
-            <Gift className="size-5 text-bgtext-100" />
+            <GiftIcon className="size-5 text-bgtext-100" />
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">
               Claim Commission
             </p>
@@ -228,7 +228,7 @@ const ClaimCommissionButton = ({
             >
               {form.formState.isSubmitting ? (
                 <div className="flex flex-row items-center justify-center space-x-2">
-                  <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                  <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                   <p className="text-bgtext-100 font-inter font-medium text-base">
                     Claiming...
                   </p>

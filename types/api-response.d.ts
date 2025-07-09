@@ -13,6 +13,15 @@ declare global {
   type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
   type TierType = "TIER1" | "TIER2" | "TIER3";
   type NotificationType = "INFO" | "DRAW";
+  type PrizePoolType =
+    | "DAILY_BASIC"
+    | "DAILY_PREMIUM"
+    | "WEEKLY"
+    | "AGENT"
+    | "MARKETING"
+    | "COMPANY";
+  type DrawType = "DAILY" | "WEEKLY";
+  type TicketType = "BASIC" | "PREMIUM";
 
   interface Verifier {
     id: string;
@@ -92,9 +101,9 @@ declare global {
 
   interface TodaysDraw {
     id: string;
+    drawType: DrawType;
     drawNumbers: string;
-    prizePool: number;
-    drawType: string;
+    ticketType: TicketType;
     createdAt: string;
   }
 
@@ -162,12 +171,46 @@ declare global {
     updatedAt: string;
   }
 
-  interface PerkWinner {
-    id: string;
-    name: string;
+  interface BonusWinner {
+    user: {
+      id: string;
+      name: string;
+    };
+    claimed: boolean;
+    claimedAt: string | null;
   }
 
-  interface Perks {
+  interface Bonus {
+    id: string;
+    imageUrl: string;
+    name: string;
+    category: string[];
+  }
+
+  interface BonusDetail extends Bonus {
+    description: string;
+    numberOfWinners: number;
+    createdAt: string;
+    validAt: string;
+    bonusWinners: BonusWinner[];
+  }
+
+  interface HistoryBonusWinner {
+    claimed: boolean;
+    claimedAt: string | null;
+    bonus: Bonus;
+    user: {
+      id: string;
+      name: string;
+    };
+  }
+
+  interface PrizePoolAmount {
+    id: PrizePoolType;
+    amount: number;
+  }
+
+  interface WeeklyBonus {
     id: string;
     imageUrl: string;
     name: string;
@@ -176,7 +219,6 @@ declare global {
     numberOfWinners: number;
     createdAt: string;
     validAt: string;
-    perkWinners: PerkWinner[];
   }
 
   interface APIBaseResponse {
@@ -385,15 +427,26 @@ declare global {
   }
 
   interface APIGetTodaysPrizePoolResponseDTO extends APIBaseResponse {
+    data: PrizePoolAmount[];
+  }
+
+  interface APIQueryBonusResponseDTO extends APIBaseResponse {
     data: {
-      id: string;
-      amount: number;
+      bonuses: Bonus[];
     };
   }
 
-  interface APIQueryPerksResponseDTO extends APIBaseResponse {
+  interface APIGetBonusDetailsResponseDTO extends APIBaseResponse {
+    data: BonusDetail;
+  }
+
+  interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
+    data: WeeklyBonus | null;
+  }
+
+  interface APIQueryHistoryBonusWinnersResponseDTO extends APIBaseResponse {
     data: {
-      perks: Perks[];
+      bonusWinners: HistoryBonusWinner[];
     };
   }
 
@@ -403,6 +456,6 @@ declare global {
   }
 
   interface ListenGetTodaysRewardDrawResponseDTO extends BaseWebsocketResponse {
-    data: TodaysDraw | null;
+    data: TodaysDraw[];
   }
 }

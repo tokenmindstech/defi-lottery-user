@@ -177,3 +177,8 @@ export const SUBSCRIPTION_ITEMS: SubscriptionItems[] = [
     price: 0,
   },
 ];
+
+export const CURRENCY_FRACTION = {
+  MINIMUM: 0,
+  MAXIMUM: 2,
+};

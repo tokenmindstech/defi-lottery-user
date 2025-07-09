@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import React from "react";
 
-const ProfileSkeleton = () => {
+const SkeletonProfile = () => {
   return (
     <div className="flex flex-col w-full h-full space-y-10">
       <div className="flex flex-col w-full h-full p-5 space-y-10 lg:flex-row lg:items-center lg:justify-between ">
@@ -34,4 +34,4 @@ const ProfileSkeleton = () => {
   );
 };
 
-export default ProfileSkeleton;
+export default SkeletonProfile;

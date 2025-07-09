@@ -2,25 +2,25 @@ import type { Metadata } from "next";
 import { Fragment } from "react";
 
 export const metadata: Metadata = {
-  title: "Rewards | DeFi Lottery Solutions",
+  title: "Lucky Draw | DeFi Lottery Solutions",
   description:
-    "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
+    "Participate in exciting lucky draw events for DeFi Lottery users. Win exclusive prizes, bonus tokens, special rewards, and cryptocurrency prizes through our lucky draw system.",
   keywords: [
-    "DeFi rewards",
-    "Crypto rewards",
-    "Lottery rewards",
-    "Token benefits",
-    "Referral program",
-    "Loyalty rewards",
-    "Staking benefits",
-    "Player advantages",
-    "DeFi lottery bonuses",
-    "VIP membership",
-    "Crypto cashback",
-    "Play-to-earn",
-    "Ticket discounts",
-    "Holder benefits",
-    "Exclusive rewards",
+    "Lucky draw",
+    "DeFi lucky draw",
+    "Crypto lucky draw",
+    "Lucky draw prizes",
+    "Random draws",
+    "Prize draws",
+    "Lucky numbers",
+    "Draw events",
+    "Special draws",
+    "Lucky draw rewards",
+    "Prize pool",
+    "Draw winners",
+    "Lucky participants",
+    "Draw system",
+    "Lucky draw bonus",
   ],
   creator: "TokenMinds",
   authors: {
@@ -31,31 +31,31 @@ export const metadata: Metadata = {
   applicationName: "DeFi Lottery Solutions",
   twitter: {
     card: "summary_large_image",
-    title: "Rewards | DeFi Lottery Solutions",
+    title: "Lucky Draw | DeFi Lottery Solutions",
     description:
-      "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
+      "Participate in exciting lucky draw events for DeFi Lottery users. Win exclusive prizes, bonus tokens, special rewards, and cryptocurrency prizes through our lucky draw system.",
     creator: "@tokenminds_co",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
-        alt: "DeFi Lottery Rewards",
+        alt: "DeFi Lottery Lucky Draw",
       },
     ],
   },
   openGraph: {
-    title: "Rewards | DeFi Lottery Solutions",
+    title: "Lucky Draw | DeFi Lottery Solutions",
     description:
-      "Discover exclusive rewards for DeFi Lottery users. Earn token rewards, special bonuses, referral benefits, and loyalty points to enhance your crypto lottery experience.",
-    url: `${process.env.NEXT_PUBLIC_APP_URL}/rewards`,
+      "Participate in exciting lucky draw events for DeFi Lottery users. Win exclusive prizes, bonus tokens, special rewards, and cryptocurrency prizes through our lucky draw system.",
+    url: `${process.env.NEXT_PUBLIC_APP_URL}/lucky-draw`,
     siteName: "DeFi Lottery Solutions",
     images: [
       {
         url: `${process.env.NEXT_PUBLIC_APP_URL}/assets/images/536-White.png`,
         width: 1200,
         height: 630,
-        alt: "DeFi Lottery Rewards",
+        alt: "DeFi Lottery Lucky Draw",
       },
     ],
   },

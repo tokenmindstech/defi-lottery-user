@@ -12,19 +12,18 @@ import Link from "next/link";
 import BlueShadow from "@/components/icons/blue-shadow";
 import RotatingText from "@/components/ui/rotating-text";
 import { truncateString } from "@/lib/utils";
-// import SeaShadow from "@/components/icons/sea-shadow";
 
-interface ItemPersksProps {
-  perks: Perks;
+interface ItemBonusProps {
+  bonus: Bonus;
 }
 
-const ItemPerks = ({ perks }: ItemPersksProps) => {
+const ItemBonus = ({ bonus }: ItemBonusProps) => {
   return (
     <Card className="bg-bgtext-900 border border-bgtext-800 rounded-xl gap-3 px-4 py-4">
       <CardHeader className="relative px-0 py-0">
         <div className="absolute top-0 left-0 z-20 flex w-fit px-2 py-1 bg-linprimary-start rounded-br-2xl">
           <RotatingText
-            texts={perks.category}
+            texts={bonus.category}
             mainClassName="text-bgtext-100 text-sm"
             staggerFrom={"last"}
             initial={{ y: "100%" }}
@@ -39,8 +38,8 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
         <div className="flex w-full h-[250px] items-center justify-center relative rounded-xl">
           <div className="flex w-full h-[180px] absolute rounded-xl z-40">
             <Image
-              src={perks.imageUrl}
-              alt={perks.name}
+              src={bonus.imageUrl}
+              alt={bonus.name}
               fill
               className="object-contain rounded-xl"
               sizes="100%"
@@ -56,11 +55,11 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
           VIP Event Access
         </p>
         <h4 className="text-bgtext-100 font-inter font-medium text-base text-left">
-          {truncateString(perks.name, 25)}
+          {truncateString(bonus.name, 25)}
         </h4>
       </CardContent>
       <CardFooter className="px-0">
-        <Link href="/bonus-reward/1" className="w-full">
+        <Link href={`/bonus-reward/${bonus.id}`} className="w-full">
           <Button className="w-full bg-bgtext-800  border border-bgtext-700 hover:bg-bgtext-700 rounded-xl cursor-pointer">
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4">
               More Details
@@ -72,4 +71,4 @@ const ItemPerks = ({ perks }: ItemPersksProps) => {
   );
 };
 
-export default ItemPerks;
+export default ItemBonus;

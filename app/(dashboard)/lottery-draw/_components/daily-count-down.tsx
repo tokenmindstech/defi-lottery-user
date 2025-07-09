@@ -9,7 +9,7 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const CountDownDraw = () => {
+const DailyCountDown = () => {
   // Use our custom hook with internally calculated target date
   const { timeLeft, isLoading } = useCountdown();
 
@@ -34,7 +34,7 @@ const CountDownDraw = () => {
         />
 
         {/* Separator */}
-        <div className="text-white text-3xl font-bold mx-1">:</div>
+        <div className="mx-1 text-3xl font-bold text-white">:</div>
 
         <RenderCountDown
           firstDigit={minutesFirstDigit}
@@ -43,7 +43,7 @@ const CountDownDraw = () => {
         />
 
         {/* Separator */}
-        <div className="text-white text-3xl font-bold mx-1">:</div>
+        <div className="mx-1 text-3xl font-bold text-white">:</div>
 
         <RenderCountDown
           firstDigit={secondsFirstDigit}
@@ -63,7 +63,7 @@ const CountDownDraw = () => {
       />
 
       {/* Separator */}
-      <div className="text-white text-3xl font-bold mx-1">:</div>
+      <div className="mx-1 text-3xl font-bold text-white">:</div>
 
       <RenderCountDown
         firstDigit={hoursFirstDigit}
@@ -72,7 +72,7 @@ const CountDownDraw = () => {
       />
 
       {/* Separator */}
-      <div className="text-white text-3xl font-bold mx-1">:</div>
+      <div className="mx-1 text-3xl font-bold text-white">:</div>
 
       <RenderCountDown
         firstDigit={minutesFirstDigit}
@@ -168,20 +168,20 @@ const RenderCountDown = ({
   return (
     <div className="flex flex-col items-center">
       <div className="flex gap-1">
-        <div className="p-2 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
-          <span className="text-bgtext-100 text-3xl font-bold">
+        <div className="flex items-center justify-center p-2 border rounded-lg bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end border-bgtext-800">
+          <span className="text-3xl font-bold text-bgtext-100">
             {firstDigit}
           </span>
         </div>
-        <div className="p-2 bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end rounded-lg flex items-center justify-center border border-bgtext-800">
-          <span className="text-bgtext-100 text-3xl font-bold">
+        <div className="flex items-center justify-center p-2 border rounded-lg bg-gradient-to-b from-linblack-start via-bgtext-700 to-linblack-end border-bgtext-800">
+          <span className="text-3xl font-bold text-bgtext-100">
             {secondDigit}
           </span>
         </div>
       </div>
-      <p className="text-bgtext-500 text-xs mt-1">{label}</p>
+      <p className="mt-1 text-xs text-bgtext-500">{label}</p>
     </div>
   );
 };
 
-export default CountDownDraw;
+export default DailyCountDown;
