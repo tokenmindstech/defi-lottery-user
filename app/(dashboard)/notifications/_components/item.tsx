@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { getTimestamp } from "@/lib/utils";
-import { Info, Ticket } from "@phosphor-icons/react/dist/ssr";
+import { InfoIcon, TicketIcon } from "@phosphor-icons/react/dist/ssr";
 
 interface NotificationItemProps {
   notification: UserNotification;
@@ -26,9 +26,9 @@ const NotificationItem = ({
       <div className="w-fit flex items-start justify-start">
         <div className="bg-gradient-to-b from-linblue-start to-linblue-end rounded-full p-2 flex items-center justify-center">
           {notification.type === "DRAW" ? (
-            <Ticket weight="fill" className="text-bgtext-100 size-8" />
+            <TicketIcon weight="fill" className="text-bgtext-100 size-8" />
           ) : (
-            <Info weight="fill" className="text-bgtext-100 size-8" />
+            <InfoIcon weight="fill" className="text-bgtext-100 size-8" />
           )}
         </div>
       </div>

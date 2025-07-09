@@ -4,7 +4,10 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import dayjs from "dayjs";
 import { cn, truncateString } from "@/lib/utils";
-import { SortAscending, SortDescending } from "@phosphor-icons/react/dist/ssr";
+import {
+  SortAscendingIcon,
+  SortDescendingIcon,
+} from "@phosphor-icons/react/dist/ssr";
 import { DataTable } from "@/components/shared/data-table";
 import Link from "next/link";
 import Image from "next/image";
@@ -33,9 +36,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -66,9 +69,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -97,9 +100,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -130,9 +133,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -173,9 +176,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>
@@ -206,9 +209,9 @@ const columns: ColumnDef<Commission>[] = [
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           >
             {column.getIsSorted() === "asc" ? (
-              <SortAscending className="size-5 text-bgtext-500" />
+              <SortAscendingIcon className="size-5 text-bgtext-500" />
             ) : (
-              <SortDescending className="size-5 text-bgtext-500" />
+              <SortDescendingIcon className="size-5 text-bgtext-500" />
             )}
           </Button>
         </div>

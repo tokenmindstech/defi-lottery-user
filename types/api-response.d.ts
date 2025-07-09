@@ -162,11 +162,40 @@ declare global {
   }
 
   interface BonusWinner {
-    id: string;
-    name: string;
+    user: {
+      id: string;
+      name: string;
+    };
+    claimed: boolean;
+    claimedAt: string | null;
   }
 
   interface Bonus {
+    id: string;
+    imageUrl: string;
+    name: string;
+    category: string[];
+  }
+
+  interface BonusDetail extends Bonus {
+    description: string;
+    numberOfWinners: number;
+    createdAt: string;
+    validAt: string;
+    bonusWinners: BonusWinner[];
+  }
+
+  interface HistoryBonusWinner {
+    claimed: boolean;
+    claimedAt: string | null;
+    bonus: Bonus;
+    user: {
+      id: string;
+      name: string;
+    };
+  }
+
+  interface WeeklyBonus {
     id: string;
     imageUrl: string;
     name: string;
@@ -175,7 +204,6 @@ declare global {
     numberOfWinners: number;
     createdAt: string;
     validAt: string;
-    bonusWinners: BonusWinner[];
   }
 
   interface APIBaseResponse {
@@ -393,6 +421,20 @@ declare global {
   interface APIQueryBonusResponseDTO extends APIBaseResponse {
     data: {
       bonuses: Bonus[];
+    };
+  }
+
+  interface APIGetBonusDetailsResponseDTO extends APIBaseResponse {
+    data: BonusDetail;
+  }
+
+  interface APIGetWeeklyBonusResponseDTO extends APIBaseResponse {
+    data: WeeklyBonus | null;
+  }
+
+  interface APIQueryHistoryBonusWinnersResponseDTO extends APIBaseResponse {
+    data: {
+      bonusWinners: HistoryBonusWinner[];
     };
   }
 

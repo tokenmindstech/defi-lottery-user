@@ -15,7 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { List } from "@phosphor-icons/react/dist/ssr";
+import { ListIcon } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import Image from "next/image";
 import { MENU_ITEMS } from "@/constant/common";
@@ -53,7 +53,7 @@ const MobileSidebarLayout = () => {
     <div className="flex lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger>
-          <List className="size-7 fill-bgtext-100 cursor-pointer" />
+          <ListIcon className="size-7 fill-bgtext-100 cursor-pointer" />
         </SheetTrigger>
         <SheetContent side="left" className="bg-bgtext-950">
           <SheetHeader>

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Spinner, Question } from "@phosphor-icons/react/dist/ssr";
+import { SpinnerIcon, QuestionIcon } from "@phosphor-icons/react/dist/ssr";
 import { cn, delay, fetchProxy } from "@/lib/utils";
 import toast from "react-hot-toast";
 import {
@@ -149,7 +149,7 @@ const SubscriptionForm = ({
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger>
-                              <Question className="size-5 text-bgtext-100 cursor-help" />
+                              <QuestionIcon className="size-5 text-bgtext-100 cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
                               <p className="text-sm text-bgtext-100 font-inter">
@@ -176,7 +176,7 @@ const SubscriptionForm = ({
           >
             {form.formState.isSubmitting ? (
               <div className="flex flex-row items-center justify-center space-x-2">
-                <Spinner className="size-5 fill-bgtext-100 animate-spin" />
+                <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                 <p className="text-base font-medium text-bgtext-100 font-inter">
                   Processing...
                 </p>

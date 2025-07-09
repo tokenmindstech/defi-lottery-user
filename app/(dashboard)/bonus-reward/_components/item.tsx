@@ -12,7 +12,6 @@ import Link from "next/link";
 import BlueShadow from "@/components/icons/blue-shadow";
 import RotatingText from "@/components/ui/rotating-text";
 import { truncateString } from "@/lib/utils";
-// import SeaShadow from "@/components/icons/sea-shadow";
 
 interface ItemBonusProps {
   bonus: Bonus;

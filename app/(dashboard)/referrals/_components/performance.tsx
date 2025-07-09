@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Wallet } from "@phosphor-icons/react/dist/ssr";
+import { UserIcon, WalletIcon } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import PerformanceCard from "@/components/shared/performance-card";
 
@@ -22,7 +22,7 @@ const AgentDashboardPerformance = ({
 
       <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <PerformanceCard
-          icon={<Wallet className="h-5 w-5" />}
+          icon={<WalletIcon className="h-5 w-5" />}
           title="Total Earning"
           value={new Intl.NumberFormat("en-US", {
             style: "currency",
@@ -33,7 +33,7 @@ const AgentDashboardPerformance = ({
           variant="checkerboard"
         />
         <PerformanceCard
-          icon={<User className="h-5 w-5" />}
+          icon={<UserIcon className="h-5 w-5" />}
           title="Total Sign Up"
           value={new Intl.NumberFormat("en-US", {
             style: "decimal",

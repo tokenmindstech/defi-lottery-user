@@ -1,6 +1,6 @@
 "use client";
 
-import { Trophy, Clock } from "@phosphor-icons/react/dist/ssr";
+import { TrophyIcon, ClockIcon } from "@phosphor-icons/react/dist/ssr";
 import { Separator } from "@/components/ui/separator";
 import ClaimCommissionButton from "./_components/claim-commission-button";
 import QuerySearch from "@/components/shared/query-search";
@@ -83,7 +83,7 @@ const EarningsPage = () => {
                       Total Earnings
                     </p>
                     <div className="flex bg-bgtext-900 rounded-full p-1.5">
-                      <Trophy className="size-5 text-bgtext-100" />
+                      <TrophyIcon className="size-5 text-bgtext-100" />
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
@@ -109,7 +109,7 @@ const EarningsPage = () => {
                       Pending Claimable
                     </p>
                     <div className="flex bg-bgtext-900 rounded-full p-1.5">
-                      <Clock className="size-5 text-bgtext-100" />
+                      <ClockIcon className="size-5 text-bgtext-100" />
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">

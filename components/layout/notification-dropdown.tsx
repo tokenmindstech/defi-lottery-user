@@ -7,7 +7,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Bell } from "@phosphor-icons/react/dist/ssr";
+import { BellIcon } from "@phosphor-icons/react/dist/ssr";
 import { Tabs, TabsList, TabsTrigger } from "../ui/tabs";
 import { NOTIFICATION_MENU_ITEMS } from "@/constant/common";
 import Link from "next/link";
@@ -74,7 +74,7 @@ const NotificationDropdown = () => {
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-800 rounded-full items-center justify-center flex cursor-pointer">
-        <Bell weight="regular" className="text-bgtext-100 size-5" />
+        <BellIcon weight="regular" className="text-bgtext-100 size-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         sideOffset={20}

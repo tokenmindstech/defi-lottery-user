@@ -18,7 +18,7 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 // Define columns for the data table
-const columns: ColumnDef<Bonus>[] = [
+const columns: ColumnDef<HistoryBonusWinner>[] = [
   {
     id: "no",
     header: () => (
@@ -33,7 +33,7 @@ const columns: ColumnDef<Bonus>[] = [
     ),
   },
   {
-    accessorKey: "perkWinners",
+    id: "fullName",
     header: () => {
       return (
         <div className="flex items-center justify-center space-x-1">
@@ -43,17 +43,8 @@ const columns: ColumnDef<Bonus>[] = [
     },
     cell: ({ row }) => {
       return (
-        <p className="text-sm font-inter font-light whitespace-nowrap pr-3">
-          {row.original.bonusWinners.map((winner, index) => (
-            <span key={winner.id} className="font-medium">
-              {censorString(winner.name)}
-              {index < row.original.bonusWinners.length - 1
-                ? index === row.original.bonusWinners.length - 2
-                  ? " and "
-                  : ", "
-                : ""}
-            </span>
-          ))}
+        <p className="text-sm font-inter font-medium whitespace-nowrap pr-3">
+          {censorString(row.original.user.name, 15)}
         </p>
       );
     },
@@ -83,9 +74,11 @@ const columns: ColumnDef<Bonus>[] = [
       return (
         <div className="flex">
           <span className={`py-1 text-sm text-bgtext-500`}>
-            {dayjs(row.original.createdAt)
-              .tz("Asia/Singapore")
-              .format("DD/MM/YYYY | HH:mm:ss SGT")}
+            {row.original.claimedAt === null
+              ? "Unclaimed"
+              : dayjs(row.original.claimedAt)
+                  .tz("Asia/Singapore")
+                  .format("DD/MM/YYYY | HH:mm:ss SGT")}
           </span>
         </div>
       );
@@ -116,20 +109,20 @@ const columns: ColumnDef<Bonus>[] = [
     },
     cell: ({ row }) => (
       <span className={`py-1 text-sm text-bgtext-500`}>
-        {truncateString(row.original.name, 20)}
+        {truncateString(row.original.bonus.name, 20)}
       </span>
     ),
   },
 ];
 
 interface BonusRewardTableProps {
-  bonuses: Bonus[];
+  winners: HistoryBonusWinner[];
 }
 
-export function BonusRewardTable({ bonuses }: BonusRewardTableProps) {
+export function BonusRewardTable({ winners }: BonusRewardTableProps) {
   return (
     <div className="rounded-md overflow-hidden w-full">
-      <DataTable columns={columns} data={bonuses} />
+      <DataTable columns={columns} data={winners} />
     </div>
   );
 }

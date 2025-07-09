@@ -1,7 +1,7 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { Clock, Trophy } from "@phosphor-icons/react/dist/ssr";
+import { ClockIcon, TrophyIcon } from "@phosphor-icons/react/dist/ssr";
 import React, { Fragment } from "react";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
@@ -85,7 +85,7 @@ const ClaimRewardsPage = () => {
                       Total Prize Won
                     </p>
                     <div className="flex bg-bgtext-900 rounded-full p-1.5">
-                      <Trophy className="size-5 text-bgtext-100" />
+                      <TrophyIcon className="size-5 text-bgtext-100" />
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
@@ -111,7 +111,7 @@ const ClaimRewardsPage = () => {
                       Prizes Pending Claim
                     </p>
                     <div className="flex bg-bgtext-900 rounded-full p-1.5">
-                      <Clock className="size-5 text-bgtext-100" />
+                      <ClockIcon className="size-5 text-bgtext-100" />
                     </div>
                   </div>
                   <p className="text-bgtext-100 font-inter text-4xl font-semibold mt-2">
