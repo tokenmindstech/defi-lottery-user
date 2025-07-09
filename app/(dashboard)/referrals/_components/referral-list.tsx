@@ -13,6 +13,7 @@ import Image from "next/image";
 
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 // Configure dayjs to use plugins
 dayjs.extend(utc);
@@ -156,8 +157,8 @@ const columns: ColumnDef<ReferredUser>[] = [
             {new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
-              minimumFractionDigits: 0,
-              maximumFractionDigits: 0,
+              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
             }).format(row.original.earnings)}
           </span>
         </div>

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import StatisticItem from "@/components/shared/lottery-stats";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 interface DashboardLotteryProps {
   totalEarnings: number;
@@ -61,8 +62,8 @@ const DashboardLottery = ({
               {new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0,
+                minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
               }).format(totalEarnings)}
             </p>
           </div>

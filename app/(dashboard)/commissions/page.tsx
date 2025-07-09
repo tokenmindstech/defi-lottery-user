@@ -13,6 +13,7 @@ import { fetchProxy } from "@/lib/utils";
 import { useSearchParams } from "next/navigation";
 import ComissionStatsSkeleton from "./_components/commission-stats-skeleton";
 import ComissionHistorySkeleton from "./_components/commission-history-skeleton";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 const EarningsPage = () => {
   const { data: userSession } = useSession();
@@ -90,8 +91,8 @@ const EarningsPage = () => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
+                      minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                      maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
                     }).format(commissionStats.data.totalEarnings)}
                   </p>
                 </div>
@@ -116,8 +117,8 @@ const EarningsPage = () => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
+                      minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                      maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
                     }).format(commissionStats.data.unclaimedEarnings)}
                   </p>
                 </div>

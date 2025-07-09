@@ -2,6 +2,7 @@ import React from "react";
 import { UserIcon, WalletIcon } from "@phosphor-icons/react/dist/ssr";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import PerformanceCard from "@/components/shared/performance-card";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 interface AgentDashboardPerformanceProps {
   totalSignUps: number;
@@ -27,8 +28,8 @@ const AgentDashboardPerformance = ({
           value={new Intl.NumberFormat("en-US", {
             style: "currency",
             currency: "USD",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+            maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
           }).format(totalEarnings)}
           variant="checkerboard"
         />
@@ -37,8 +38,8 @@ const AgentDashboardPerformance = ({
           title="Total Sign Up"
           value={new Intl.NumberFormat("en-US", {
             style: "decimal",
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
+            minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+            maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
           }).format(totalSignUps)}
         />
       </CardContent>

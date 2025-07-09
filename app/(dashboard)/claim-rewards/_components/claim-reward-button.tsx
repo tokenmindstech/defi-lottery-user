@@ -18,6 +18,7 @@ import {
   FormControl,
   FormItem,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { fetchProxy } from "@/lib/utils";
 import { GiftIcon, SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
@@ -30,7 +31,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { Separator } from "@radix-ui/react-separator";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 interface ClaimRewardButtonProps {
   totalClaimable: number;
@@ -133,20 +134,20 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
       <DialogTrigger asChild>
         <Button
           disabled={totalClaimable === 0}
-          className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300"
+          className="p-5 transition-all duration-300 ease-out border-2 cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl"
         >
-          <div className="flex flex-row space-x-3 items-center justify-start">
+          <div className="flex flex-row items-center justify-start space-x-3">
             <GiftIcon className="size-5 text-bgtext-100" />
-            <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">
+            <p className="py-4 text-sm font-medium text-bgtext-100 font-inter whitespace-nowrap">
               Claim Reward
             </p>
           </div>
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-sm md:max-w-md h-fit overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg">
+      <DialogContent className="max-w-sm overflow-y-auto bg-black rounded-lg md:max-w-md h-fit border-1 border-bgtext-800">
         <DialogHeader>
-          <DialogTitle className="text-bgtext-100 font-inter font-semibold text-lg text-left">
+          <DialogTitle className="text-lg font-semibold text-left text-bgtext-100 font-inter">
             Input OTP to Claim Reward
           </DialogTitle>
           <DialogDescription className="hidden" />
@@ -179,26 +180,63 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
                       ))}
                     </InputOTP>
                   </FormControl>
+                  <FormDescription className="space-y-2 text-xs text-bgtext-500 font-inter">
+                    <div className="mt-2">
+                      <p className="font-medium text-bgtext-600">
+                        <strong className="text-bgtext-100">Note:</strong>
+                        <br />A 5% administration fee will be applied to your
+                        winning amount.
+                      </p>
+                      <div className="mt-2">
+                        <p>
+                          Total Claimable:{" "}
+                          <span className="font-medium text-bgtext-100">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                            }).format(totalClaimable)}
+                          </span>
+                        </p>
+                        <p>
+                          Administration Fee (5%):{" "}
+                          <span className="font-medium text-bgtext-100">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                              minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                              maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                            }).format(totalClaimable * 0.05)}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
             <Button
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="w-full bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300"
+              className="w-full transition-all duration-300 ease-out border-2 rounded-lg cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50"
             >
               {form.formState.isSubmitting ? (
                 <div className="flex flex-row items-center justify-center space-x-2">
                   <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
-                  <p className="text-bgtext-100 font-inter font-medium text-base">
+                  <p className="text-base font-medium text-bgtext-100 font-inter">
                     Claiming...
                   </p>
                 </div>
               ) : (
-                "Claim Reward"
+                `Claim ${new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                  minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                  maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                }).format(totalClaimable * 0.95)}` // Displaying the amount after 5% fee
               )}
             </Button>
           </form>

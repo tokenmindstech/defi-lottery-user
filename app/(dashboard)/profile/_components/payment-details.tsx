@@ -6,7 +6,7 @@ import { fetchProxy } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import SubscriptionSkeleton from "./subscription-skeleton";
-import { SUBSCRIPTION_ITEMS } from "@/constant/common";
+import { CURRENCY_FRACTION, SUBSCRIPTION_ITEMS } from "@/constant/common";
 import PlanBadge from "@/components/shared/plan-badge";
 
 const PaymentDetailsForm = () => {
@@ -57,8 +57,8 @@ const PaymentDetailsForm = () => {
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
                   currency: "USD",
-                  maximumFractionDigits: 0,
-                  minimumFractionDigits: 0,
+                  minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                  maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
                 }).format(
                   subscription
                     ? SUBSCRIPTION_ITEMS.find(

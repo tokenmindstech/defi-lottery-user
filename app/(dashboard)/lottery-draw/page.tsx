@@ -12,6 +12,7 @@ import DailyWinningNumber from "./_components/daily-winning-number";
 import SeaShadow from "@/components/icons/sea-shadow";
 import DailyCountDown from "./_components/daily-count-down";
 import WeeklyCountDown from "./_components/weekly-count-down";
+import { CURRENCY_FRACTION } from "@/constant/common";
 
 const LuckyDrawPage = () => {
   const { data: userSession } = useSession();
@@ -50,8 +51,8 @@ const LuckyDrawPage = () => {
                       {new Intl.NumberFormat("en-US", {
                         style: "currency",
                         currency: "USD",
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
+                        minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                        maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
                       }).format(prizePool.data.amount || 0)}
                     </p>
                   </div>
@@ -92,8 +93,8 @@ const LuckyDrawPage = () => {
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 0,
+                      minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                      maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
                     }).format(prizePool.data.amount || 0)}
                   </p>
                 </div>
