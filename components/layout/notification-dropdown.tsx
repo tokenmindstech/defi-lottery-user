@@ -73,14 +73,14 @@ const NotificationDropdown = () => {
   };
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger className="w-10 h-10 border-2 bg-bgtext-900 border-bgtext-800 rounded-full items-center justify-center flex cursor-pointer">
+      <DropdownMenuTrigger className="flex items-center justify-center w-10 h-10 border-2 rounded-full cursor-pointer bg-bgtext-900 border-bgtext-800">
         <BellIcon weight="regular" className="text-bgtext-100 size-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         sideOffset={20}
-        className="w-full min-w-sm max-w-sm md:min-w-md md:max-w-md bg-bgtext-900 border-1 border-bgtext-800 rounded-xl p-0"
+        className="w-full max-w-sm p-0 min-w-sm md:min-w-md md:max-w-md bg-bgtext-900 border-1 border-bgtext-800 rounded-xl"
       >
-        <DropdownMenuLabel className="text-bgtext-100 font-medium text-base mb-3 p-3 pb-0">
+        <DropdownMenuLabel className="p-3 pb-0 mb-3 text-base font-medium text-bgtext-100">
           Notification
         </DropdownMenuLabel>
         <div className="flex flex-col w-full h-full space-y-5">
@@ -93,7 +93,7 @@ const NotificationDropdown = () => {
                 defaultValue={NOTIFICATION_MENU_ITEMS[0].value}
                 className="w-full bg-transparent"
               >
-                <TabsList className="w-full flex flex-row items-center justify-between bg-transparent">
+                <TabsList className="flex flex-row items-center justify-between w-full bg-transparent">
                   <div className="flex flex-row space-x-2 w-fit">
                     {NOTIFICATION_MENU_ITEMS.map((item, idx) => (
                       <TabsTrigger
@@ -105,7 +105,7 @@ const NotificationDropdown = () => {
                         {idx === 1 && notifications[0].data.unreadCount > 0 && (
                           <Badge
                             variant="destructive"
-                            className="rounded-full text-xs border-0"
+                            className="text-xs border-0 rounded-full"
                           >
                             {notifications[0].data.unreadCount}
                           </Badge>
@@ -115,7 +115,7 @@ const NotificationDropdown = () => {
                   </div>
                   <Button
                     variant="link"
-                    className="text-bgtext-600 cursor-pointer hover:text-bgtext-100 hover:border-b-2 border-linprimary-start rounded-none hover:no-underline ease-out transition-all duration-300"
+                    className="transition-all duration-300 ease-out rounded-none cursor-pointer text-bgtext-600 hover:text-bgtext-100 hover:border-b-2 border-linprimary-start hover:no-underline"
                     onClick={() => {
                       mutation.mutate();
                     }}
@@ -150,7 +150,7 @@ const NotificationDropdown = () => {
         </div>
 
         <Link href="/notifications" onClick={() => setOpen(false)}>
-          <p className="text-bgtext-100 text-sm text-center border-0 border-t-1 py-2 border-bgtext-800 hover:bg-bgtext-800 ease-out transition-all duration-300 cursor-pointer">
+          <p className="py-2 text-sm text-center transition-all duration-300 ease-out border-0 cursor-pointer text-bgtext-100 border-t-1 border-bgtext-800 hover:bg-bgtext-800">
             View all
           </p>
         </Link>
