@@ -10,14 +10,6 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/profiles/**',
       },
-    ],
-  },
-  webpack: (config) => {
-    config.externals.push("pino-pretty", "lokijs", "encoding");
-    return config;
-  },
-  images: {
-    remotePatterns: [
       {
         protocol: "https",
         hostname: "**",
@@ -25,6 +17,10 @@ const nextConfig: NextConfig = {
         pathname: "**",
       },
     ],
+  },
+  webpack: (config) => {
+    config.externals.push("pino-pretty", "lokijs", "encoding");
+    return config;
   },
 };
 
