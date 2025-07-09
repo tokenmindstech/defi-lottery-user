@@ -24,16 +24,26 @@ import { usePathname } from "next/navigation";
 import RenderIcon from "../icons/render-icon";
 import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { clearProfileImageCache } from "@/lib/use-cached-profile-image";
 
 const MobileSidebarLayout = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { data: userSession } = useSession();
   const [accordionValue, setAccordionValue] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
   const handleOpenChange = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    // Clear profile image cache before logout
+    if (userSession?.user?.id) {
+      clearProfileImageCache(userSession.user.id);
+    }
+    signOut({ redirect: true, callbackUrl: "/auth?action=logout" });
   };
 
   useEffect(() => {
@@ -187,9 +197,7 @@ const MobileSidebarLayout = () => {
             <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
             <Button
-              onClick={() =>
-                signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
-              }
+              onClick={handleLogout}
               className="w-full flex flex-row items-start justify-start bg-transparent hover:bg-transparent cursor-pointer group"
             >
               <li className="flex flex-row space-x-2 items-center justify-start group cursor-pointer">

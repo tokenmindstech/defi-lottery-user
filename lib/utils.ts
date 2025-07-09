@@ -90,9 +90,62 @@ export const fetchProxy = async ({
     const result = await response.json();
     return result;
   } catch (error) {
-    console.error(error);
-    console.error(`Error in ${method} ${url}:`, error);
     return error;
+  }
+};
+
+export const handleProxyResponse = async (response: Response, targetURL: string) => {
+  // Check if response is ok
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error(`Error body:`, errorText);
+    
+    return {
+      success: false,
+      status: response.status,
+      data: { 
+        error: `Backend error: ${response.status} ${response.statusText}`,
+        message: errorText.length > 500 ? errorText.substring(0, 500) + "..." : errorText
+      }
+    };
+  }
+
+  // Check content type
+  const contentType = response.headers.get("content-type");
+  if (!contentType || !contentType.includes("application/json")) {
+    const responseText = await response.text();
+    console.error(`Backend returned non-JSON response for ${targetURL}. Content-Type: ${contentType}`);
+    console.error(`Response body:`, responseText.length > 500 ? responseText.substring(0, 500) + "..." : responseText);
+    
+    return {
+      success: false,
+      status: 502,
+      data: { 
+        error: "Backend returned non-JSON response",
+        contentType,
+        message: responseText.length > 200 ? responseText.substring(0, 200) + "..." : responseText
+      }
+    };
+  }
+
+  try {
+    const result = await response.json();
+    return {
+      success: true,
+      status: response.status,
+      data: result
+    };
+  } catch (jsonError) {
+    console.error(`Failed to parse JSON response for ${targetURL}:`, jsonError);
+    const responseText = await response.text();
+    return {
+      success: false,
+      status: 502,
+      data: {
+        error: "Failed to parse JSON response",
+        message: responseText.length > 200 ? responseText.substring(0, 200) + "..." : responseText
+      }
+    };
   }
 };
 

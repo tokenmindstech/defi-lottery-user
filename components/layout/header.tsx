@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { MagnifyingGlassIcon } from "@phosphor-icons/react/dist/ssr";
@@ -5,8 +7,32 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import MobileSidebarLayout from "./mobile-sidebar";
 import NotificationDropdown from "./notification-dropdown";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProxy } from "@/lib/utils";
+import { useCachedProfileImage } from "@/lib/use-cached-profile-image";
 
 const HeaderLayout = () => {
+  const { data: userSession } = useSession();
+  
+  // Get user profile data
+  const { data: userData } = useQuery<APIGetUserProfileResponseDTO>({
+    queryKey: ["profile", userSession?.user.id],
+    queryFn: async () =>
+      fetchProxy({
+        url: "user/profile",
+        method: "GET",
+        auth: true,
+      }),
+    enabled: !!userSession,
+  });
+
+  // Use cached profile image
+  const { cachedImage: cachedProfileImage } = useCachedProfileImage(
+    userData?.data?.imageUrl,
+    userSession?.user.id
+  );
+
   return (
     <div className="flex sticky flex-row h-[10vh] w-full items-center justify-between">
       <div className="absolute h-[85px] w-full border-b border-b-bgtext-800 mask-l-from-80% mask-r-from-80%" />
@@ -25,12 +51,26 @@ const HeaderLayout = () => {
           <NotificationDropdown />
           <Link href={"/profile"}>
             <Avatar className="w-10 h-10 bg-bgtext-800 rounded-full cursor-pointer">
-              <AvatarImage
-                src="/assets/images/user.jpeg"
-                alt="User Avatar"
-                className="object-cover"
-              />
-              <AvatarFallback>DF</AvatarFallback>
+              {cachedProfileImage ? (
+                <AvatarImage
+                  src={cachedProfileImage}
+                  alt="User Avatar"
+                  className="object-cover"
+                />
+              ) : userData?.data?.imageUrl ? (
+                <AvatarImage
+                  src={userData.data.imageUrl}
+                  alt="User Avatar"
+                  className="object-cover"
+                  onError={(e) => {
+                    // Hide the image if it fails to load, fallback will show
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+              ) : null}
+              <AvatarFallback className="bg-bgtext-800 text-white text-sm">
+                {userData?.data?.name ? userData.data.name.charAt(0).toUpperCase() : userSession?.user?.name?.charAt(0).toUpperCase() || "DF"}
+              </AvatarFallback>
             </Avatar>
           </Link>
         </div>

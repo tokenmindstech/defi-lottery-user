@@ -1,5 +1,5 @@
 import { authConfig } from "@/config/auth";
-import { parseCustomHeaders } from "@/lib/utils";
+import { handleProxyResponse, parseCustomHeaders } from "@/lib/utils";
 import { getServerSession } from "next-auth";
 import { NextRequest } from "next/server";
 
@@ -26,16 +26,20 @@ export async function GET(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "true", // Required for ngrok tunnels
           ...customHeaders,
         },
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in GET ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }
 
@@ -57,6 +61,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
+    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {
@@ -64,17 +69,21 @@ export async function POST(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "true",
           ...customHeaders,
         },
         body: JSON.stringify(body),
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in POST ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }
 
@@ -96,6 +105,7 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
+    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {
@@ -103,17 +113,21 @@ export async function PUT(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "true",
           ...customHeaders,
         },
         body: JSON.stringify(body),
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in PUT ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }
 
@@ -135,6 +149,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
+    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {
@@ -142,17 +157,21 @@ export async function PATCH(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "true",
           ...customHeaders,
         },
         body: JSON.stringify(body),
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in PATCH ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }
 
@@ -174,6 +193,7 @@ export async function DELETE(request: NextRequest) {
 
   try {
     const body = await request.json();
+    
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_BASEURL}/${targetURL}`,
       {
@@ -181,16 +201,20 @@ export async function DELETE(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
+          "ngrok-skip-browser-warning": "true",
           ...customHeaders,
         },
         body: JSON.stringify(body),
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in DELETE ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }

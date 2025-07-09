@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import RenderIcon from "../icons/render-icon";
 import { Button } from "../ui/button";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
+import { clearProfileImageCache } from "@/lib/use-cached-profile-image";
 import {
   Accordion,
   AccordionContent,
@@ -19,8 +20,19 @@ import {
 
 const DesktopSidebarLayout = () => {
   const pathname = usePathname();
+  const { data: userSession } = useSession();
   const [mounted, setMounted] = useState(false);
   const [accordionValue, setAccordionValue] = useState<string[]>([]);
+
+  // ...existing code...
+
+  const handleLogout = () => {
+    // Clear profile image cache before logout
+    if (userSession?.user?.id) {
+      clearProfileImageCache(userSession.user.id);
+    }
+    signOut({ redirect: true, callbackUrl: "/auth?action=logout" });
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -159,9 +171,7 @@ const DesktopSidebarLayout = () => {
         <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
 
         <Button
-          onClick={() =>
-            signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
-          }
+          onClick={handleLogout}
           className="w-full flex flex-row items-start justify-start bg-transparent hover:bg-transparent cursor-pointer group"
         >
           <li className="flex flex-row space-x-2 items-center justify-start">

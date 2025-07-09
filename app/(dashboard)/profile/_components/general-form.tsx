@@ -24,6 +24,9 @@ import { cn, fetchProxy } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import BindUnbindGoogle from "./bind-unbind-google";
+import ProfilePictureUpload from "./profile-picture-upload";
+import Image from "next/image";
+import { useCachedProfileImage } from "@/lib/use-cached-profile-image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
@@ -54,11 +57,45 @@ const GeneralForm = ({
   setIsEditing,
   userInfoResponse,
 }: GeneralFormProps) => {
-  // Track the user info as state to force re-renders
-  const [userInfo, setUserInfo] = useState(userInfoResponse);
-
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
+  
+  // Get the latest profile data from React Query cache
+  const latestProfileData = queryClient.getQueryData<APIGetUserProfileResponseDTO>(["profile", userSession?.user.id]);
+  const currentUserInfo = latestProfileData?.data || userInfoResponse;
+  
+  // Track the user info as state to force re-renders - use current data
+  const [userInfo, setUserInfo] = useState(currentUserInfo);
+  
+  // Update userInfo when the latest profile data changes
+  useEffect(() => {
+    setUserInfo(currentUserInfo);
+  }, [currentUserInfo]);
+
+  // Force re-render when profile image cache is cleared
+  useEffect(() => {
+    const handleCacheCleared = (event: CustomEvent) => {
+      if (event.detail.userId === userSession?.user.id) {
+        // Force a re-render by updating the query cache
+        queryClient.invalidateQueries({
+          queryKey: ["profile", userSession?.user.id],
+        });
+      }
+    };
+    
+    window.addEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    return () => {
+      window.removeEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+    };
+  }, [userSession?.user.id, queryClient]);
+  
+  // Use cached profile image with the current image URL
+  const { cachedImage: cachedProfileImage } = useCachedProfileImage(
+    currentUserInfo.imageUrl,
+    userSession?.user.id
+  );
+
+
 
   // Initialize default notification preference
   const getDefaultNotificationPreference = useCallback(() => {
@@ -158,8 +195,8 @@ const GeneralForm = ({
         id: `update-profile-success-${userSession?.user.id}`,
       });
       setIsEditing(false);
-    } catch (error) {
-      console.error("Error submitting form:", error);
+    } catch {
+      // Error handled by toast notification system
     }
   };
 
@@ -200,9 +237,64 @@ const GeneralForm = ({
 
   return (
     <div className="flex flex-col space-y-5 p-2">
-      <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
-        Profile
-      </h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold text-bgtext-100 font-inter whitespace-nowrap">
+          Profile
+        </h2>
+      </div>
+      
+      {/* Display current profile picture with edit button */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <div className="relative">
+            {cachedProfileImage ? (
+              <Image
+                src={cachedProfileImage}
+                alt="Profile"
+                width={80}
+                height={80}
+                className="rounded-full object-cover"
+              />
+            ) : currentUserInfo.imageUrl ? (
+              <Image
+                src={currentUserInfo.imageUrl}
+                alt="Profile"
+                width={80}
+                height={80}
+                className="rounded-full object-cover"
+                onError={(e) => {
+                  // Hide image on error and show fallback
+                  e.currentTarget.style.display = 'none';
+                  const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (fallbackDiv) {
+                    fallbackDiv.style.display = 'flex';
+                  }
+                }}
+              />
+            ) : null}
+            
+            {/* Fallback initial - only show when no image or on error */}
+            <div 
+              className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0"
+              style={{ display: (!cachedProfileImage && !currentUserInfo.imageUrl) ? 'flex' : 'none' }}
+            >
+              <span className="text-xl text-white">
+                {currentUserInfo.name.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          </div>
+          <div>
+            <p className="text-sm text-bgtext-400">Profile Picture</p>
+          </div>
+        </div>
+        {isEditing && (
+          <ProfilePictureUpload 
+            userInfoResponse={currentUserInfo}
+            setIsEditing={setIsEditing}
+          />
+        )}
+      </div>
+
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}

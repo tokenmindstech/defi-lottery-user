@@ -1,4 +1,4 @@
-import { parseCustomHeaders } from "@/lib/utils";
+import { handleProxyResponse, parseCustomHeaders } from "@/lib/utils";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -18,16 +18,20 @@ export async function GET(request: NextRequest) {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
           ...customHeaders,
         },
       }
     );
 
-    const result = await response.json();
-    return Response.json(result);
+    const result = await handleProxyResponse(response, targetURL);
+    return Response.json(result.data, { status: result.status });
   } catch (error) {
     console.error(`Error in GET ${targetURL}:`, error);
-    return Response.json({ error }, { status: 500 });
+    return Response.json({ 
+      error: "Proxy request failed",
+      message: error instanceof Error ? error.message : String(error)
+    }, { status: 500 });
   }
 }
 
