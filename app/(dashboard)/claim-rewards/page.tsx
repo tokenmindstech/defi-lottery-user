@@ -127,7 +127,9 @@ const ClaimRewardsPage = () => {
               </div>
             </div>
 
-            <ClaimRewardButton totalClaimable={10} />
+            <ClaimRewardButton
+              totalClaimable={claimStats.data.totalClaimable}
+            />
           </div>
         )
       )}
