@@ -9,7 +9,7 @@ declare global {
   type ProviderType = "GOOGLE" | "TELEGRAM";
   type RoleType = "USER" | "ADMIN";
   type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
-  type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED";
+  type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED" | "IN_PROGRESS";
   type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
   type TierType = "TIER1" | "TIER2" | "TIER3";
   type NotificationType = "INFO" | "DRAW";

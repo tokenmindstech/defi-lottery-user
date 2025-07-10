@@ -184,6 +184,10 @@ const columns: ColumnDef<SupportTicketWithUser>[] = [
                 ? "bg-warning-500/20 text-warning-500"
                 : status === "CLOSED"
                 ? "bg-error-500/20 text-error-500"
+                : status === "RESOLVED"
+                ? "bg-success-500/20 text-success-500"
+                : status === "IN_PROGRESS"
+                ? "bg-info-500/20 text-info-500"
                 : "bg-success-500/20 text-success-500"
             }`}
           >
