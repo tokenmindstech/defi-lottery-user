@@ -8,8 +8,19 @@ export {};
 declare global {
   type ProviderType = "GOOGLE" | "TELEGRAM";
   type RoleType = "USER" | "ADMIN";
-  type TicketIssueType = "BILLING" | "ACCOUNT" | "TECHNICAL" | "OTHER";
-  type TicketStatusType = "OPEN" | "CLOSED" | "RESOLVED" | "IN_PROGRESS";
+  type TicketIssueType =
+    | "ALL"
+    | "BILLING"
+    | "ACCOUNT"
+    | "TECHNICAL"
+    | "BONUS"
+    | "OTHER";
+  type TicketStatusType =
+    | "ALL"
+    | "OPEN"
+    | "CLOSED"
+    | "RESOLVED"
+    | "IN_PROGRESS";
   type SubscriptionType = "EXPLORE" | "BASIC" | "PREMIUM";
   type TierType = "TIER1" | "TIER2" | "TIER3";
   type NotificationType = "INFO" | "DRAW";
@@ -48,6 +59,7 @@ declare global {
     status: TicketStatusType;
     createdAt: string;
     updatedAt: string;
+    attachments: string[];
     User: {
       id: string;
       name: string;

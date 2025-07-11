@@ -44,6 +44,7 @@
     "react-easy-crop": "^5.4.2",
     "react-hook-form": "^7.57.0",
     "react-hot-toast": "^2.5.2",
+    "react-photo-view": "^1.2.7",
     "recharts": "^2.15.3",
     "rimraf": "^6.0.1",
     "socket.io": "^4.8.1",

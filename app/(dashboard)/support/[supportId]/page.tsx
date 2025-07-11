@@ -8,8 +8,11 @@ import { useParams } from "next/navigation";
 import BreadcrumbPages from "@/components/layout/breadcrumb-pages";
 import SkeletonSupportDetails from "./_components/skeleton-support-details";
 import ResultDisplay from "@/components/shared/result-display";
+import { PhotoProvider, PhotoView } from "react-photo-view";
+import "react-photo-view/dist/react-photo-view.css";
+import Image from "next/image";
 
-const NotificationPage = () => {
+const SupportDetailsPage = () => {
   const { data: userSession } = useSession();
   const { supportId } = useParams();
 
@@ -78,13 +81,37 @@ const NotificationPage = () => {
                 <p className="text-sm text-bgtext-500 font-inter">
                   {supportData.data.description || "Ticket Subject"}
                 </p>
-                <p className="text-xs text-bgtext-600 font-inter">
-                  Opened: {getTimestamp(new Date(supportData.data.createdAt))}
-                </p>
-                <p className="text-xs text-bgtext-600 font-inter">
-                  Last Updated:{" "}
-                  {getTimestamp(new Date(supportData.data.updatedAt))}
-                </p>
+
+                <PhotoProvider>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
+                    {supportData.data.attachments.map((media, idx) => (
+                      <PhotoView key={idx} src={media}>
+                        <div
+                          key={idx}
+                          className="relative w-full h-40 bg-bgtext rounded-lg overflow-hidden"
+                        >
+                          <Image
+                            src={media}
+                            alt={`Support Attachment ${idx + 1}`}
+                            fill
+                            className="object-cover object-center rounded-lg"
+                            sizes="100%"
+                          />
+                        </div>
+                      </PhotoView>
+                    ))}
+                  </div>
+                </PhotoProvider>
+
+                <div className="flex flex-col space-y-2 mt-20">
+                  <p className="text-xs text-bgtext-600 font-inter">
+                    Opened: {getTimestamp(new Date(supportData.data.createdAt))}
+                  </p>
+                  <p className="text-xs text-bgtext-600 font-inter">
+                    Last Updated:{" "}
+                    {getTimestamp(new Date(supportData.data.updatedAt))}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -94,4 +121,4 @@ const NotificationPage = () => {
   );
 };
 
-export default NotificationPage;
+export default SupportDetailsPage;
