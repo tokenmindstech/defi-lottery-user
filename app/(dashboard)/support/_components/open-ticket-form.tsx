@@ -154,14 +154,12 @@ const OpenTicketForm = () => {
     mutationFn: async (data) => {
       let attachments: string[] = [];
       if (temporaryFiles.length > 0) {
-        toast.loading("Uploading attachments...");
         attachments = await handleUploadImages();
       }
       const payload = {
         subject: data.subject,
         description: data.description,
         category: data.category,
-        contactPreference: "TELEGRAM",
         attachments,
       };
       const response = await fetchProxy({
@@ -180,7 +178,7 @@ const OpenTicketForm = () => {
   });
 
   const isErrorResponse = (
-    response: API2FAVerifyResponseDTO | APIBaseErrorResponse
+    response: APIBaseResponse | APIBaseErrorResponse
   ): response is APIBaseErrorResponse => {
     return "statusCode" in response && response.statusCode >= 400;
   };
@@ -217,7 +215,7 @@ const OpenTicketForm = () => {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-w-sm md:max-w-md h-full max-h-[80vh] overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg">
+      <DialogContent className="max-w-sm md:max-w-md h-full max-h-[80vh] overflow-y-auto bg-black border-1 border-bgtext-800 rounded-lg no-scrollbar">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

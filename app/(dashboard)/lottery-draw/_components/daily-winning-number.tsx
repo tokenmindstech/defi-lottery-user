@@ -72,8 +72,6 @@ const DailyWinningNumber = () => {
     }
   }, [connected, sended, sendMessage]);
 
-  // console.log("noow", dayjs().tz("Asia/Singapore").get("day"));
-
   return (
     <Fragment>
       {lastMessage === undefined ? (
