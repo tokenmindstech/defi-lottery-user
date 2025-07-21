@@ -1,5 +1,7 @@
-import type { Metadata } from "next";
+import React from "react";
 import Layout from "@/components/layout/layout";
+import SocketProvider from "@/provider/socket";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Dashboard | DeFi Lottery Solutions",
@@ -59,10 +61,14 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  return <Layout>{children}</Layout>;
+}) {
+  return (
+    <Layout>
+      <SocketProvider>{children}</SocketProvider>
+    </Layout>
+  );
 }
