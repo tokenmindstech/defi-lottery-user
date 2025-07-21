@@ -59,14 +59,18 @@ const GeneralForm = ({
 }: GeneralFormProps) => {
   const queryClient = useQueryClient();
   const { data: userSession } = useSession();
-  
+
   // Get the latest profile data from React Query cache
-  const latestProfileData = queryClient.getQueryData<APIGetUserProfileResponseDTO>(["profile", userSession?.user.id]);
+  const latestProfileData =
+    queryClient.getQueryData<APIGetUserProfileResponseDTO>([
+      "profile",
+      userSession?.user.id,
+    ]);
   const currentUserInfo = latestProfileData?.data || userInfoResponse;
-  
+
   // Track the user info as state to force re-renders - use current data
   const [userInfo, setUserInfo] = useState(currentUserInfo);
-  
+
   // Update userInfo when the latest profile data changes
   useEffect(() => {
     setUserInfo(currentUserInfo);
@@ -82,20 +86,24 @@ const GeneralForm = ({
         });
       }
     };
-    
-    window.addEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+
+    window.addEventListener(
+      "profileImageCacheCleared",
+      handleCacheCleared as EventListener
+    );
     return () => {
-      window.removeEventListener('profileImageCacheCleared', handleCacheCleared as EventListener);
+      window.removeEventListener(
+        "profileImageCacheCleared",
+        handleCacheCleared as EventListener
+      );
     };
   }, [userSession?.user.id, queryClient]);
-  
+
   // Use cached profile image with the current image URL
   const { cachedImage: cachedProfileImage } = useCachedProfileImage(
     currentUserInfo.imageUrl,
     userSession?.user.id
   );
-
-
 
   // Initialize default notification preference
   const getDefaultNotificationPreference = useCallback(() => {
@@ -242,7 +250,7 @@ const GeneralForm = ({
           Profile
         </h2>
       </div>
-      
+
       {/* Display current profile picture with edit button */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
@@ -253,7 +261,7 @@ const GeneralForm = ({
                 alt="Profile"
                 width={80}
                 height={80}
-                className="rounded-full object-cover"
+                className="rounded-full object-cover aspect-square"
               />
             ) : currentUserInfo.imageUrl ? (
               <Image
@@ -261,34 +269,37 @@ const GeneralForm = ({
                 alt="Profile"
                 width={80}
                 height={80}
-                className="rounded-full object-cover"
+                className="rounded-full object-cover aspect-square"
                 onError={(e) => {
                   // Hide image on error and show fallback
-                  e.currentTarget.style.display = 'none';
-                  const fallbackDiv = e.currentTarget.nextElementSibling as HTMLElement;
+                  e.currentTarget.style.display = "none";
+                  const fallbackDiv = e.currentTarget
+                    .nextElementSibling as HTMLElement;
                   if (fallbackDiv) {
-                    fallbackDiv.style.display = 'flex';
+                    fallbackDiv.style.display = "flex";
                   }
                 }}
               />
             ) : null}
-            
+
             {/* Fallback initial - only show when no image or on error */}
-            <div 
+            <div
               className="w-20 h-20 bg-bgtext-800 rounded-full flex items-center justify-center absolute inset-0"
-              style={{ display: (!cachedProfileImage && !currentUserInfo.imageUrl) ? 'flex' : 'none' }}
+              style={{
+                display:
+                  !cachedProfileImage && !currentUserInfo.imageUrl
+                    ? "flex"
+                    : "none",
+              }}
             >
               <span className="text-xl text-white">
                 {currentUserInfo.name.charAt(0).toUpperCase()}
               </span>
             </div>
           </div>
-          <div>
-            <p className="text-sm text-bgtext-400">Profile Picture</p>
-          </div>
         </div>
         {isEditing && (
-          <ProfilePictureUpload 
+          <ProfilePictureUpload
             userInfoResponse={currentUserInfo}
             setIsEditing={setIsEditing}
           />
@@ -298,7 +309,9 @@ const GeneralForm = ({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col space-y-5"
+          className={`flex flex-col space-y-5 ${
+            !cachedProfileImage && !currentUserInfo.imageUrl && "mt-20"
+          }`}
         >
           <div
             className={cn(
