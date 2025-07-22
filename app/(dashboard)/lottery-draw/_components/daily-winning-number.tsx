@@ -3,7 +3,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import SkeletonLuckyDrawWInningNumber from "./skeleton-lucky-draw-winning";
 import WinningNumber from "./winning-number";
-import { useSocket, useSocketEvent } from "socket.io-react-hook";
+import { useSocketContext } from "@/provider/socket";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -52,25 +52,27 @@ interface RenderTodaysWinningNumbersProps {
 }
 
 const DailyWinningNumber = () => {
-  const HOST =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_BACKEND_BASEURL!
-      : "http://localhost:2010";
+  const [lastMessage, setLastMessage] = useState<
+    ListenGetTodaysRewardDrawResponseDTO | undefined
+  >(undefined);
+  const { socket, connected } = useSocketContext();
   const [sended, setSended] = useState(false);
 
-  const { socket, connected } = useSocket(HOST);
-  const { sendMessage, lastMessage } =
-    useSocketEvent<ListenGetTodaysRewardDrawResponseDTO>(
-      socket,
-      "getTodayRewardDraw"
-    );
-
   useEffect(() => {
-    if (connected && !sended) {
-      sendMessage();
+    if (connected && socket && !sended) {
+      socket.emit("getTodayRewardDraw");
       setSended(true);
     }
-  }, [connected, sended, sendMessage]);
+    if (socket) {
+      const handler = (msg: ListenGetTodaysRewardDrawResponseDTO) => {
+        setLastMessage(msg);
+      };
+      socket.on("getTodayRewardDraw", handler);
+      return () => {
+        socket.off("getTodayRewardDraw", handler);
+      };
+    }
+  }, [connected, socket, sended]);
 
   return (
     <Fragment>
