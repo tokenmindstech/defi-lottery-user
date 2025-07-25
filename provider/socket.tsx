@@ -50,12 +50,10 @@ const SocketProvider = ({ children }: PropsWithChildren) => {
       });
 
       socket.on("connect", () => {
-        console.log("Socket connected");
         setConnected(true);
       });
 
       socket.on("disconnect", () => {
-        console.log("Socket disconnected");
         setConnected(false);
       });
 
