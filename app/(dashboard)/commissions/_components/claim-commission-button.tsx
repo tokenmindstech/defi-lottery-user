@@ -32,8 +32,6 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { Separator } from "@radix-ui/react-separator";
-import { isAddress } from "viem";
-import { Input } from "@/components/ui/input";
 import toast from "react-hot-toast";
 
 interface ClaimCommissionButtonProps {
@@ -41,9 +39,6 @@ interface ClaimCommissionButtonProps {
 }
 
 const formSchema = z.object({
-  address: z.custom<`0x${string}`>((value) => isAddress(value as string), {
-    message: "Invalid address format",
-  }),
   otp: z
     .string()
     .min(6, {
@@ -64,7 +59,6 @@ const ClaimCommissionButton = ({
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      address: "" as `0x${string}`,
       otp: "",
     },
   });
@@ -74,15 +68,15 @@ const ClaimCommissionButton = ({
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   const mutation = useMutation<
-    APIClaimRewardResponseDTO | APIBaseErrorResponse,
+    APIBaseResponse | APIBaseErrorResponse,
     Error,
     FormType
   >({
-    mutationKey: ["claim-reward"],
+    mutationKey: ["claim-commission"],
     mutationFn: async (data) => {
       return await fetchProxy({
         method: "POST",
-        url: "draw-ticket/claim",
+        url: "commission/claim",
         auth: true,
         body: {
           otp: data.otp,
@@ -95,7 +89,7 @@ const ClaimCommissionButton = ({
   });
 
   const isErrorResponse = (
-    response: APIClaimRewardResponseDTO | APIBaseErrorResponse
+    response: APIBaseResponse | APIBaseErrorResponse
   ): response is APIBaseErrorResponse => {
     return "statusCode" in response && response.statusCode >= 400;
   };
@@ -166,28 +160,6 @@ const ClaimCommissionButton = ({
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col items-start justify-start space-y-5"
           >
-            <FormField
-              control={form.control}
-              name="address"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="text-bgtext-100 font-inter font-medium text-base">
-                    Wallet Address
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="0x..."
-                      className="w-full h-12 bg-bgtext-900 border-1 border-bgtext-800 text-sm rounded-lg text-bgtext-100 selection:bg-bgtext-100 selection:text-bgtext-900 focus-visible:ring-0 focus-visible:border-[1px] focus-visible:border-bgtext-100 focus-visible:ring-bgtext-100"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="otp"

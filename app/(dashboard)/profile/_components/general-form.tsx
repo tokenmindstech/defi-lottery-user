@@ -372,7 +372,7 @@ const GeneralForm = ({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
-                      Email
+                      Google Account
                     </FormLabel>
                     <FormControl>
                       <Input

@@ -204,8 +204,9 @@ const OpenTicketForm = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {/* Client want to hide create support and only use for claim bonus */}
       <DialogTrigger asChild>
-        <Button className="bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
+        <Button className="hidden bg-gradient-to-b p-5 from-linprimary-start to-linprimary-end border-2 border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl cursor-pointer ease-out transition-all duration-300">
           <div className="flex flex-row space-x-3 items-center justify-start">
             <PlusIcon className="size-5 text-bgtext-100" />
             <p className="text-bgtext-100 font-inter font-medium text-sm py-4 whitespace-nowrap">

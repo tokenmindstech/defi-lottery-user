@@ -85,7 +85,9 @@ const EarningsPage = () => {
               </div>
             </div>
 
-            <ClaimCommissionButton totalClaimable={0} />
+            <ClaimCommissionButton
+              totalClaimable={commissionStats.data.unclaimedEarnings}
+            />
           </div>
         )
       )}
