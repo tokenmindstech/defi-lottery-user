@@ -5,14 +5,11 @@ import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import ResultDisplay from "@/components/shared/result-display";
-import { useSession } from "next-auth/react";
 import Skeleton2FA from "./skeleton-2fa";
 import CopySecret from "./copy-secret";
 import Setup2FAForm from "./setup-2fa-form";
 
 const TwoFaSetup = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
-  const session = useSession();
-
   const {
     data: twoFA,
     isLoading,
@@ -76,7 +73,6 @@ const TwoFaSetup = ({ setOpen }: { setOpen: (open: boolean) => void }) => {
                 setOpen={setOpen}
                 qrCode={twoFA.data.qrCode}
                 secret={twoFA.data.secret}
-                token={session.data?.accessToken as string}
               />
             </div>
           </div>

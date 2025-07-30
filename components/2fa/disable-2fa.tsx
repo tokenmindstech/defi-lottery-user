@@ -19,16 +19,14 @@ import {
 } from "@/components/ui/input-otp";
 import { Separator } from "@/components/ui/separator";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
-import { useMutation } from "@tanstack/react-query";
-import { delay, fetchProxy } from "@/lib/utils";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchProxy } from "@/lib/utils";
 import { SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
-import { signIn, signOut } from "next-auth/react";
-import { AUTH_LOGIN_2FA } from "@/constant/common";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
-interface Verify2FAFormProps {
-  token: string;
+interface DisableTwoFactorProps {
+  setOpen: (open: boolean) => void;
 }
 
 const formSchema = z.object({
@@ -42,8 +40,9 @@ const formSchema = z.object({
     }),
 });
 
-const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
-  const router = useRouter();
+const DisableTwoFactor = ({ setOpen }: DisableTwoFactorProps) => {
+  const { data: userSession, update } = useSession();
+  const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -66,17 +65,15 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
     Error,
     z.infer<typeof formSchema>
   >({
-    mutationKey: ["verify-2fa"],
+    mutationKey: ["disable-2fa"],
     mutationFn: async (data) =>
       fetchProxy({
-        method: "POST",
-        url: "two-factor/verify",
+        method: "DELETE",
+        url: "two-factor/unbind",
         body: {
           otp: data.otp,
         },
-        customHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
+        auth: true,
       }),
   });
 
@@ -90,20 +87,26 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
         return;
       }
 
-      toast.success("2FA verified successfully!");
-      await signIn("credentials", {
-        type: AUTH_LOGIN_2FA,
+      // Update session token in NextAuth
+      await update({
         accessToken: result.data.access_token,
-        user: JSON.stringify(result.data.user),
-        redirect: false,
+        user: {
+          name: result.data.user.name,
+          email: result.data.user.email,
+          roles: result.data.user.roles,
+          verifiers: result.data.user.verifiers,
+          isTwoFactorSetup: result.data.user.isTwoFactorSetup,
+        },
       });
 
-      await delay(2000);
-      if (!result.data.user.subscription) {
-        router.push("/auth/subscription-offers");
-      } else {
-        router.push("/");
-      }
+      // Invalidate profile query after session update
+      await queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+      });
+
+      toast.success("2FA removed successfully!");
+
+      setOpen(false);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
@@ -131,7 +134,11 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
     <div ref={formContainerRef}>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit(onSubmit)(e);
+          }}
           className="flex flex-col items-start justify-start space-y-5"
         >
           <FormField
@@ -167,9 +174,7 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
             <Button
               type="button"
               disabled={form.formState.isSubmitting}
-              onClick={() =>
-                signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
-              }
+              onClick={() => setOpen(false)}
               className="bggradient-to-b from-linblack-start to-linblack-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linblack-start hover:to-linblack-end rounded-lg cursor-pointer ease-out transition-all duration-300"
             >
               Cancel
@@ -183,11 +188,11 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
                 <div className="flex flex-row items-center justify-center space-x-2">
                   <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
                   <p className="text-bgtext-100 font-inter font-medium text-base">
-                    Logging in...
+                    Submitting...
                   </p>
                 </div>
               ) : (
-                "Login"
+                "Submit"
               )}
             </Button>
           </div>
@@ -197,4 +202,4 @@ const Verify2FAForm = ({ token }: Verify2FAFormProps) => {
   );
 };
 
-export default Verify2FAForm;
+export default DisableTwoFactor;

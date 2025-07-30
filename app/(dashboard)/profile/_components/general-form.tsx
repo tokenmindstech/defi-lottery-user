@@ -201,9 +201,11 @@ const GeneralForm = ({
         );
         return;
       }
+
       toast.success("Profile updated successfully", {
         id: `update-profile-success-${userSession?.user.id}`,
       });
+
       setIsEditing(false);
     } catch {
       // Error handled by toast notification system

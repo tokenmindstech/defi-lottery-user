@@ -1,6 +1,5 @@
 "use client";
 
-import TwoFaSetup from "@/components/2fa-setup/2fa-setup";
 import BlueShadowBottom from "@/components/icons/blue-shadow-bottom";
 import {
   Dialog,
@@ -11,6 +10,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
+import DisableTwoFactor from "@/components/2fa/disable-2fa";
+import TwoFaSetup from "@/components/2fa/2fa-setup";
 
 export default function TwoFactorToggle({
   field,
@@ -44,12 +45,13 @@ export default function TwoFactorToggle({
 
           <div className="mt-4">
             {field.value ? (
-              <div className="text-white">Disable</div>
+              <DisableTwoFactor setOpen={setOpen} />
             ) : (
-              <TwoFaSetup setOpen={setOpen} />
+              <>
+                <TwoFaSetup setOpen={setOpen} />
+                <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-5%" />
+              </>
             )}
-
-            <BlueShadowBottom className="absolute h-full z-10 inset-0 mask-t-from-5%" />
           </div>
         </DialogContent>
       </Dialog>

@@ -9,6 +9,7 @@ declare module "next-auth" {
     roles: RoleType[];
     accessToken: string;
     verifiers: Verifier[];
+    isTwoFactorSetup: boolean;
   }
 
   interface Session {
@@ -25,5 +26,6 @@ declare module "next-auth/jwt" {
     roles: RoleType[];
     isVerified: boolean;
     verifiers: Verifier[];
+    isTwoFactorSetup: boolean;
   }
 }

@@ -146,6 +146,7 @@ export const authConfig: NextAuthOptions = {
               id: userData.id,
               name: userData.name,
               roles: userData.roles,
+              isTwoFactorSetup: userData.isTwoFactorSetup,
               verifiers: userData.verifiers,
               image: "https://example.com/image.jpg",
             };
@@ -204,6 +205,7 @@ export const authConfig: NextAuthOptions = {
             id: response.data.user.id,
             name: response.data.user.name,
             roles: response.data.user.roles,
+            isTwoFactorSetup: response.data.user.isTwoFactorSetup,
             verifiers: response.data.user.verifiers,
             image: "https://example.com/image.jpg",
           };
@@ -231,6 +233,7 @@ export const authConfig: NextAuthOptions = {
         token.email = user.email;
         token.accessToken = user.accessToken;
         token.roles = user.roles;
+        token.isTwoFactorSetup = user.isTwoFactorSetup;
         token.picture = user.image;
         token.name = user.name;
         token.verifiers = user.verifiers;
@@ -240,12 +243,14 @@ export const authConfig: NextAuthOptions = {
         token.email = session.user?.email;
         token.name = session.user?.name;
         token.roles = session.user?.roles;
-        token.provider = session.user?.provider;
+        token.verifiers = session.user?.verifiers;
+        token.isTwoFactorSetup = session.user?.isTwoFactorSetup;
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
+        session.accessToken = token.accessToken;
         session.user = {
           id: token.id,
           email: token.email,
@@ -254,6 +259,7 @@ export const authConfig: NextAuthOptions = {
           image: token.picture || "",
           roles: token.roles,
           verifiers: token.verifiers,
+          isTwoFactorSetup: token.isTwoFactorSetup,
         };
       }
       return session;

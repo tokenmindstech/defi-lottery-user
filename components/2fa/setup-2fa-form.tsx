@@ -23,14 +23,13 @@ import { useMutation } from "@tanstack/react-query";
 import { fetchProxy } from "@/lib/utils";
 import { SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
-import { signIn } from "next-auth/react";
-import { AUTH_LOGIN_2FA } from "@/constant/common";
+import { useSession } from "next-auth/react";
+// import { AUTH_LOGIN_2FA } from "@/constant/common";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface Setup2FAFormProps {
   secret: string;
   qrCode: string;
-  token: string;
   setOpen: (open: boolean) => void;
 }
 
@@ -49,12 +48,7 @@ const formSchema = z.object({
   qrCode: z.string(),
 });
 
-const Setup2FAForm = ({
-  qrCode,
-  secret,
-  token,
-  setOpen,
-}: Setup2FAFormProps) => {
+const Setup2FAForm = ({ qrCode, secret, setOpen }: Setup2FAFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -63,6 +57,7 @@ const Setup2FAForm = ({
       qrCode,
     },
   });
+  const { data: userSession, update } = useSession();
   const queryClient = useQueryClient();
 
   // Create a ref for the first OTP input
@@ -104,11 +99,24 @@ const Setup2FAForm = ({
         return;
       }
 
-      toast.success("2FA activated successfully");
-
-      queryClient.invalidateQueries({
-        queryKey: ["profile", result.data.user.id],
+      // Update session token in NextAuth
+      await update({
+        accessToken: result.data.access_token,
+        user: {
+          name: result.data.user.name,
+          email: result.data.user.email,
+          roles: result.data.user.roles,
+          verifiers: result.data.user.verifiers,
+          isTwoFactorSetup: result.data.user.isTwoFactorSetup,
+        },
       });
+
+      // Invalidate profile query after session update
+      await queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+      });
+
+      toast.success("2FA activated successfully");
 
       setOpen(false);
     } catch (error) {
@@ -140,7 +148,11 @@ const Setup2FAForm = ({
     <div ref={formContainerRef}>
       <Form {...form}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit(onSubmit)(e);
+          }}
           className="flex flex-col items-start justify-start space-y-5"
         >
           <FormField
