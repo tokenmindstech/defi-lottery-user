@@ -29,9 +29,8 @@ import toast from "react-hot-toast";
 import { delay } from "@/lib/utils";
 import {
   AUTH_ERROR_TELEGRAM_ALREADY_BOUND,
-  REQUIRED_2FA_SETUP,
   REQUIRED_AUTHENTICATION,
-  REQUIRED_BIND_TELEGRAM,
+  // REQUIRED_BIND_TELEGRAM,
 } from "@/constant/common";
 import { Web3AuthContext } from "@/provider/web3-auth";
 import Link from "next/link";
@@ -68,27 +67,29 @@ const LoginForm = () => {
       });
 
       if (result?.error) {
-        if (result.error.startsWith(REQUIRED_BIND_TELEGRAM)) {
-          toast.success("Telegram binding required. Redirecting...");
-          web3Auth.clearCache();
-          await web3Auth.logout();
-          await delay(2000);
-          router.push(
-            `/auth/telegram-bind?jwt=${result.error.replace(
-              REQUIRED_BIND_TELEGRAM,
-              ""
-            )}`
-          );
-        } else if (result.error.startsWith(REQUIRED_2FA_SETUP)) {
-          toast.success("2FA setup required. Redirecting...");
-          await delay(2000);
-          router.push(
-            `/auth/2fa-setup?token=${result.error.replace(
-              REQUIRED_2FA_SETUP,
-              ""
-            )}`
-          );
-        } else if (result.error.startsWith(REQUIRED_AUTHENTICATION)) {
+        // if (result.error.startsWith(REQUIRED_BIND_TELEGRAM)) {
+        //   toast.success("Telegram binding required. Redirecting...");
+        //   web3Auth.clearCache();
+        //   await web3Auth.logout();
+        //   await delay(2000);
+        //   router.push(
+        //     `/auth/telegram-bind?jwt=${result.error.replace(
+        //       REQUIRED_BIND_TELEGRAM,
+        //       ""
+        //     )}`
+        //   );
+        // }
+        // else if (result.error.startsWith(REQUIRED_2FA_SETUP)) {
+        //   toast.success("2FA setup required. Redirecting...");
+        //   await delay(2000);
+        //   router.push(
+        //     `/auth/2fa-setup?token=${result.error.replace(
+        //       REQUIRED_2FA_SETUP,
+        //       ""
+        //     )}`
+        //   );
+        // }
+        if (result.error.startsWith(REQUIRED_AUTHENTICATION)) {
           router.push(
             `/auth/2fa-challenge?token=${result.error.replace(
               REQUIRED_AUTHENTICATION,
@@ -262,7 +263,8 @@ const LoginForm = () => {
             </Fragment>
           )}
         </Button>
-        <Button
+
+        {/* <Button
           onClick={loginWithTelegram}
           className="w-full flex flex-row items-center justify-center bg-bgtext-800 border py-6 border-bgtext-700 hover:bg-bgtext-700 rounded-xl cursor-pointer"
           disabled={isLoading}
@@ -280,7 +282,7 @@ const LoginForm = () => {
               </p>
             </Fragment>
           )}
-        </Button>
+        </Button> */}
 
         <p className="text-xs text-bgtext-100 font-inter text-center">
           By creating an account, I agree to the536.com&apos;s{" "}

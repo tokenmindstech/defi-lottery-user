@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -29,12 +29,13 @@ import Image from "next/image";
 import { useCachedProfileImage } from "@/lib/use-cached-profile-image";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
+import TwoFactorToggle from "./two-factor-toogle";
 
 const formSchema = z.object({
   name: z.string().min(1, {
     message: "Name is required",
   }),
-  telegramId: z.string().optional(),
+  // telegramId: z.string().optional(),
   email: z
     .string()
     .optional()
@@ -114,12 +115,12 @@ const GeneralForm = ({
   }, [userInfo.verifiers]);
 
   // Get verifier IDs with defaults to prevent undefined values
-  const getTelegramId = useCallback(() => {
-    return (
-      userInfo.verifiers.find((verifier) => verifier.type === "TELEGRAM")?.id ||
-      ""
-    );
-  }, [userInfo.verifiers]);
+  // const getTelegramId = useCallback(() => {
+  //   return (
+  //     userInfo.verifiers.find((verifier) => verifier.type === "TELEGRAM")?.id ||
+  //     ""
+  //   );
+  // }, [userInfo.verifiers]);
 
   const getEmailId = useCallback(() => {
     return (
@@ -132,10 +133,10 @@ const GeneralForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: userInfo.name,
-      telegramId: getTelegramId(),
+      // telegramId: getTelegramId(),
       email: getEmailId(),
       notificationPreferences: getDefaultNotificationPreference(),
-      twoFactorAuth: true,
+      twoFactorAuth: userInfo.twoFactorAuth,
     },
   });
 
@@ -185,6 +186,7 @@ const GeneralForm = ({
         }
         return verifier;
       });
+
       const result = await mutation.mutateAsync({
         name: data.name,
         verifiers: newVerifiers,
@@ -211,7 +213,7 @@ const GeneralForm = ({
   const handleResetForm = () => {
     form.reset({
       name: userInfo.name,
-      telegramId: getTelegramId(),
+      // telegramId: getTelegramId(),
       email: getEmailId(),
       notificationPreferences: getDefaultNotificationPreference(),
       twoFactorAuth: true,
@@ -230,15 +232,15 @@ const GeneralForm = ({
 
     form.reset({
       name: userInfo.name,
-      telegramId: getTelegramId(),
+      // telegramId: getTelegramId(),
       email: getEmailId(),
       notificationPreferences: notificationPreference,
-      twoFactorAuth: true,
+      twoFactorAuth: userInfo.twoFactorAuth,
     });
   }, [
     form,
     getDefaultNotificationPreference,
-    getTelegramId,
+    // getTelegramId,
     getEmailId,
     userInfo.name,
   ]);
@@ -323,7 +325,7 @@ const GeneralForm = ({
               name="name"
               control={form.control}
               render={({ field }) => (
-                <FormItem className="col-span-2 h-fit">
+                <FormItem className="col-span-1 h-fit">
                   <FormLabel className="text-bgtext-100 font-inter font-medium text-sm">
                     Name
                   </FormLabel>
@@ -342,7 +344,7 @@ const GeneralForm = ({
               )}
             />
 
-            <FormField
+            {/* <FormField
               name="telegramId"
               control={form.control}
               render={({ field }) => (
@@ -363,7 +365,7 @@ const GeneralForm = ({
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
 
             <div className="flex flex-col space-y-2 mb-0 col-span-2 md:col-span-1">
               <FormField
@@ -488,18 +490,9 @@ const GeneralForm = ({
             <div className="flex flex-row items-center justify-start space-x-10">
               <FormField
                 name="twoFactorAuth"
-                control={form.control}
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center space-x-2">
-                    <FormControl>
-                      <Switch
-                        disabled
-                        checked={field.value}
-                        className={cn(
-                          "w-8 h-5 cursor-not-allowed data-[state=checked]:bg-linprimary-start opacity-70"
-                        )}
-                      />
-                    </FormControl>
+                    <TwoFactorToggle field={field} />
                   </FormItem>
                 )}
               />

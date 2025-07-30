@@ -98,6 +98,7 @@ declare global {
     roles: RoleType[];
     verifiers: Verifier[];
     subscription: Subscription | null;
+    twoFactorAuth: boolean;
   }
 
   interface InvoiceSubscription {

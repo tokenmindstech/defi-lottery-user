@@ -40,7 +40,7 @@ const ProfilePage = () => {
       }),
     enabled: !!userSession,
   });
-  
+
   // Use cached profile image
   const { cachedImage: cachedProfileImage } = useCachedProfileImage(
     userData?.data?.imageUrl,
@@ -92,7 +92,7 @@ const ProfilePage = () => {
                       className="object-cover"
                       onError={(e) => {
                         // Hide the image if it fails to load, fallback will show
-                        e.currentTarget.style.display = 'none';
+                        e.currentTarget.style.display = "none";
                       }}
                     />
                   ) : null}

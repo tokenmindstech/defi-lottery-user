@@ -20,17 +20,18 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useMutation } from "@tanstack/react-query";
-import { delay, fetchProxy } from "@/lib/utils";
+import { fetchProxy } from "@/lib/utils";
 import { SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import toast from "react-hot-toast";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { AUTH_LOGIN_2FA } from "@/constant/common";
-import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Setup2FAFormProps {
   secret: string;
   qrCode: string;
   token: string;
+  setOpen: (open: boolean) => void;
 }
 
 const formSchema = z.object({
@@ -48,8 +49,12 @@ const formSchema = z.object({
   qrCode: z.string(),
 });
 
-const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
-  const router = useRouter();
+const Setup2FAForm = ({
+  qrCode,
+  secret,
+  token,
+  setOpen,
+}: Setup2FAFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,6 +63,7 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
       qrCode,
     },
   });
+  const queryClient = useQueryClient();
 
   // Create a ref for the first OTP input
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -84,9 +90,7 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
           secret: data.secret,
           qrCode: data.qrCode,
         },
-        customHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
+        auth: true,
       }),
   });
 
@@ -101,19 +105,12 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
       }
 
       toast.success("2FA activated successfully");
-      await signIn("credentials", {
-        type: AUTH_LOGIN_2FA,
-        accessToken: result.data.access_token,
-        user: JSON.stringify(result.data.user),
-        redirect: false,
+
+      queryClient.invalidateQueries({
+        queryKey: ["profile", result.data.user.id],
       });
 
-      await delay(2000);
-      if (!result.data.user.subscription) {
-        router.push("/auth/subscription-offers");
-      } else {
-        router.push("/");
-      }
+      setOpen(false);
     } catch (error) {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form");
@@ -173,23 +170,22 @@ const Setup2FAForm = ({ qrCode, secret, token }: Setup2FAFormProps) => {
               </FormItem>
             )}
           />
-          <Separator className="bg-bgtext-800 mask-l-from-80% mask-r-from-80%" />
+          <Separator className="bg-bgtext-400 mask-l-from-80% mask-r-from-80%" />
 
-          <div className="w-full flex flex-row space-x-5 items-center justify-end">
+          <div className="w-full flex flex-row space-x-5 items-center justify-end mt-5">
             <Button
               type="button"
               disabled={form.formState.isSubmitting}
-              onClick={() =>
-                signOut({ redirect: true, callbackUrl: "/auth?action=logout" })
-              }
-              className="bggradient-to-b from-linblack-start to-linblack-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linblack-start hover:to-linblack-end rounded-lg cursor-pointer ease-out transition-all duration-300"
+              onClick={() => setOpen(false)}
+              className="bggradient-to-b from-linblack-start to-linblack-end text-bgtext-100 hover:bg-gradient-to-b hover:from-linblack-start hover:to-linblack-end rounded-lg cursor-pointer ease-out transition-all duration-300"
             >
               Cancel
             </Button>
+
             <Button
               type="submit"
               disabled={form.formState.isSubmitting}
-              className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-2 border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300"
+              className="bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-lg cursor-pointer ease-out transition-all duration-300"
             >
               {form.formState.isSubmitting ? (
                 <div className="flex flex-row items-center justify-center space-x-2">

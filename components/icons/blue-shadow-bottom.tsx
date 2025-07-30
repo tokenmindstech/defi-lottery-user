@@ -6,7 +6,7 @@ const BlueShadowBottom = ({ className }: CustomIconProps) => {
     <svg
       width="100%"
       height="100%"
-      viewBox="0 0 654 163"
+      viewBox="0 0 654 157"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={cn("flex-grow-0 flex-shrink-0 w-full h-screen", className)}

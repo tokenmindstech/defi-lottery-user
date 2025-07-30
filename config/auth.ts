@@ -1,7 +1,6 @@
 import {
   AUTH_ERROR,
   AUTH_LOGIN_2FA,
-  REQUIRED_2FA_SETUP,
   REQUIRED_AUTHENTICATION,
   REQUIRED_BIND_TELEGRAM,
 } from "../constant/common";
@@ -175,22 +174,25 @@ export const authConfig: NextAuthOptions = {
           }
 
           // Check if TELEGRAM is exist in verifiers
-          const telegramVerifier = response.data.user.verifiers.find(
-            (verifier) => verifier.type === "TELEGRAM"
-          );
-          if (!telegramVerifier) {
-            throw new CustomError(
-              `${REQUIRED_BIND_TELEGRAM}${response.data.access_token}`
-            );
-          }
+          // const telegramVerifier = response.data.user.verifiers.find(
+          //   (verifier) => verifier.type === "TELEGRAM"
+          // );
+          // if (!telegramVerifier) {
+          //   throw new CustomError(
+          //     `${REQUIRED_BIND_TELEGRAM}${response.data.access_token}`
+          //   );
+          // }
 
-          if (response.data.user.isTwoFactorSetup === false) {
-            throw new CustomError(
-              `${REQUIRED_2FA_SETUP}${response.data.access_token}`
-            );
-          }
+          // if (response.data.user.isTwoFactorSetup === false) {
+          //   throw new CustomError(
+          //     `${REQUIRED_2FA_SETUP}${response.data.access_token}`
+          //   );
+          // }
 
-          if (response.data.user.authenticated === false) {
+          if (
+            response.data.user.isTwoFactorSetup == true &&
+            response.data.user.authenticated === false
+          ) {
             throw new CustomError(
               `${REQUIRED_AUTHENTICATION}${response.data.access_token}`
             );
