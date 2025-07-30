@@ -9,11 +9,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import {
-  GoogleLogoIcon,
-  SpinnerIcon,
-  TelegramLogoIcon,
-} from "@phosphor-icons/react/dist/ssr";
+import { GoogleLogoIcon, SpinnerIcon } from "@phosphor-icons/react/dist/ssr";
 import { WALLET_ADAPTERS } from "@web3auth/base";
 import {
   useEffect,
@@ -34,7 +30,7 @@ import {
 } from "@/constant/common";
 import { Web3AuthContext } from "@/provider/web3-auth";
 import Link from "next/link";
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASEURL!;
+// const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_BASEURL!;
 
 const LoginForm = () => {
   const searchParams = useSearchParams();
@@ -158,9 +154,9 @@ const LoginForm = () => {
     [isInitialized, requestJwt, web3Auth]
   );
 
-  const loginWithTelegram = useCallback(() => {
-    router.push(`${BACKEND_URL}/auth/telegram-login`);
-  }, [router]);
+  // const loginWithTelegram = useCallback(() => {
+  //   router.push(`${BACKEND_URL}/auth/telegram-login`);
+  // }, [router]);
 
   // Handle initialization and check connection status
   useEffect(() => {
