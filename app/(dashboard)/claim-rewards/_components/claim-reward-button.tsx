@@ -31,6 +31,8 @@ import {
 } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { CURRENCY_FRACTION } from "@/constant/common";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface ClaimRewardButtonProps {
   totalClaimable: number;
@@ -50,6 +52,8 @@ type FormType = z.infer<typeof formSchema>;
 
 const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const queryClient = useQueryClient();
   const form = useForm<FormType>({
@@ -112,6 +116,17 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
     }
   };
 
+  const handleDialogTrigger = () => {
+    if (!session?.user?.isTwoFactorSetup) {
+      toast.error(
+        "Please enable Two-Factor Authentication first to claim rewards."
+      );
+      router.push("/profile");
+      return;
+    }
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (firstInputRef.current) {
@@ -129,125 +144,126 @@ const ClaimRewardButton = ({ totalClaimable }: ClaimRewardButtonProps) => {
     return () => clearTimeout(timer);
   }, []);
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button
-          disabled={totalClaimable === 0}
-          className="p-5 transition-all duration-300 ease-out border-2 cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl"
-        >
-          <div className="flex flex-row items-center justify-start space-x-3">
-            <GiftIcon className="size-5 text-bgtext-100" />
-            <p className="py-4 text-sm font-medium text-bgtext-100 font-inter whitespace-nowrap">
-              Claim Reward
-            </p>
-          </div>
-        </Button>
-      </DialogTrigger>
+    <>
+      <Button
+        disabled={totalClaimable === 0}
+        className="p-5 transition-all duration-300 ease-out border-2 cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end border-bgtext-800 hover:bg-gradient-to-b hover:from-linprimary-start hover:to-linprimary-end/50 rounded-xl"
+        onClick={handleDialogTrigger}
+      >
+        <div className="flex flex-row items-center justify-start space-x-3">
+          <GiftIcon className="size-5 text-bgtext-100" />
+          <p className="py-4 text-sm font-medium text-bgtext-100 font-inter whitespace-nowrap">
+            Claim Reward
+          </p>
+        </div>
+      </Button>
 
-      <DialogContent className="max-w-sm overflow-y-auto bg-black rounded-lg md:max-w-md h-fit border-1 border-bgtext-800">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-left text-bgtext-100 font-inter">
-            Input OTP to Claim Reward
-          </DialogTitle>
-          <DialogDescription className="hidden" />
-        </DialogHeader>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col items-start justify-start space-y-5"
-          >
-            <FormField
-              control={form.control}
-              name="otp"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="space-y-2 text-sm text-bgtext-500 font-inter">
-                    <p className="font-medium text-destructive">
-                      <strong className="font-bold">Attention:</strong>
-                      <br />
-                      <span className="font-bold">A 5%</span> administration fee
-                      will be applied to your winning amount.
-                    </p>
-                    <div className="mt-2">
-                      <p className="font-bold text-bgtext-100">
-                        Total Claimable:{" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                        }).format(totalClaimable)}
-                      </p>
-                      <p className="font-bold text-bgtext-100">
-                        Administration Fee (5%):{" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                        }).format(totalClaimable * 0.05)}
-                      </p>
-                      <p className="font-bold text-bgtext-100">
-                        Net Claim Amount :{" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                          maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                        }).format(totalClaimable - totalClaimable * 0.05)}
-                      </p>
-                    </div>
-                  </div>
-
-                  <FormControl>
-                    <InputOTP
-                      maxLength={6}
-                      pattern={REGEXP_ONLY_DIGITS}
-                      autoFocus={true}
-                      {...field}
-                    >
-                      {Array.from({ length: 6 }, (_, index) => (
-                        <InputOTPGroup key={index}>
-                          <InputOTPSlot
-                            index={index}
-                            ref={index === 0 ? firstInputRef : null}
-                            className="mt-3 size-10 md:size-12 lg:size-14 bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end border-0 first:border-l-0 data-[active=true]:border-2 border-bgtext-800 text-3xl md:text-4xl text-bgtext-100"
-                          />
-                        </InputOTPGroup>
-                      ))}
-                    </InputOTP>
-                  </FormControl>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Button
-              type="submit"
-              disabled={form.formState.isSubmitting}
-              className="w-full transition-all duration-300 ease-out border-2 rounded-lg cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50"
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-sm overflow-y-auto bg-black rounded-lg md:max-w-md h-fit border-1 border-bgtext-800">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-left text-bgtext-100 font-inter">
+              Input OTP to Claim Reward
+            </DialogTitle>
+            <DialogDescription className="hidden" />
+          </DialogHeader>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="flex flex-col items-start justify-start space-y-5"
             >
-              {form.formState.isSubmitting ? (
-                <div className="flex flex-row items-center justify-center space-x-2">
-                  <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
-                  <p className="text-base font-medium text-bgtext-100 font-inter">
-                    Claiming...
-                  </p>
-                </div>
-              ) : (
-                `Claim ${new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                  minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
-                  maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
-                }).format(totalClaimable * 0.95)}` // Displaying the amount after 5% fee
-              )}
-            </Button>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+              <FormField
+                control={form.control}
+                name="otp"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="space-y-2 text-sm text-bgtext-500 font-inter">
+                      <p className="font-medium text-destructive">
+                        <strong className="font-bold">Attention:</strong>
+                        <br />
+                        <span className="font-bold">A 5%</span> administration
+                        fee will be applied to your winning amount.
+                      </p>
+                      <div className="mt-2">
+                        <p className="font-bold text-bgtext-100">
+                          Total Claimable:{" "}
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                            minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                            maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                          }).format(totalClaimable)}
+                        </p>
+                        <p className="font-bold text-bgtext-100">
+                          Administration Fee (5%):{" "}
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                            minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                            maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                          }).format(totalClaimable * 0.05)}
+                        </p>
+                        <p className="font-bold text-bgtext-100">
+                          Net Claim Amount :{" "}
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                            minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                            maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                          }).format(totalClaimable - totalClaimable * 0.05)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <FormControl>
+                      <InputOTP
+                        maxLength={6}
+                        pattern={REGEXP_ONLY_DIGITS}
+                        autoFocus={true}
+                        {...field}
+                      >
+                        {Array.from({ length: 6 }, (_, index) => (
+                          <InputOTPGroup key={index}>
+                            <InputOTPSlot
+                              index={index}
+                              ref={index === 0 ? firstInputRef : null}
+                              className="mt-3 size-10 md:size-12 lg:size-14 bg-gradient-to-b from-linblack-start via-30% via-linblack-via to-linblack-end border-0 first:border-l-0 data-[active=true]:border-2 border-bgtext-800 text-3xl md:text-4xl text-bgtext-100"
+                            />
+                          </InputOTPGroup>
+                        ))}
+                      </InputOTP>
+                    </FormControl>
+
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                type="submit"
+                disabled={form.formState.isSubmitting}
+                className="w-full transition-all duration-300 ease-out border-2 rounded-lg cursor-pointer bg-gradient-to-b from-linprimary-start to-linprimary-end text-bgtext-100 hover:bg-gradient-to-b border-bgtext-800 hover:from-linprimary-start hover:to-linprimary-end/50"
+              >
+                {form.formState.isSubmitting ? (
+                  <div className="flex flex-row items-center justify-center space-x-2">
+                    <SpinnerIcon className="size-5 fill-bgtext-100 animate-spin" />
+                    <p className="text-base font-medium text-bgtext-100 font-inter">
+                      Claiming...
+                    </p>
+                  </div>
+                ) : (
+                  `Claim ${new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    minimumFractionDigits: CURRENCY_FRACTION.MINIMUM,
+                    maximumFractionDigits: CURRENCY_FRACTION.MAXIMUM,
+                  }).format(totalClaimable * 0.95)}` // Displaying the amount after 5% fee
+                )}
+              </Button>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
