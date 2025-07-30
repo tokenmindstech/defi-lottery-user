@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 import { useForm } from "react-hook-form";
@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn, fetchProxy } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
-import BindUnbindGoogle from "./bind-unbind-google";
+// import BindUnbindGoogle from "./bind-unbind-google";
 import ProfilePictureUpload from "./profile-picture-upload";
 import Image from "next/image";
 import { useCachedProfileImage } from "@/lib/use-cached-profile-image";
@@ -245,6 +245,7 @@ const GeneralForm = ({
     // getTelegramId,
     getEmailId,
     userInfo.name,
+    userInfo.twoFactorAuth,
   ]);
 
   return (
@@ -267,9 +268,9 @@ const GeneralForm = ({
                 height={80}
                 className="rounded-full object-cover aspect-square"
               />
-            ) : currentUserInfo.imageUrl ? (
+            ) : userInfo.imageUrl ? (
               <Image
-                src={currentUserInfo.imageUrl}
+                src={userInfo.imageUrl}
                 alt="Profile"
                 width={80}
                 height={80}
@@ -392,12 +393,12 @@ const GeneralForm = ({
                   </FormItem>
                 )}
               />
-              {isEditing && (
+              {/* {isEditing && (
                 <BindUnbindGoogle
                   setIsEditing={setIsEditing}
                   userInfoResponse={userInfoResponse}
                 />
-              )}
+              )} */}
             </div>
           </div>
 

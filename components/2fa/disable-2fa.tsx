@@ -75,6 +75,12 @@ const DisableTwoFactor = ({ setOpen }: DisableTwoFactorProps) => {
         },
         auth: true,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+        refetchType: "all",
+      });
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -97,11 +103,6 @@ const DisableTwoFactor = ({ setOpen }: DisableTwoFactorProps) => {
           verifiers: result.data.user.verifiers,
           isTwoFactorSetup: result.data.user.isTwoFactorSetup,
         },
-      });
-
-      // Invalidate profile query after session update
-      await queryClient.invalidateQueries({
-        queryKey: ["profile", userSession?.user.id],
       });
 
       toast.success("2FA removed successfully!");

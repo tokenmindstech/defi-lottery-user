@@ -87,6 +87,12 @@ const Setup2FAForm = ({ qrCode, secret, setOpen }: Setup2FAFormProps) => {
         },
         auth: true,
       }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["profile", userSession?.user.id],
+        refetchType: "all",
+      });
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -109,11 +115,6 @@ const Setup2FAForm = ({ qrCode, secret, setOpen }: Setup2FAFormProps) => {
           verifiers: result.data.user.verifiers,
           isTwoFactorSetup: result.data.user.isTwoFactorSetup,
         },
-      });
-
-      // Invalidate profile query after session update
-      await queryClient.invalidateQueries({
-        queryKey: ["profile", userSession?.user.id],
       });
 
       toast.success("2FA activated successfully");
