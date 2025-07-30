@@ -2,7 +2,6 @@ import {
   AUTH_ERROR,
   AUTH_LOGIN_2FA,
   REQUIRED_AUTHENTICATION,
-  REQUIRED_BIND_TELEGRAM,
 } from "../constant/common";
 import { NextAuthOptions, User } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
